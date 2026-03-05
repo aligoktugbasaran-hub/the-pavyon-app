@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  nickname      String
+  photos        String[] // max 2 URL
+  gender        String?
+  credits       Int       @default(0)
+  earnings      Float     @default(0)
+  createdAt     DateTime  @default(now())
+  messages      Message[]
+  giftsGiven    Gift[]    @relation("GiftSender")
+  giftsReceived Gift[]    @relation("GiftReceiver")
+}
+
+model Room {
+  id        String    @id @default(uuid())
+  name      String
+  capacity  Int       @default(10)
+  messages  Message[]
+  isPrivate Boolean   @default(false)
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  userId    String
+  roomId    String
+  user      User     @relation(fields: [userId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Gift {
+  id         String   @id @default(uuid())
+  type       String   // "champagne", "flower", "diamond", etc.
+  creditCost Int
+  tlValue    Float
+  senderId   String
+  receiverId String
+  sender     User     @relation("GiftSender", fields: [senderId], references: [id])
+  receiver   User     @relation("GiftReceiver", fields: [receiverId], references: [id])
+  createdAt  DateTime @default(now())
+}

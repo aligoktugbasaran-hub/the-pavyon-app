@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bordeaux-500: #4A0404;
+  --color-bordeaux-900: #2a0202;
+  --color-purple-900: #2E0249;
+  --color-purple-950: #1a0129;
+  --color-gold-400: #FFD700;
+  --color-gold-500: #e6c200;
+  --color-neon-pink: #FF007F;
+  --color-pavyon-bg: #09010E;
+
+  /* User Requested Colors */
+  --color-pavyon-dark: #0a0510;
+  --color-pavyon-neonPink: #ff007f;
+  --color-pavyon-gold: #ffd700;
+  --color-pavyon-cardBg: rgba(20, 10, 30, 0.7);
+
+  --font-heading: var(--font-playfair);
+  --font-body: var(--font-inter);
+  --font-sans: var(--font-inter);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-pavyon-bg);
+    color: #FAFAFA;
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    background: rgba(46, 2, 73, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-panel-hover {
+    transition: all 0.3s ease;
+  }
+
+  .glass-panel-hover:hover {
+    background: rgba(46, 2, 73, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .neon-glow-pink {
+    box-shadow: 0 0 10px rgba(255, 0, 127, 0.6), 0 0 20px rgba(255, 0, 127, 0.3);
+  }
+
+  .neon-glow-gold {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+
+  .neon-text-pink {
+    text-shadow: 0 0 5px rgba(255, 0, 127, 0.8), 0 0 15px rgba(255, 0, 127, 0.5);
+  }
+
+  .neon-text-gold {
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.8), 0 0 15px rgba(255, 215, 0, 0.5);
+  }
+}

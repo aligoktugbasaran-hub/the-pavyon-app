@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">The Pavyon</string>
+    <string name="title_activity_main">The Pavyon</string>
+    <string name="package_name">com.thepavyon.app</string>
+    <string name="custom_url_scheme">com.thepavyon.app</string>
+</resources>
