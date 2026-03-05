@@ -1,4 +1,4 @@
-name: iOS Build v2
+name: iOS Build v3
 
 on:
   push:
@@ -13,13 +13,13 @@ jobs:
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node.js 22.x
+      - name: 🟢 Setup Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
 
-      - name: 🔍 Debug node version
+      - name: 🔍 Debug Version
         run: node -v && npm -v
 
       - name: 📦 Install Deps
@@ -28,16 +28,10 @@ jobs:
       - name: 🏗️ Build Web
         run: npm run build
 
-      - name: 🔄 Capacitor Sync iOS (Fix Node 22)
+      - name: 🔄 Capacitor Sync
         run: ./node_modules/.bin/cap sync ios
 
-      - name: 💎 Install CocoaPods
-        run: |
-          gem install cocoapods
-          cd ios/App
-          pod install
-
-      - name: 🔐 Setup signing (unsigned build for testing)
+      - name: 🔐 Setup signing (No Podfile - SPM)
         run: |
           cd ios/App
           # Disable automatic signing for unsigned build
