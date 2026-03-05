@@ -1,4 +1,4 @@
-name: iOS Build v3
+name: iOS Build v4
 
 on:
   push:
@@ -39,11 +39,11 @@ jobs:
           sed -i '' 's/CODE_SIGN_IDENTITY = .*/CODE_SIGN_IDENTITY = "";/' App.xcodeproj/project.pbxproj
           sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/' App.xcodeproj/project.pbxproj
 
-      - name: 🛠️ Build iOS (simulator - no signing needed)
+      - name: 🛠️ Build iOS ( simulator - no signing needed)
         run: |
           cd ios/App
           xcodebuild \
-            -workspace App.xcworkspace \
+            -project App.xcodeproj \
             -scheme App \
             -sdk iphonesimulator \
             -configuration Release \
