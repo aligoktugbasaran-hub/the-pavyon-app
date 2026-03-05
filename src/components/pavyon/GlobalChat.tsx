@@ -13,12 +13,15 @@ const AD_WORDS = ["satılık", "reklam", "ucuz fiyat", "hesap sat", "takipçi", 
 const PAVYON_EMOJIS = ["🔥", "💸", "🥂", "🌹", "💃", "👑", "🚬", "🥃"];
 
 export function GlobalChat() {
-    const { nickname, avatarUrl, id: userId } = useUserStore();
+    const { nickname, avatarUrl, id: userId, blockedUsers } = useUserStore();
     const [msg, setMsg] = useState("");
     type ChatMessage = { id: number; sender: string; content: string; isSystem?: boolean; avatar?: string };
     const [messages, setMessages] = useState<ChatMessage[]>([
         { id: 1, sender: "Sistem", isSystem: true, content: "Pavyon'a hoş geldiniz! Lütfen küfür, reklam ve spam yapmayınız. Kurallara uymayanlar kapıya konulur." }
     ]);
+
+    // Filtered messages for display
+    const visibleMessages = messages.filter(m => !blockedUsers.includes(m.sender));
 
     // Anti-spam & Ban State
     const [lastSentMsg, setLastSentMsg] = useState("");
@@ -106,7 +109,7 @@ export function GlobalChat() {
 
             {/* Chat Listesi */}
             <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 scrollbar-thin scrollbar-thumb-white/10">
-                {messages.map((m) => (
+                {visibleMessages.map((m) => (
                     <div key={m.id} className={`flex gap-3 text-sm ${m.isSystem ? 'justify-center my-2' : ''} animate-in fade-in slide-in-from-bottom-2`}>
                         {m.isSystem ? (
                             <span className="text-neon-pink text-xs bg-neon-pink/10 px-4 py-2 rounded-full text-center border border-neon-pink/20 max-w-[85%]">

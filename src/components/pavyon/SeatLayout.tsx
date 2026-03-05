@@ -35,6 +35,7 @@ export function SeatLayout() {
     // Global Store
     const joinedTableId = useUserStore(state => state.joinedTableId);
     const setJoinedTableId = useUserStore(state => state.setJoinedTableId);
+    const blockedUsers = useUserStore(state => state.blockedUsers);
 
     const [hoveredUser, setHoveredUser] = useState<{ tableId: number, seatIndex: number } | null>(null);
 
@@ -101,6 +102,10 @@ export function SeatLayout() {
                 // If this is the active table, also add to chat panel
                 if (joinedTableId === randomTable.id) {
                     const mockName = MOCK_USER_NAMES[(randomTable.id + randomSeat) % MOCK_USER_NAMES.length];
+
+                    // Don't show messages from blocked users
+                    if (blockedUsers.includes(mockName)) return;
+
                     const avatarUrl = `/avatars/${randomSeat % 2 === 0 ? 'female' : 'male'}_avatar_${(randomSeat % 6) + 1}.png`;
                     setTableMessages(prev => [...prev, {
                         id: Date.now(),
@@ -329,7 +334,7 @@ export function SeatLayout() {
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-white/10 min-h-0">
-                        {tableMessages.map((msg) => (
+                        {tableMessages.filter(m => !blockedUsers.includes(m.sender)).map((msg) => (
                             <div key={msg.id} className={`flex ${msg.isMe ? 'justify-end' : 'justify-start'} text-sm`}>
                                 {!msg.isMe && msg.avatar && (
                                     <img src={msg.avatar} alt={msg.sender} className="w-6 h-6 rounded-full mr-2 mt-1 border border-white/20 object-cover" />

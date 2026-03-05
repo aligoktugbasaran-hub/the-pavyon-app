@@ -10,12 +10,15 @@ export function NotificationMenu() {
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     const notifications = useUserStore(state => state.notifications);
+    const blockedUsers = useUserStore(state => state.blockedUsers);
     const removeNotification = useUserStore(state => state.removeNotification);
     const clearNotifications = useUserStore(state => state.clearNotifications);
     const setJoinedTableId = useUserStore(state => state.setJoinedTableId);
     const addFriend = useUserStore(state => state.addFriend);
 
-    const unreadCount = notifications.length;
+    // Filter notifications from blocked users
+    const filteredNotifications = notifications.filter(n => !blockedUsers.includes(n.user));
+    const unreadCount = filteredNotifications.length;
 
     useEffect(() => {
         setMounted(true);
@@ -70,14 +73,14 @@ export function NotificationMenu() {
 
                 {/* List */}
                 <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 p-2">
-                    {notifications.length === 0 ? (
+                    {filteredNotifications.length === 0 ? (
                         <div className="text-center py-8 text-white/40 text-sm">
                             <Bell className="w-8 h-8 mx-auto mb-2 opacity-20" />
                             Yeni bildiriminiz yok.
                         </div>
                     ) : (
                         <div className="flex flex-col gap-2">
-                            {notifications.map((notif) => (
+                            {filteredNotifications.map((notif) => (
                                 <div key={notif.id} className="flex items-start gap-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-colors group">
                                     {/* Avatar */}
                                     <div className="relative shrink-0">

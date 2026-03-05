@@ -52,15 +52,9 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
 
-      - name: 📦 Package simulator app
-        run: |
-          mkdir -p artifacts
-          cd ios/App/build/Build/Products/Release-iphonesimulator
-          zip -r $GITHUB_WORKSPACE/artifacts/ThePavyon-simulator.zip *.app
-
       - name: ⬆️ Upload simulator build
         uses: actions/upload-artifact@v4
         with:
-          name: ThePavyon-iOS-Simulator
-          path: artifacts/
+          name: ThePavyon-Simulator
+          path: ios/App/build/Build/Products/Release-iphonesimulator/App.app
           retention-days: 30
