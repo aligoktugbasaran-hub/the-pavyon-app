@@ -1,5 +1,5 @@
-name: iOS Build v5.1
-# Triggering fresh build for Appetize.io fix
+name: iOS Build v5.2
+# Refresh build trigger
 
 on:
   push:
