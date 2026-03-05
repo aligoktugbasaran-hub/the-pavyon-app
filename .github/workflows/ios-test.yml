@@ -1,0 +1,60 @@
+name: iOS Test Build
+# Manual and Auto Trigger
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: 🔍 Debug Version
+        run: node -v && npm -v
+
+      - name: 📦 Install Deps
+        run: npm ci
+
+      - name: 🏗️ Build Web
+        run: npm run build
+
+      - name: 🔄 Capacitor Sync
+        run: ./node_modules/.bin/cap sync ios
+
+      - name: 🔐 Setup signing (No Podfile - SPM)
+        run: |
+          cd ios/App
+          # Disable automatic signing for unsigned build
+          sed -i '' 's/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = "";/' App.xcodeproj/project.pbxproj
+          sed -i '' 's/CODE_SIGN_IDENTITY = .*/CODE_SIGN_IDENTITY = "";/' App.xcodeproj/project.pbxproj
+          sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/' App.xcodeproj/project.pbxproj
+
+      - name: 🛠️ Build iOS ( simulator - no signing needed)
+        run: |
+          cd ios/App
+          xcodebuild \
+            -project App.xcodeproj \
+            -scheme App \
+            -sdk iphonesimulator \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: ⬆️ Upload simulator build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ThePavyon-Simulator
+          path: ios/App/build/Build/Products/Release-iphonesimulator/App.app
+          retention-days: 30
