@@ -22,6 +22,15 @@ The Pavyon is designed for anonymous social interaction. We only collect:
 * Profile pictures (uploaded by you).
 * Basic device information for push notifications.
 
-## 3. Contact Us
+## 3. Data Deletion Request
+You have the right to request the deletion of your personal data at any time. Since The Pavyon is designed for anonymity, deleting your data will result in the permanent removal of your:
+* Nickname
+* Uploaded profile pictures
+* Friend lists and blocked users list
+* Chat history associated with your unique ID
+
+To request data deletion, please contact us at **info@thepavyon.app** with your nickname and a request for account removal. We will process your request within 48-72 hours.
+
+## 4. Contact Us
 If you have any questions about this Privacy Policy, You can contact us at:
 * By email: info@thepavyon.app
