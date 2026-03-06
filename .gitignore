@@ -52,6 +52,6 @@ ios/App/Pods/
 ios/App/App/build/
 ios/.build/
 
-# Keystore (never commit this!)
-*.keystore
-*.jks
+# Keystore (included for GitHub Actions build)
+# *.keystore
+# *.jks
