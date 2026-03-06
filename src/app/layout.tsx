@@ -24,6 +24,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr" className="dark">
+      <head>
+        {/* Inline safety styles to prevent white screen on Android if CSS fails to load */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+          :root { --color-pavyon-bg: #05000a; }
+          html, body { 
+            background-color: #05000a !important; 
+            color: #ffffff !important;
+            margin: 0; padding: 0;
+            overflow-x: hidden;
+            font-family: sans-serif;
+          }
+          .min-h-screen { min-height: 100vh; }
+          .bg-pavyon-bg { background-color: #05000a; }
+          .fixed-bg {
+            position: fixed; inset: 0; z-index: -10;
+            background: radial-gradient(circle at center, #0a0011 0%, #05000a 100%);
+          }
+        `}} />
+      </head>
       <body
         className={`${inter.variable} ${playfair.variable} antialiased text-white`}
       >

@@ -22,12 +22,14 @@ export default function Home() {
           animate={{ rotate: [0, 5, 0, -5, 0] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           className="w-32 h-32 mb-6 rounded-full border-2 border-gold-500/50 flex items-center justify-center p-1 relative shadow-[0_0_30px_rgba(255,215,0,0.3)]"
+          style={{ width: '128px', height: '128px', overflow: 'hidden' }}
         >
           <div className="w-full h-full rounded-full bg-gradient-to-tr from-gold-500/20 to-neon-pink/10 blur-xl absolute -z-10" />
           <img
             src="/logo.png"
             alt="The Pavyon Logo"
             className="w-24 h-24 object-contain relative z-10"
+            style={{ width: '96px', height: '96px', objectFit: 'contain' }}
             onError={(e) => {
               // Fallback if image fails
               e.currentTarget.src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
@@ -35,10 +37,13 @@ export default function Home() {
           />
         </motion.div>
 
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white neon-text-pink leading-tight font-heading">
+        <h1
+          className="text-5xl md:text-7xl font-bold mb-6 text-white neon-text-pink leading-tight font-heading"
+          style={{ color: 'white', textShadow: '0 0 10px #ff007f' }}
+        >
           The Pavyon'a <br /> Hoş Geldiniz
         </h1>
-        <p className="text-lg md:text-xl text-white/70 mb-12 max-w-xl mx-auto font-light leading-relaxed">
+        <p className="text-lg md:text-xl text-white/70 mb-12 max-w-xl mx-auto font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
           Türkiye'nin ilk ve tek lüks sanal pavyon deneyimi. Gizliliğini koru,
           hediyeler gönder, en popüler sen ol.
         </p>

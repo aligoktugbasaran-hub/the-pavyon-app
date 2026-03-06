@@ -62,6 +62,15 @@ jobs:
       - name: Build Web
         run: npm run build
 
+      - name: Fix Android Assets Prefix
+        run: |
+          # Rename _next to assets_next to avoid underscore folder issues on Android webview
+          cd out
+          mv _next assets_next || true
+          # Replace all references in HTML files (requires perl for multi-platform friendliness)
+          grep -rl "_next" . | xargs sed -i 's/_next/assets_next/g' || true
+          cd ..
+
       - name: Capacitor Sync
         run: npx cap sync android
 
