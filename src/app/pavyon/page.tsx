@@ -57,7 +57,7 @@ export default function PavyonPage() {
                     </div>
                     <button
                         onClick={() => setIsCreditModalOpen(true)}
-                        className="text-sm border border-neon-pink rounded-full px-4 py-1.5 hover:bg-neon-pink transition-colors font-bold"
+                        className="text-xs md:text-sm border border-neon-pink rounded-full px-3 md:px-4 py-1.5 hover:bg-neon-pink transition-colors font-bold mr-2 md:mr-0"
                     >
                         Kredi Yükle
                     </button>

@@ -44,7 +44,7 @@ export default function PavyonAuthPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0a0510] relative overflow-hidden flex flex-col items-center justify-center p-4 font-sans text-white">
+        <div className="min-h-screen bg-[#0a0510] relative overflow-hidden flex flex-col items-center justify-center p-4 font-sans text-white" style={{ backgroundColor: '#0a0510', color: 'white' }}>
             {/* Arka plan ışık efektleri (Glow) */}
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#ff007f] rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse"></div>
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#ffd700] rounded-full mix-blend-screen filter blur-[150px] opacity-10"></div>
@@ -55,8 +55,10 @@ export default function PavyonAuthPage() {
                     // Yeni üretilen lüks pavyon logosu
                     src="/logo.png"
                     alt="The Pavyon Icon"
-                    className="w-48 h-48 md:w-56 md:h-56 object-contain drop-shadow-[0_0_20px_rgba(255,215,0,0.6)] mb-2 mix-blend-lighten"
+                    className="w-40 h-40 md:w-56 md:h-56 object-contain drop-shadow-[0_0_20px_rgba(255,215,0,0.6)] mb-2 mix-blend-lighten"
                     style={{
+                        width: '160px',
+                        height: '160px',
                         WebkitMaskImage: 'radial-gradient(circle, black 40%, transparent 75%)',
                         maskImage: 'radial-gradient(circle, black 40%, transparent 75%)'
                     }}
@@ -109,8 +111,16 @@ export default function PavyonAuthPage() {
                         </div>
 
                         <button
-                            onClick={() => setStep(2)}
-                            className="w-full mt-6 bg-gradient-to-r from-[#ff007f] to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(255,0,127,0.4)] transition-all transform hover:scale-[1.02]"
+                            onClick={() => {
+                                if (nickname.trim() === "") {
+                                    alert("Lütfen bir lakap giriniz!");
+                                } else {
+                                    setStep(2);
+                                }
+                            }}
+                            disabled={nickname.trim() === ""}
+                            className={`w-full mt-6 py-3 px-6 rounded-xl font-bold transition-all transform flex items-center justify-center gap-2 ${nickname.trim() === "" ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-[#ff007f] to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white shadow-[0_0_20px_rgba(255,0,127,0.4)] hover:scale-[1.02]'}`}
+                            style={nickname.trim() === "" ? { backgroundColor: '#374151' } : { background: 'linear-gradient(to right, #ff007f, #7e22ce)' }}
                         >
                             Karakterimi Seç
                         </button>
