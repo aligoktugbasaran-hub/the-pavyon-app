@@ -30,7 +30,7 @@ jobs:
       - name: Build App
         run: |
           cd ios/App
-          xcodebuild -project App.xcodeproj -scheme App -sdk iphonesimulator -configuration Release ONLY_ACTIVE_ARCH=NO -derivedDataPath build CODE_SIGNING_ALLOWED=NO
+          xcodebuild -project App.xcodeproj -scheme App -sdk iphonesimulator -destination "generic/platform=iOS Simulator" ARCHS="x86_64 arm64" ONLY_ACTIVE_ARCH=NO -configuration Release -derivedDataPath build CODE_SIGNING_ALLOWED=NO
 
       - name: Package for Appetize
         run: |
