@@ -8,10 +8,9 @@ interface CreditModalProps {
 
 const PACKAGES = [
     { id: 'bronze', name: 'Bronz', amount: 100, price: 100, bonus: 0, color: 'from-orange-700 to-amber-900', icon: '🥉' },
-    { id: 'silver', name: 'Gümüş', amount: 500, price: 500, bonus: 50, color: 'from-slate-400 to-gray-600', icon: '🥈' },
-    { id: 'gold', name: 'Altın', amount: 1000, price: 1000, bonus: 150, color: 'from-yellow-400 to-yellow-700', icon: '🥇', popular: true },
-    { id: 'diamond', name: 'Elmas', amount: 5000, price: 5000, bonus: 1000, color: 'from-cyan-400 to-blue-700', icon: '💎' },
-    { id: 'king', name: 'Pavyon King', amount: 50000, price: 50000, bonus: 15000, color: 'from-pink-500 to-red-700', icon: '👑' },
+    { id: 'gold', name: 'Altın', amount: 1000, price: 1000, bonus: 200, color: 'from-yellow-400 to-yellow-700', icon: '🥇', popular: true },
+    { id: 'diamond', name: 'Elmas', amount: 5000, price: 5000, bonus: 1500, color: 'from-cyan-400 to-blue-700', icon: '💎' },
+    { id: 'king', name: 'Pavyon King', amount: 50000, price: 50000, bonus: 20000, color: 'from-pink-500 to-red-700', icon: '👑' },
 ];
 
 const PAYMENT_METHODS = [
@@ -23,7 +22,7 @@ const PAYMENT_METHODS = [
 ];
 
 export function CreditModal({ isOpen, onClose }: CreditModalProps) {
-    const [selectedPackage, setSelectedPackage] = useState(PACKAGES[2].id);
+    const [selectedPackage, setSelectedPackage] = useState(PACKAGES[1].id); // Gold is now index 1
     const [selectedMethod, setSelectedMethod] = useState(PAYMENT_METHODS[0].id);
 
     if (!isOpen) return null;
@@ -104,17 +103,17 @@ export function CreditModal({ isOpen, onClose }: CreditModalProps) {
                         </div>
                     </div>
 
-                    <div className="mt-8 mb-6 md:mb-0">
-                        <div className="flex justify-between items-center mb-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div className="mt-4 sm:mt-8 mb-4 md:mb-0 shrink-0">
+                        <div className="flex justify-between items-center mb-3 p-3 bg-white/5 rounded-xl border border-white/10">
                             <div>
-                                <div className="text-white/50 text-xs">Toplam Ödenecek Tutar</div>
-                                <div className="text-2xl font-black text-white">{currentPkg?.price} TL</div>
-                                <div className="text-green-400 text-xs font-bold">Hesaba Geçecek: {(currentPkg?.amount ?? 0) + (currentPkg?.bonus ?? 0)} ₺</div>
+                                <div className="text-white/50 text-[10px] uppercase font-bold">Toplam Tutar</div>
+                                <div className="text-xl font-black text-white">{currentPkg?.price} TL</div>
+                                <div className="text-green-400 text-[10px] font-bold">Bakiye: {(currentPkg?.amount ?? 0) + (currentPkg?.bonus ?? 0)} ₺</div>
                             </div>
-                            <ShieldCheck className="w-10 h-10 text-green-500/50" />
+                            <ShieldCheck className="w-8 h-8 text-green-500/50" />
                         </div>
-                        <button className="w-full group py-4 rounded-xl flex items-center justify-center gap-3 bg-gradient-to-r from-neon-pink to-purple-600 hover:from-neon-pink/80 hover:to-purple-500 text-white font-bold text-lg transition-all shadow-[0_0_20px_rgba(255,0,127,0.4)]">
-                            DEVAM ET <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        <button className="w-full group py-3 rounded-xl flex items-center justify-center gap-3 bg-gradient-to-r from-neon-pink to-purple-600 hover:from-neon-pink/80 hover:to-purple-500 text-white font-bold text-base transition-all shadow-[0_0_20px_rgba(255,0,127,0.4)]">
+                            DEVAM ET <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </button>
                     </div>
                 </div>
