@@ -203,30 +203,37 @@ export function SeatLayout() {
         const totalUsers = activeTable.currentUsers + 1;
 
         return (
-            <div className="absolute inset-0 flex flex-col md:flex-row bg-[#0a0011] overflow-hidden animate-in fade-in duration-500 rounded-2xl z-50">
+            <div className="absolute inset-0 flex flex-col md:flex-row bg-[#080010] overflow-hidden animate-in fade-in duration-500 rounded-2xl z-50">
+                {/* Fixed Exit Button for Mobile — Hapsolmayı engellemek için */}
+                <button
+                    onClick={handleLeaveTable}
+                    className="absolute top-4 left-4 z-[100] md:hidden bg-red-600/20 hover:bg-red-600/40 border border-red-500/50 p-2 rounded-full text-red-500 transition-all backdrop-blur-md"
+                    title="Masadan Kalk"
+                >
+                    <ArrowLeft className="w-5 h-5 shadow-lg" />
+                </button>
                 {/* Background effects for focused view */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,127,0.1),transparent_70%)] opacity-30 pointer-events-none" />
 
-                {/* Sol Taraf: Masanın Büyük Görünümü */}
-                <div className="flex-1 flex flex-col items-center justify-center relative p-4 md:p-8 min-h-[40vh] md:min-h-0">
-                    <div className="relative w-full max-w-sm aspect-square flex items-center justify-center scale-90 md:scale-110 lg:scale-125">
+                <div className="flex-1 flex flex-col items-center justify-center relative p-3 md:p-8 min-h-[35vh] md:min-h-0 pt-16 md:pt-8 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
+                    <div className="relative w-full max-w-[280px] md:max-w-sm aspect-square flex items-center justify-center scale-95 md:scale-110 lg:scale-125">
                         {/* Kırmızı Hilal Şeklinde Koltuk (Sofa) */}
                         <div
-                            className="absolute rounded-full border-red-800/95 shadow-[inset_0_10px_40px_rgba(100,0,0,0.8),0_20px_50px_rgba(220,38,38,0.3)] z-0 flex items-center justify-center before:absolute before:inset-0 before:rounded-full before:border-[3px] before:border-red-500/30 before:border-t-transparent animate-pulse"
+                            className="absolute rounded-full border-red-900 shadow-[inset_0_10px_30px_rgba(80,0,0,0.9),0_15px_40px_rgba(220,38,38,0.2)] z-0 flex items-center justify-center before:absolute before:inset-0 before:rounded-full before:border-[2px] before:border-red-500/30 before:border-t-transparent after:absolute after:inset-1 after:rounded-full after:border-[1px] after:border-white/5 after:border-t-transparent"
                             style={{
-                                width: isVip ? '280px' : '220px',
-                                height: isVip ? '180px' : '160px',
-                                borderWidth: isVip ? '40px' : '35px',
+                                width: isVip ? '260px' : '200px',
+                                height: isVip ? '160px' : '140px',
+                                borderWidth: isVip ? '35px' : '30px',
                                 borderTopColor: 'transparent',
-                                transform: 'translateY(15px)'
+                                transform: 'translateY(10px)'
                             }}
                         >
                         </div>
 
                         {/* Fiziksel Masa Büyütülmüş  */}
-                        <div className={`${isVip ? 'w-40 h-28 rounded-3xl' : 'w-24 h-24 rounded-full'} border-[3px] flex flex-col items-center justify-center shadow-[0_0_40px_rgba(0,0,0,0.9)] z-10 ${isVip ? 'bg-gradient-to-br from-bordeaux-900 to-black border-gold-400' : 'bg-gradient-to-br from-purple-900/60 to-black border-neon-pink/80'} `}>
-                            <span className="text-3xl drop-shadow-lg opacity-90">{activeTable.icon}</span>
-                            <span className={`text-[8px] font-black mt-1 uppercase tracking-widest text-center mx-2 ${isVip ? 'text-gold-400' : 'text-white'} leading-tight`}>{activeTable.name} MS.</span>
+                        <div className={`${isVip ? 'w-36 h-24 rounded-3xl' : 'w-20 h-20 rounded-full'} border-[2px] flex flex-col items-center justify-center shadow-[0_0_40px_rgba(0,0,0,1)] z-10 ${isVip ? 'bg-black border-gold-500/50' : 'bg-black border-neon-pink/50'} `}>
+                            <span className="text-2xl drop-shadow-lg opacity-95">{activeTable.icon}</span>
+                            <span className={`text-[7px] font-black mt-1 uppercase tracking-tighter text-center mx-1 ${isVip ? 'text-gold-400' : 'text-neon-pink'} leading-none`}>{activeTable.name} MS.</span>
                         </div>
 
                         {/* Oturan Avatarlar */}
@@ -488,9 +495,15 @@ export function SeatLayout() {
                                 </div>
 
                                 {/* Fiziksel Masa / Loca Çizimi */}
-                                <div className={`${isVip ? 'w-32 h-20 rounded-3xl' : 'w-20 h-20 rounded-full'} border-[3px] flex flex-col items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.8)] z-10 transition-all ${displayUsers >= table.capacity ? 'bg-red-900/30 border-red-500/30' : (isVip ? 'bg-black border-gold-500/20 group-hover:border-gold-500/60' : 'bg-black border-neon-pink/20 group-hover:border-neon-pink/60')} `}>
-                                    <span className="text-2xl drop-shadow-lg opacity-80 group-hover:scale-110 transition-transform">{table.icon}</span>
-                                    <span className={`text-[8px] font-black mt-1 uppercase tracking-widest text-center leading-tight mx-2 ${isVip ? 'text-gold-400' : 'text-neon-pink'} `}>{table.name}</span>
+                                <div className={`${isVip ? 'w-32 h-20 rounded-3xl' : 'w-20 h-20 rounded-full'} border-[2px] flex flex-col items-center justify-center shadow-[0_0_20px_rgba(0,0,0,1)] z-10 transition-all ${displayUsers >= (table.capacity ?? 10) ? 'bg-red-900/30 border-red-500/30' : (isVip ? 'bg-black border-gold-500/30 group-hover:border-gold-500/80' : 'bg-black border-neon-pink/30 group-hover:border-neon-pink/80')} `}>
+                                    <span className="text-2xl drop-shadow-lg opacity-90 group-hover:scale-110 transition-transform">{table.icon}</span>
+                                    <span className={`text-[8px] font-black mt-0.5 uppercase tracking-tighter text-center leading-tight mx-2 ${isVip ? 'text-gold-400' : 'text-neon-pink'} `}>{table.name}</span>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); handleJoinTable(table.id, table.currentUsers, table.capacity); }}
+                                        className="mt-1 px-3 py-0.5 bg-white/10 hover:bg-white/20 rounded-full text-[7px] font-black uppercase text-white border border-white/20"
+                                    >
+                                        OTUR
+                                    </button>
                                 </div>
 
                                 {/* Oturan Avatarlar ve Sandalyeler */}

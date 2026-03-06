@@ -31,8 +31,8 @@ export function CreditModal({ isOpen, onClose }: CreditModalProps) {
     const currentPkg = PACKAGES.find(p => p.id === selectedPackage);
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
-            <div className="bg-gradient-to-br from-black to-zinc-900 border border-white/10 rounded-3xl w-full max-w-4xl shadow-[0_0_50px_rgba(255,0,127,0.15)] flex flex-col md:flex-row overflow-hidden relative">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-4 overflow-y-auto animate-in fade-in duration-300">
+            <div className="bg-gradient-to-br from-[#0d0011] to-black border-0 md:border md:border-white/10 rounded-none md:rounded-3xl w-full max-w-4xl min-h-screen md:min-h-0 shadow-[0_0_50px_rgba(255,0,127,0.15)] flex flex-col md:flex-row overflow-hidden relative">
 
                 {/* Kapat Butonu */}
                 <button
@@ -104,12 +104,12 @@ export function CreditModal({ isOpen, onClose }: CreditModalProps) {
                         </div>
                     </div>
 
-                    <div className="mt-8">
+                    <div className="mt-8 mb-6 md:mb-0">
                         <div className="flex justify-between items-center mb-4 p-4 bg-white/5 rounded-xl border border-white/10">
                             <div>
                                 <div className="text-white/50 text-xs">Toplam Ödenecek Tutar</div>
                                 <div className="text-2xl font-black text-white">{currentPkg?.price} TL</div>
-                                <div className="text-green-400 text-xs font-bold">Hesaba Geçecek: {currentPkg!.amount + currentPkg!.bonus} ₺</div>
+                                <div className="text-green-400 text-xs font-bold">Hesaba Geçecek: {(currentPkg?.amount ?? 0) + (currentPkg?.bonus ?? 0)} ₺</div>
                             </div>
                             <ShieldCheck className="w-10 h-10 text-green-500/50" />
                         </div>
