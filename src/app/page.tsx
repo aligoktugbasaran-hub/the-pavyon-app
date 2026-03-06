@@ -19,12 +19,20 @@ export default function Home() {
         className="text-center z-10 max-w-3xl flex flex-col items-center mt-20"
       >
         <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="w-24 h-24 mb-6 rounded-full border border-gold-500/30 flex items-center justify-center p-2 relative"
+          animate={{ rotate: [0, 5, 0, -5, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="w-32 h-32 mb-6 rounded-full border-2 border-gold-500/50 flex items-center justify-center p-1 relative shadow-[0_0_30px_rgba(255,215,0,0.3)]"
         >
-          <div className="w-full h-full rounded-full bg-gradient-to-tr from-gold-500/20 to-neon-pink/20 blur-md absolute" />
-          <Sparkles className="w-10 h-10 text-gold-400 relative z-10" />
+          <div className="w-full h-full rounded-full bg-gradient-to-tr from-gold-500/20 to-neon-pink/10 blur-xl absolute -z-10" />
+          <img
+            src="/logo.png"
+            alt="The Pavyon Logo"
+            className="w-24 h-24 object-contain relative z-10"
+            onError={(e) => {
+              // Fallback if image fails
+              e.currentTarget.src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+            }}
+          />
         </motion.div>
 
         <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white neon-text-pink leading-tight font-heading">
