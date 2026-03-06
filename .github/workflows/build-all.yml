@@ -30,13 +30,13 @@ jobs:
       - name: Build App
         run: |
           cd ios/App
-          xcodebuild -project App.xcodeproj -scheme App -sdk iphonesimulator -configuration Release -derivedDataPath build CODE_SIGNING_ALLOWED=NO
+          xcodebuild -project App.xcodeproj -scheme App -sdk iphonesimulator -configuration Release ONLY_ACTIVE_ARCH=NO -derivedDataPath build CODE_SIGNING_ALLOWED=NO
 
       - name: Package for Appetize
         run: |
           mkdir -p artifacts
           cd ios/App/build/Build/Products/Release-iphonesimulator
-          zip -r $GITHUB_WORKSPACE/artifacts/ThePavyon-iOS.zip App.app
+          ditto -c -k --sequesterRsrc --keepParent App.app $GITHUB_WORKSPACE/artifacts/ThePavyon-iOS.zip
 
       - name: Upload iOS
         uses: actions/upload-artifact@v4
