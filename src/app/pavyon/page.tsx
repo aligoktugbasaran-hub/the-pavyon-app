@@ -12,7 +12,7 @@ import { UserProfileMenu } from "@/components/pavyon/UserProfileMenu";
 import { NotificationMenu } from "@/components/pavyon/NotificationMenu";
 import { PublicProfileModal } from "@/components/pavyon/PublicProfileModal";
 import { CreditModal } from "@/components/pavyon/CreditModal";
-import { MessageSquare, Trophy, Sparkles, X, Heart } from "lucide-react";
+import { MessageSquare, Trophy, Sparkles, X } from "lucide-react";
 
 export default function PavyonPage() {
     const { isLoggedIn, nickname, avatarUrl, credits } = useUserStore();

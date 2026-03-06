@@ -486,7 +486,7 @@ export function SeatLayout() {
                                     </div>
                                     <button
                                         onClick={() => handleJoinTable(table.id, table.currentUsers, table.capacity)}
-                                        className={`px - 3 py - 1 rounded - full text - xs font - bold transition - transform hover: scale - 105 ${table.currentUsers >= table.capacity ? 'bg-gray-600 text-white cursor-not-allowed' : 'bg-neon-pink text-white'} `}
+                                        className={`px-3 py-1 rounded-full text-xs font-bold transition-transform hover:scale-105 ${table.currentUsers >= table.capacity ? 'bg-gray-600 text-white cursor-not-allowed' : 'bg-neon-pink text-white'}`}
                                         disabled={table.currentUsers >= table.capacity}
                                     >
                                         Masaya Otur
