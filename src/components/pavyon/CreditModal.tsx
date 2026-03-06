@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, CreditCard, Smartphone, Building2, Wallet, Flame, ArrowRight, ShieldCheck } from "lucide-react";
+import { X, CreditCard, Smartphone, Building2, Wallet, Flame, ArrowRight, ShieldCheck, ArrowLeft } from "lucide-react";
 
 interface CreditModalProps {
     isOpen: boolean;
@@ -30,8 +30,19 @@ export function CreditModal({ isOpen, onClose }: CreditModalProps) {
     const currentPkg = PACKAGES.find(p => p.id === selectedPackage);
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-4 overflow-y-auto animate-in fade-in duration-300">
-            <div className="bg-gradient-to-br from-[#0d0011] to-black border-0 md:border md:border-white/10 rounded-none md:rounded-3xl w-full max-w-4xl min-h-screen md:min-h-0 shadow-[0_0_50px_rgba(255,0,127,0.15)] flex flex-col md:flex-row overflow-hidden relative">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-4 overflow-y-auto animate-in fade-in duration-300 scrollbar-hide">
+            {/* Top Fixed Header for Mobile */}
+            <div className="md:hidden fixed top-0 inset-x-0 h-16 bg-black/80 backdrop-blur-md border-b border-white/10 z-[250] flex items-center px-6 justify-between">
+                <button
+                    onClick={onClose}
+                    className="flex items-center gap-2 text-white/70 hover:text-white font-bold text-sm"
+                >
+                    <ArrowLeft className="w-5 h-5" /> GERİ DÖN
+                </button>
+                <div className="text-gold-400 font-black tracking-tighter text-sm uppercase">Kredi Yükle</div>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#0d0011] to-black border-0 md:border md:border-white/10 rounded-none md:rounded-3xl w-full max-w-4xl min-h-screen md:min-h-0 shadow-[0_0_50px_rgba(255,0,127,0.15)] flex flex-col md:flex-row overflow-hidden relative pt-16 md:pt-0">
 
                 {/* Kapat Butonu */}
                 <button

@@ -131,14 +131,14 @@ export function SeatLayout() {
             const startAngle = 0;
             const angle = total === 1 ? Math.PI / 2 : startAngle + (index / (total - 1)) * angleSpan;
 
-            // Shrink for better chat space on mobile
-            const radiusX = isVip ? 100 : 80;
-            const radiusY = isVip ? 55 : 45;
-            const yOffset = -20; // Move up
+            // Even smaller for maximum chat space
+            const radiusX = isVip ? 80 : 65;
+            const radiusY = isVip ? 45 : 35;
+            const yOffset = -45; // Move much further up
 
             return {
-                left: `calc(50% + ${Math.cos(angle) * radiusX}px - 16px)`, // 16px is half of w-8
-                top: `calc(50% + ${Math.sin(angle) * radiusY + yOffset}px - 16px)`,
+                left: `calc(50% + ${Math.cos(angle) * radiusX}px - 14px)`, // 14px is half of w-7
+                top: `calc(50% + ${Math.sin(angle) * radiusY + yOffset}px - 14px)`,
             };
         } else {
             const radiusX = (isVip ? 60 : 45) * scale;
@@ -215,25 +215,24 @@ export function SeatLayout() {
                 {/* Background effects for focused view */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,127,0.1),transparent_70%)] opacity-30 pointer-events-none" />
 
-                <div className="flex-1 flex flex-col items-center justify-start relative p-3 md:p-8 min-h-[30vh] md:min-h-0 pt-20 md:pt-8 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
-                    <div className="relative w-full max-w-[240px] md:max-w-sm aspect-square flex items-center justify-center scale-90 md:scale-110 lg:scale-125 -mt-4 md:mt-0">
+                <div className="flex-1 flex flex-col items-center justify-start relative p-3 md:p-8 min-h-[20vh] md:min-h-0 pt-24 md:pt-8 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
+                    <div className="relative w-full max-w-[200px] md:max-w-sm aspect-square flex items-center justify-center scale-75 md:scale-110 lg:scale-125 -mt-10 md:mt-0">
                         {/* Kırmızı Hilal Şeklinde Koltuk (Sofa) */}
                         <div
                             className="absolute rounded-full border-red-900 shadow-[inset_0_10px_30px_rgba(80,0,0,0.9),0_15px_40px_rgba(220,38,38,0.2)] z-0 flex items-center justify-center before:absolute before:inset-0 before:rounded-full before:border-[2px] before:border-red-500/30 before:border-t-transparent after:absolute after:inset-1 after:rounded-full after:border-[1px] after:border-white/5 after:border-t-transparent"
                             style={{
-                                width: isVip ? '260px' : '200px',
-                                height: isVip ? '160px' : '140px',
-                                borderWidth: isVip ? '35px' : '30px',
+                                width: isVip ? '200px' : '150px',
+                                height: isVip ? '120px' : '100px',
+                                borderWidth: isVip ? '25px' : '20px',
                                 borderTopColor: 'transparent',
-                                transform: 'translateY(10px)'
+                                transform: 'translateY(-20px)'
                             }}
                         >
                         </div>
 
                         {/* Fiziksel Masa Büyütülmüş  */}
-                        <div className={`${isVip ? 'w-28 h-20 rounded-2xl' : 'w-16 h-16 rounded-full'} border-[2px] flex flex-col items-center justify-center shadow-[0_0_40px_rgba(0,0,0,1)] z-10 ${isVip ? 'bg-black border-gold-500/50' : 'bg-black border-neon-pink/50'} -mt-5`}>
-                            <span className="text-xl drop-shadow-lg opacity-95">{activeTable.icon}</span>
-                            <span className={`text-[6px] font-black mt-1 uppercase tracking-tighter text-center mx-1 ${isVip ? 'text-gold-400' : 'text-neon-pink'} leading-none`}>{activeTable.name}</span>
+                        <div className={`${isVip ? 'w-24 h-16 rounded-2xl' : 'w-12 h-12 rounded-full'} border-[1.5px] flex flex-col items-center justify-center shadow-[0_0_40px_rgba(0,0,0,1)] z-10 ${isVip ? 'bg-black border-gold-500/50' : 'bg-black border-neon-pink/50'} -mt-16`}>
+                            <span className="text-lg drop-shadow-lg opacity-95">{activeTable.icon}</span>
                         </div>
 
                         {/* Oturan Avatarlar */}
@@ -259,7 +258,7 @@ export function SeatLayout() {
                                             setHoveredUser(null);
                                         }
                                     }}
-                                    className={`absolute w-8 h-8 md:w-10 md:h-10 rounded-full border-[2.5px] transition-all cursor-${isOccupied && !isMySeat ? 'pointer' : 'default'} ${isOccupied ? `bg-cover bg-center shadow-2xl z-20 ${isMySeat ? 'border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.6)]' : (isVip ? 'neon-border-gold shadow-[0_0_10px_rgba(255,215,0,0.3)]' : 'neon-border-pink shadow-[0_0_10px_rgba(255,0,127,0.3)]')}` : 'border-white/5 bg-white/5 opacity-20 border-dashed z-0'} `}
+                                    className={`absolute w-7 h-7 md:w-10 md:h-10 rounded-full border-[2px] transition-all cursor-${isOccupied && !isMySeat ? 'pointer' : 'default'} ${isOccupied ? `bg-cover bg-center shadow-2xl z-20 ${isMySeat ? 'border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.6)]' : (isVip ? 'neon-border-gold shadow-[0_0_10px_rgba(255,215,0,0.3)]' : 'neon-border-pink shadow-[0_0_10px_rgba(255,0,127,0.3)]')}` : 'border-white/5 bg-white/5 opacity-20 border-dashed z-0'} `}
                                     style={{
                                         left: pos.left,
                                         top: pos.top,
@@ -302,7 +301,7 @@ export function SeatLayout() {
                 </div>
 
                 {/* Sağ Taraf: Masaya Özel Kurallı Chat - Expanded on Mobile */}
-                <div className="w-full h-[65%] md:h-full md:w-80 lg:w-96 border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden shrink-0 z-10 mt-0 md:mt-4 lg:mt-6 rounded-tr-2xl">
+                <div className="w-full h-[75%] md:h-full md:w-80 lg:w-96 border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden shrink-0 z-10 mt-0 md:mt-4 lg:mt-6 rounded-tr-2xl">
                     <div className="p-4 border-b border-white/10 bg-black/60 shadow-md flex items-center justify-between">
                         <div>
                             <h3 className="font-bold text-white flex items-center gap-2">
@@ -312,8 +311,8 @@ export function SeatLayout() {
                             <p className="text-[10px] text-white/50 mt-0.5">Genel ahlak kuralları geçerlidir.</p>
                         </div>
                         <div className="flex items-center gap-2">
-                            {/* Video Call Button — sadece özel/VIP lokalarda göster */}
-                            {isVip && (
+                            {/* Video Call Button — SADECE ÖZEL LOCADA (ID: 99) GÖSTER */}
+                            {joinedTableId === 99 && (
                                 <button
                                     onClick={() => {
                                         // Pick the first non-me occupant as demo target
@@ -323,9 +322,9 @@ export function SeatLayout() {
                                         setVideoCallTarget({ name: otherName, avatar: otherAvatar });
                                         setIsVideoCallOpen(true);
                                     }}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-neon-pink/10 hover:bg-neon-pink/20 border border-neon-pink/30 rounded-full text-neon-pink text-xs font-bold transition-all hover:shadow-[0_0_10px_rgba(255,0,127,0.3)]"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-neon-pink text-white border border-neon-pink/30 rounded-full text-xs font-bold animate-pulse shadow-[0_0_15px_rgba(255,0,127,0.5)]"
                                 >
-                                    <Video className="w-3.5 h-3.5" /> Görüntülü
+                                    <Video className="w-3.5 h-3.5" /> GÖRÜNTÜLÜ ARA
                                 </button>
                             )}
                             <span className="text-xs bg-white/10 px-2 py-1 rounded-full text-white/80 font-bold">{totalUsers} Kişi</span>
