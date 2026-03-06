@@ -12,7 +12,7 @@ import { UserProfileMenu } from "@/components/pavyon/UserProfileMenu";
 import { NotificationMenu } from "@/components/pavyon/NotificationMenu";
 import { PublicProfileModal } from "@/components/pavyon/PublicProfileModal";
 import { CreditModal } from "@/components/pavyon/CreditModal";
-import { MessageSquare, Trophy, Sparkles, X } from "lucide-react";
+import { MessageSquare, Trophy, Sparkles, X, Heart } from "lucide-react";
 
 export default function PavyonPage() {
     const { isLoggedIn, nickname, avatarUrl, credits } = useUserStore();
@@ -93,28 +93,47 @@ export default function PavyonPage() {
                     <LiveRadio />
 
                     <div className="grid grid-cols-2 gap-3 mb-1 shrink-0">
+                        {/* Bonkörler (Givers) */}
                         <div className="glass-panel rounded-xl p-3 border-gold-500/20">
                             <h4 className="text-[10px] font-bold text-gold-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                                <Trophy className="w-3 h-3" /> Kral (Top Veren)
+                                <Trophy className="w-3 h-3" /> Bonkörler
                             </h4>
                             <div className="flex gap-2 justify-center sm:justify-start">
-                                {[1, 2, 3].map(i => (
-                                    <div key={i} className="relative">
-                                        <img src={`/avatars/male_avatar_${i}.png`} className="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-gold-400 shadow-[0_0_10px_rgba(255,215,0,0.3)] object-cover" />
-                                        <div className="absolute -top-1 -right-1 bg-black text-[7px] px-1 rounded border border-gold-400 font-bold">{i}</div>
+                                {[
+                                    { id: 101, name: "Baron", avatar: "/avatars/male_avatar_1.png", age: 34 },
+                                    { id: 102, name: "Reis", avatar: "/avatars/male_avatar_2.png", age: 41 },
+                                    { id: 103, name: "Dayı", avatar: "/avatars/male_avatar_3.png", age: 45 }
+                                ].map((user, i) => (
+                                    <div
+                                        key={user.id}
+                                        className="relative cursor-pointer hover:scale-110 transition-transform active:scale-95"
+                                        onClick={() => setSelectedUserProfile(user)}
+                                    >
+                                        <img src={user.avatar} className="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-gold-400 shadow-[0_0_10px_rgba(255,215,0,0.3)] object-cover" />
+                                        <div className="absolute -top-1 -right-1 bg-black text-[7px] px-1 rounded border border-gold-400 font-bold">{i + 1}</div>
                                     </div>
                                 ))}
                             </div>
                         </div>
+
+                        {/* Ünlüler (Receivers) */}
                         <div className="glass-panel rounded-xl p-3 border-neon-pink/20">
                             <h4 className="text-[10px] font-bold text-neon-pink uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                                <Sparkles className="w-3 h-3" /> Kraliçe (Top Alan)
+                                <Sparkles className="w-3 h-3" /> Ünlüler
                             </h4>
                             <div className="flex gap-2 justify-center sm:justify-start">
-                                {[1, 2, 3].map(i => (
-                                    <div key={i} className="relative">
-                                        <img src={`/avatars/female_avatar_${i}.png`} className="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-neon-pink shadow-[0_0_10px_rgba(255,0,127,0.3)] object-cover" />
-                                        <div className="absolute -top-1 -right-1 bg-black text-[7px] px-1 rounded border border-neon-pink font-bold">{i}</div>
+                                {[
+                                    { id: 201, name: "Selin", avatar: "/avatars/female_avatar_1.png", age: 24 },
+                                    { id: 202, name: "Buse", avatar: "/avatars/female_avatar_2.png", age: 21 },
+                                    { id: 203, name: "Ceren", avatar: "/avatars/female_avatar_3.png", age: 23 }
+                                ].map((user, i) => (
+                                    <div
+                                        key={user.id}
+                                        className="relative cursor-pointer hover:scale-110 transition-transform active:scale-95"
+                                        onClick={() => setSelectedUserProfile(user)}
+                                    >
+                                        <img src={user.avatar} className="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-neon-pink shadow-[0_0_10px_rgba(255,0,127,0.3)] object-cover" />
+                                        <div className="absolute -top-1 -right-1 bg-black text-[7px] px-1 rounded border border-neon-pink font-bold">{i + 1}</div>
                                     </div>
                                 ))}
                             </div>
