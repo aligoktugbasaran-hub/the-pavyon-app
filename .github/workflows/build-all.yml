@@ -1,0 +1,85 @@
+name: Build All
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    name: Build iOS Simulator
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Deps
+        run: npm ci
+
+      - name: Build Web
+        run: npm run build
+
+      - name: Capacitor Sync
+        run: npx cap sync ios
+
+      - name: Build App
+        run: |
+          cd ios/App
+          xcodebuild -project App.xcodeproj -scheme App -sdk iphonesimulator -configuration Release -derivedDataPath build CODE_SIGNING_ALLOWED=NO
+
+      - name: Package for Appetize
+        run: |
+          mkdir -p artifacts
+          cd ios/App/build/Build/Products/Release-iphonesimulator
+          zip -r $GITHUB_WORKSPACE/artifacts/ThePavyon-iOS.zip App.app
+
+      - name: Upload iOS
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-Simulator-Appetize
+          path: artifacts/ThePavyon-iOS.zip
+
+  build-android:
+    name: Build Android Bundle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Deps
+        run: npm ci
+
+      - name: Build Web
+        run: npm run build
+
+      - name: Capacitor Sync
+        run: npx cap sync android
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Build Android Bundle
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew bundleRelease
+
+      - name: Upload Android
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android-Bundle
+          path: android/app/build/outputs/bundle/release/app-release.aab

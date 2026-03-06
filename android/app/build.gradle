@@ -18,7 +18,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("C:/Users/aytug/pavyon-release.keystore")
+            storeFile file("pavyon-release.keystore")
             storePassword "PavyonApp2024!"
             keyAlias "pavyon_key"
             keyPassword "PavyonApp2024!"
