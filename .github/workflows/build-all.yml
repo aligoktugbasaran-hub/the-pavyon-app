@@ -34,15 +34,14 @@ jobs:
 
       - name: Package for Appetize
         run: |
-          mkdir -p artifacts
-          cd ios/App/build/Build/Products/Release-iphonesimulator
-          ditto -c -k --sequesterRsrc --keepParent App.app $GITHUB_WORKSPACE/artifacts/ThePavyon-iOS.zip
-
+          mkdir -p artifacts/payload
+          cp -r ios/App/build/Build/Products/Release-iphonesimulator/App.app artifacts/payload/
+          
       - name: Upload iOS
         uses: actions/upload-artifact@v4
         with:
           name: iOS-Simulator-Appetize
-          path: artifacts/ThePavyon-iOS.zip
+          path: artifacts/payload/
 
   build-android:
     name: Build Android Bundle
@@ -72,14 +71,21 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
-      - name: Build Android Bundle
+      - name: Build Android Bundle & APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew bundleRelease
+          ./gradlew assembleRelease
 
-      - name: Upload Android
+      - name: Upload Android Bundle
         uses: actions/upload-artifact@v4
         with:
-          name: Android-Bundle
+          name: Android-Bundle-PlayConsole
           path: android/app/build/outputs/bundle/release/app-release.aab
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android-APK-BlueStacks
+          path: android/app/build/outputs/apk/release/app-release.apk
