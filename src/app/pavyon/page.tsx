@@ -28,7 +28,9 @@ export default function PavyonPage() {
     if (!isLoggedIn) return null; // Avoid hydration mismatch or flash
 
     return (
-        <div className="min-h-screen bg-pavyon-bg text-white flex flex-col p-4 md:p-6 gap-6 h-screen overflow-hidden">
+        <div className="min-h-screen bg-transparent text-white flex flex-col p-3 md:p-6 gap-4 md:gap-6 h-screen overflow-hidden relative">
+            {/* Background Grid Overlay */}
+            <div className="fixed inset-0 pavyon-grid pointer-events-none opacity-20 z-0" />
             {/* Top Navbar / User Profile Strip */}
             <header className="flex justify-between items-center glass-panel rounded-full px-6 py-3 shrink-0 relative z-20 gap-4">
                 <UserProfileMenu />

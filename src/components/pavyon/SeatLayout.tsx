@@ -127,35 +127,26 @@ export function SeatLayout() {
     // Helper to calculate circular/semicircular positions
     const getSeatPosition = (index: number, total: number, isVip: boolean, scale = 1, isFocused = false) => {
         if (isFocused) {
-            // Hilal (yarım ay) şeklinde diziliş için (sadece odaklanılmış masada)
-            // U şeklinde aşağıya doğru bir yay çizeceğiz. (0'dan 180 dereceye)
-            const angleSpan = Math.PI; // 180 derece
-            const startAngle = 0; // Sağdan başla
-
-            // Eğer tek bir kişi varsa tam ortaya oturt, yoksa açısal dağıt
+            const angleSpan = Math.PI;
+            const startAngle = 0;
             const angle = total === 1 ? Math.PI / 2 : startAngle + (index / (total - 1)) * angleSpan;
 
-            // Yarıçaplar tam olarak koltuğun kalınlığının merkezine (oturma aline) denk gelecek şekilde hesaplandı
-            // VIP Sofa: width 320, height 200, border 45 -> centerX = 160 - 22.5 = 137.5, centerY = 100 - 22.5 = 77.5
-            // Normal Sofa: width 260, height 180, border 40 -> centerX = 130 - 20 = 110, centerY = 90 - 20 = 70
-            const radiusX = isVip ? 137.5 : 110;
-            const radiusY = isVip ? 77.5 : 70;
-
-            // Koltuğun translateY(15px) ofseti var, avatarları da aynı oranda kaydırıyoruz
+            // Use vmin for responsive sizing on mobile
+            const radiusX = isVip ? 130 : 100;
+            const radiusY = isVip ? 70 : 60;
             const yOffset = 15;
 
             return {
-                left: `calc(50% + ${Math.cos(angle) * radiusX}px - 20px)`, // 20px avatarın yarısı (w-10 = 40px)
-                top: `calc(50% + ${Math.sin(angle) * radiusY + yOffset}px - 20px)`,
+                left: `calc(50% + ${Math.cos(angle) * radiusX}px - 18px)`, // 18px is approx half of w-9 (36px)
+                top: `calc(50% + ${Math.sin(angle) * radiusY + yOffset}px - 18px)`,
             };
         } else {
-            // Mekan düzenindeki normal dairesel/oval diziliş
-            const radiusX = (isVip ? 65 : 45) * scale;
-            const radiusY = (isVip ? 40 : 45) * scale;
+            const radiusX = (isVip ? 60 : 45) * scale;
+            const radiusY = (isVip ? 35 : 45) * scale;
             const angle = (index / total) * 2 * Math.PI - Math.PI / 2;
             return {
-                left: `calc(50% + ${Math.cos(angle) * radiusX}px - 16px)`, // 16px avatarın yarısı (w-8 = 32px)
-                top: `calc(50% + ${Math.sin(angle) * radiusY}px - 16px)`,
+                left: `calc(50% + ${Math.cos(angle) * radiusX}px - 14px)`, // 14px is approx half of w-7 (28px)
+                top: `calc(50% + ${Math.sin(angle) * radiusY}px - 14px)`,
             };
         }
     };
@@ -209,21 +200,23 @@ export function SeatLayout() {
     // --- FOCUSED TABLE VIEW (MASAYA OTURUNCA AÇILAN EKRAN) ---
     if (activeTable) {
         const isVip = activeTable.type === "vip";
-        const totalUsers = activeTable.currentUsers + 1; // +1 for the current user who just sat down
+        const totalUsers = activeTable.currentUsers + 1;
 
         return (
-            <div className="absolute inset-0 flex flex-col md:flex-row bg-black/80 backdrop-blur-2xl overflow-hidden animate-in fade-in duration-500 rounded-2xl z-50 pt-2 lg:pt-4">
-                {/* Sol Taraf: Masanın Büyük Görünümü */}
-                <div className="flex-1 flex flex-col items-center justify-center relative p-8">
+            <div className="absolute inset-0 flex flex-col md:flex-row bg-[#0a0011] overflow-hidden animate-in fade-in duration-500 rounded-2xl z-50">
+                {/* Background effects for focused view */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,127,0.1),transparent_70%)] opacity-30 pointer-events-none" />
 
-                    <div className="relative w-full max-w-lg aspect-square flex items-center justify-center scale-125 lg:scale-150 mt-20 md:mt-28">
+                {/* Sol Taraf: Masanın Büyük Görünümü */}
+                <div className="flex-1 flex flex-col items-center justify-center relative p-4 md:p-8 min-h-[40vh] md:min-h-0">
+                    <div className="relative w-full max-w-sm aspect-square flex items-center justify-center scale-90 md:scale-110 lg:scale-125">
                         {/* Kırmızı Hilal Şeklinde Koltuk (Sofa) */}
                         <div
-                            className="absolute rounded-full border-red-800/95 shadow-[inset_0_10px_40px_rgba(100,0,0,0.8),0_20px_50px_rgba(220,38,38,0.3)] z-0 flex items-center justify-center before:absolute before:inset-0 before:rounded-full before:border-[3px] before:border-red-500/30 before:border-t-transparent after:absolute after:inset-1 after:rounded-full after:border-[1px] after:border-black/50 after:border-dashed after:border-t-transparent"
+                            className="absolute rounded-full border-red-800/95 shadow-[inset_0_10px_40px_rgba(100,0,0,0.8),0_20px_50px_rgba(220,38,38,0.3)] z-0 flex items-center justify-center before:absolute before:inset-0 before:rounded-full before:border-[3px] before:border-red-500/30 before:border-t-transparent animate-pulse"
                             style={{
-                                width: isVip ? '320px' : '260px',
-                                height: isVip ? '200px' : '180px',
-                                borderWidth: isVip ? '45px' : '40px',
+                                width: isVip ? '280px' : '220px',
+                                height: isVip ? '180px' : '160px',
+                                borderWidth: isVip ? '40px' : '35px',
                                 borderTopColor: 'transparent',
                                 transform: 'translateY(15px)'
                             }}
@@ -231,16 +224,15 @@ export function SeatLayout() {
                         </div>
 
                         {/* Fiziksel Masa Büyütülmüş  */}
-                        <div className={`${isVip ? 'w-48 h-32 rounded-3xl' : 'w-32 h-32 rounded-full'} border-4 flex flex-col items-center justify-center shadow-[0_0_50px_rgba(0,0,0,0.9)] z-10 ${isVip ? 'bg-gradient-to-br from-bordeaux-900 to-black border-gold-400' : 'bg-gradient-to-br from-purple-900/60 to-black border-neon-pink/80'} `}>
-                            <span className="text-4xl drop-shadow-lg opacity-90">{activeTable.icon}</span>
-                            <span className={`text-[10px] font-bold mt-2 uppercase tracking-widest text-center mx-2 ${isVip ? 'text-gold-400/80' : 'text-white/80'} `}>{activeTable.name} Masası</span>
+                        <div className={`${isVip ? 'w-40 h-28 rounded-3xl' : 'w-24 h-24 rounded-full'} border-[3px] flex flex-col items-center justify-center shadow-[0_0_40px_rgba(0,0,0,0.9)] z-10 ${isVip ? 'bg-gradient-to-br from-bordeaux-900 to-black border-gold-400' : 'bg-gradient-to-br from-purple-900/60 to-black border-neon-pink/80'} `}>
+                            <span className="text-3xl drop-shadow-lg opacity-90">{activeTable.icon}</span>
+                            <span className={`text-[8px] font-black mt-1 uppercase tracking-widest text-center mx-2 ${isVip ? 'text-gold-400' : 'text-white'} leading-tight`}>{activeTable.name} MS.</span>
                         </div>
 
                         {/* Oturan Avatarlar */}
                         {Array.from({ length: activeTable.capacity }).map((_, i) => {
                             const isMySeat = i === activeTable.currentUsers;
                             const isOccupied = i < activeTable.currentUsers || isMySeat;
-                            // Odaklanılmış görünüm, tam koltuk üzerine oturacağından dolayı scale 1 ve isFocused=true
                             const pos = getSeatPosition(i, activeTable.capacity, isVip, 1, true);
                             const hasMessage = activeMessage?.tableId === activeTable.id && activeMessage?.seatIndex === i;
                             const isHovered = hoveredUser?.tableId === activeTable.id && hoveredUser?.seatIndex === i;
@@ -260,7 +252,7 @@ export function SeatLayout() {
                                             setHoveredUser(null);
                                         }
                                     }}
-                                    className={`absolute w-10 h-10 rounded-full border-[3px] transition-all cursor-${isOccupied && !isMySeat ? 'pointer' : 'default'} ${isOccupied ? `bg-cover bg-center shadow-2xl z-20 ${isMySeat ? 'border-green-400 shadow-[0_0_20px_rgba(34,197,94,0.8)]' : (isVip ? 'border-gold-400 shadow-[0_0_15px_rgba(255,215,0,0.5)] hover:scale-110' : 'border-neon-pink shadow-[0_0_15px_rgba(255,0,127,0.5)] hover:scale-110')}` : 'border-white/10 bg-white/5 opacity-30 border-dashed z-0'} `}
+                                    className={`absolute w-9 h-9 md:w-10 md:h-10 rounded-full border-[3px] transition-all cursor-${isOccupied && !isMySeat ? 'pointer' : 'default'} ${isOccupied ? `bg-cover bg-center shadow-2xl z-20 ${isMySeat ? 'border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.6)]' : (isVip ? 'neon-border-gold shadow-[0_0_10px_rgba(255,215,0,0.3)]' : 'neon-border-pink shadow-[0_0_10px_rgba(255,0,127,0.3)]')}` : 'border-white/5 bg-white/5 opacity-20 border-dashed z-0'} `}
                                     style={{
                                         left: pos.left,
                                         top: pos.top,
@@ -398,7 +390,7 @@ export function SeatLayout() {
 
     // --- MAIN MEKAN VIEW (GENEL GÖRÜNÜM) ---
     return (
-        <div className="w-full h-full flex flex-col relative overflow-hidden bg-[#05000a]">
+        <div className="w-full h-full flex flex-col relative overflow-hidden bg-transparent">
 
             {/* Üst Bar: Kişisel Özel Loca Durumu */}
             <div className={`shrink-0 w-full p-4 border-b transition-colors duration-500 bg-black/60 border-white/5 relative z-40`}>
@@ -496,9 +488,9 @@ export function SeatLayout() {
                                 </div>
 
                                 {/* Fiziksel Masa / Loca Çizimi */}
-                                <div className={`${isVip ? 'w-40 h-24 rounded-3xl' : 'w-24 h-24 rounded-full'} border-4 flex flex-col items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.8)] z-10 transition-colors ${displayUsers >= table.capacity ? 'bg-red-900/40 border-red-500/50' : (isVip ? 'bg-gradient-to-br from-bordeaux-900 to-black border-gold-400/50 group-hover:border-gold-400' : 'bg-gradient-to-br from-purple-900/60 to-black border-neon-pink/30 group-hover:border-neon-pink/80')} `}>
-                                    <span className="text-3xl drop-shadow-lg opacity-80 group-hover:scale-110 transition-transform">{table.icon}</span>
-                                    <span className={`text-[9px] font-bold mt-1 uppercase tracking-widest text-center leading-tight mx-2 ${isVip ? 'text-gold-400/70' : 'text-white/70'} `}>{table.name}</span>
+                                <div className={`${isVip ? 'w-32 h-20 rounded-3xl' : 'w-20 h-20 rounded-full'} border-[3px] flex flex-col items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.8)] z-10 transition-all ${displayUsers >= table.capacity ? 'bg-red-900/30 border-red-500/30' : (isVip ? 'bg-black border-gold-500/20 group-hover:border-gold-500/60' : 'bg-black border-neon-pink/20 group-hover:border-neon-pink/60')} `}>
+                                    <span className="text-2xl drop-shadow-lg opacity-80 group-hover:scale-110 transition-transform">{table.icon}</span>
+                                    <span className={`text-[8px] font-black mt-1 uppercase tracking-widest text-center leading-tight mx-2 ${isVip ? 'text-gold-400' : 'text-neon-pink'} `}>{table.name}</span>
                                 </div>
 
                                 {/* Oturan Avatarlar ve Sandalyeler */}
@@ -524,7 +516,7 @@ export function SeatLayout() {
                                                     setHoveredUser(null);
                                                 }
                                             }}
-                                            className={`absolute w-8 h-8 rounded-full border-2 transition-all cursor-${isOccupied ? 'pointer' : 'default'} ${isOccupied ? `bg-cover bg-center shadow-lg z-20 ${isVip ? 'border-gold-400 shadow-[0_0_10px_rgba(255,215,0,0.4)] hover:scale-125' : 'border-neon-pink shadow-[0_0_10px_rgba(255,0,127,0.4)] hover:scale-125'}` : 'border-white/10 bg-white/5 opacity-50 border-dashed z-0'} `}
+                                            className={`absolute w-7 h-7 rounded-full border-2 transition-all cursor-${isOccupied ? 'pointer' : 'default'} ${isOccupied ? `bg-cover bg-center shadow-lg z-20 ${isVip ? 'border-gold-400 shadow-[0_0_8px_rgba(255,215,0,0.3)] hover:scale-125' : 'border-neon-pink shadow-[0_0_8px_rgba(255,0,127,0.3)] hover:scale-125'}` : 'border-white/5 bg-white/5 opacity-10 border-dashed z-0'} `}
                                             style={{
                                                 left: pos.left,
                                                 top: pos.top,
