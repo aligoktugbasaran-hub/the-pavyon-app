@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Upload, Mail, Lock, User as UserIcon, CheckCircle2, Wand2 } from 'lucide-react';
+import { Upload, Mail, Lock, User as UserIcon, CheckCircle2, Wand2, Sparkles } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { AvatarBuilder } from "@/components/pavyon/AvatarBuilder";
@@ -80,36 +80,36 @@ export default function PavyonAuthPage() {
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <h2 className="text-2xl font-semibold text-white/90 mb-4 text-center">Masaya Rezerve Yap</h2>
 
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                             <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Gizli E-Posta Adresin (İsteğe Bağlı)"
-                                    className="w-full bg-black/40 border border-[#ff007f]/30 rounded-xl py-3 pl-11 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-[#ff007f] focus:ring-1 focus:ring-[#ff007f] transition-all"
+                                    placeholder="Gizli E-Posta (İsteğe Bağlı)"
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-neon-pink/50 transition-all"
                                 />
                             </div>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                                 <input
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Şifren (En az 6 hane) (İsteğe Bağlı)"
-                                    className="w-full bg-black/40 border border-[#ff007f]/30 rounded-xl py-3 pl-11 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-[#ff007f] focus:ring-1 focus:ring-[#ff007f] transition-all"
+                                    placeholder="Şifren (En az 6 hane)"
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-neon-pink/50 transition-all"
                                 />
                             </div>
                             <div className="relative">
-                                <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-yellow-500/40" />
                                 <input
                                     type="text"
                                     value={nickname}
                                     onChange={(e) => setNickname(e.target.value)}
                                     placeholder="Pavyon Lakabın (Zorunlu)"
                                     required
-                                    className="w-full bg-black/40 border border-yellow-500/40 rounded-xl py-3 pl-11 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                                    className="w-full bg-black/40 border border-yellow-500/20 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-yellow-500/50 transition-all"
                                 />
                             </div>
                         </div>
@@ -123,68 +123,50 @@ export default function PavyonAuthPage() {
                                 }
                             }}
                             disabled={nickname.trim() === ""}
-                            className={`w-full mt-6 py-3 px-6 rounded-xl font-bold transition-all transform flex items-center justify-center gap-2 ${nickname.trim() === "" ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-[#ff007f] to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white shadow-[0_0_20px_rgba(255,0,127,0.4)] hover:scale-[1.02]'}`}
-                            style={nickname.trim() === "" ? { backgroundColor: '#374151' } : { background: 'linear-gradient(to right, #ff007f, #7e22ce)' }}
+                            className={`w-full mt-4 py-4 px-6 rounded-2xl font-black transition-all transform flex items-center justify-center gap-2 uppercase tracking-widest text-xs ${nickname.trim() === "" ? 'bg-white/5 text-white/20 cursor-not-allowed opacity-50' : 'bg-gradient-to-r from-[#ff007f] to-purple-600 text-white shadow-[0_10px_25px_rgba(255,0,127,0.3)] active:scale-95'}`}
                         >
-                            Karakterimi Seç
+                            <Sparkles className="w-4 h-4" /> Karakterimi Seç
                         </button>
                     </div>
                 )}
 
                 {/* Step 2: Avatar ve Fotoğraf Yükleme */}
                 {step === 2 && (
-                    <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-500">
-                        <div className="flex justify-between items-center mb-2">
-                            <button onClick={() => setStep(1)} className="text-gray-400 hover:text-white text-sm">Geri</button>
-                            <h2 className="text-xl font-semibold text-center text-yellow-500">Görünümünü Belirle</h2>
-                            <div className="w-8"></div>
+                    <div className="space-y-5 animate-in fade-in slide-in-from-right-8 duration-500">
+                        <div className="flex justify-between items-center mb-1">
+                            <button onClick={() => setStep(1)} className="text-white/40 hover:text-white text-[10px] font-bold uppercase tracking-widest border border-white/10 px-3 py-1 rounded-lg">Geri</button>
+                            <h2 className="text-lg font-bold text-center text-yellow-500 uppercase tracking-tighter">Görünümünü Seç</h2>
+                            <div className="w-12"></div>
                         </div>
 
                         {/* Avatar Grid */}
-                        <div>
-                            <p className="text-xs text-gray-400 mb-3 text-center">Seni yansıtacak bir avatar seç...</p>
-                            <div className="grid grid-cols-5 md:grid-cols-6 gap-2 max-h-40 overflow-y-auto p-1 rounded-xl scrollbar-thin scrollbar-thumb-[#ff007f]/50">
+                        <div className="bg-black/40 p-3 rounded-2xl border border-white/5">
+                            <p className="text-[10px] text-white/30 mb-3 text-center uppercase font-black tracking-widest">Seni yansıtacak bir avatar seç...</p>
+                            <div className="grid grid-cols-5 gap-2 max-h-36 overflow-y-auto p-1 scrollbar-thin scrollbar-thumb-neon-pink/50">
                                 {avatars.map((avatar, idx) => (
                                     <div
                                         key={idx}
                                         onClick={() => setSelectedAvatar(idx)}
-                                        className={`cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${selectedAvatar === idx ? 'border-yellow-400 shadow-[0_0_10px_rgba(255,215,0,0.6)] scale-105 relative z-10' : 'border-transparent hover:border-white/20'}`}
+                                        className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all aspect-square ${selectedAvatar === idx ? 'border-neon-pink shadow-[0_0_15px_rgba(255,0,127,0.4)] scale-105 active:scale-95' : 'border-white/5 hover:border-white/20'}`}
                                     >
-                                        <img src={avatar} alt={`Avatar ${idx}`} className="w-full h-full object-cover aspect-square bg-black/50" />
-                                        {selectedAvatar === idx && (
-                                            <div className="absolute top-0.5 right-0.5 bg-black rounded-full text-yellow-400">
-                                                <CheckCircle2 className="w-3 h-3" />
-                                            </div>
-                                        )}
+                                        <img src={avatar} alt={`Avatar ${idx}`} className="w-full h-full object-cover bg-black/50" />
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        {/* Avatarını Oluştur Butonu */}
-                        <button
-                            type="button"
-                            onClick={() => setIsAvatarBuilderOpen(true)}
-                            className="w-full mt-3 flex items-center justify-center gap-2 py-3 px-4 bg-purple-900/30 border border-purple-500/40 hover:border-purple-400 hover:bg-purple-900/50 rounded-xl text-purple-300 hover:text-white font-bold text-sm transition-all"
-                        >
-                            <Wand2 className="w-4 h-4" />
-                            Ya da Kendi Avatárını Oluştur
-                        </button>
-
                         {/* Gerçek Fotoğraf Yükleme */}
-                        <div className="pt-4 border-t border-white/10">
-                            <p className="text-sm text-gray-300 mb-3 text-center">...ya da en fazla 2 gerçek fotoğrafını yükle</p>
-                            <div className="flex gap-4 justify-center">
-                                {/* Slot 1 */}
-                                <label className="flex flex-col items-center justify-center w-28 h-32 border-2 border-dashed border-[#ff007f]/40 rounded-2xl bg-black/30 hover:bg-[#ff007f]/10 cursor-pointer transition-all group">
-                                    <Upload className="w-6 h-6 text-[#ff007f] mb-2 group-hover:scale-110 transition-transform" />
-                                    <span className="text-xs text-gray-400">Fotoğraf 1</span>
+                        <div className="pt-2">
+                            <p className="text-[10px] text-white/30 mb-2 text-center uppercase font-black tracking-widest">veya gerçek fotoğrafını yükle</p>
+                            <div className="flex gap-3 justify-center">
+                                <label className="flex flex-col items-center justify-center w-20 h-24 border-2 border-dashed border-white/10 rounded-xl bg-black/30 hover:bg-neon-pink/10 cursor-pointer transition-all active:scale-95">
+                                    <Upload className="w-5 h-5 text-neon-pink mb-1" />
+                                    <span className="text-[8px] text-white/40 uppercase font-black">Yükle</span>
                                     <input type="file" className="hidden" accept="image/*" />
                                 </label>
-                                {/* Slot 2 */}
-                                <label className="flex flex-col items-center justify-center w-28 h-32 border-2 border-dashed border-[#ff007f]/40 rounded-2xl bg-black/30 hover:bg-[#ff007f]/10 cursor-pointer transition-all group">
-                                    <Upload className="w-6 h-6 text-[#ff007f] mb-2 group-hover:scale-110 transition-transform" />
-                                    <span className="text-xs text-gray-400">Fotoğraf 2</span>
+                                <label className="flex flex-col items-center justify-center w-20 h-24 border-2 border-dashed border-white/10 rounded-xl bg-black/30 hover:bg-neon-pink/10 cursor-pointer transition-all active:scale-95">
+                                    <Upload className="w-5 h-5 text-neon-pink mb-1" />
+                                    <span className="text-[8px] text-white/40 uppercase font-black">Yükle</span>
                                     <input type="file" className="hidden" accept="image/*" />
                                 </label>
                             </div>
@@ -192,9 +174,9 @@ export default function PavyonAuthPage() {
 
                         <button
                             onClick={handleJoin}
-                            className="w-full mt-6 bg-gradient-to-r from-yellow-600 to-yellow-400 hover:from-yellow-500 hover:to-yellow-300 text-black font-bold py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(255,215,0,0.4)] transition-all transform hover:scale-[1.02]"
+                            className="w-full mt-4 bg-gradient-to-r from-neon-pink to-purple-700 hover:from-pink-500 hover:to-purple-600 text-white font-black py-3.5 px-6 rounded-2xl shadow-[0_10px_30px_rgba(255,0,127,0.3)] transition-all transform active:scale-[0.98] text-sm uppercase tracking-widest"
                         >
-                            Masaya Geç (İçeri Gir)
+                            Masaya Geç
                         </button>
                     </div>
                 )}

@@ -48,16 +48,16 @@ export default function PavyonPage() {
                     <TopReceivers onUserClick={setSelectedUserProfile} />
                 </div>
 
-                <div className="flex items-center gap-6 shrink-0">
+                <div className="flex items-center gap-3 md:gap-6 shrink-0">
                     <NotificationMenu />
 
-                    <div className="flex flex-col items-end">
-                        <span className="text-xs text-white/60">Bakiye</span>
-                        <span className="font-bold text-neon-pink">₺{credits.toFixed(2)}</span>
+                    <div className="hidden xs:flex flex-col items-end">
+                        <span className="text-[10px] text-white/40 uppercase tracking-tighter">Bakiye</span>
+                        <span className="font-bold text-neon-pink text-sm tracking-tight">₺{credits.toFixed(2)}</span>
                     </div>
                     <button
                         onClick={() => setIsCreditModalOpen(true)}
-                        className="text-xs md:text-sm border border-neon-pink rounded-full px-3 md:px-4 py-1.5 hover:bg-neon-pink transition-colors font-bold mr-2 md:mr-0"
+                        className="text-[10px] md:text-sm border border-neon-pink/50 rounded-full px-3 md:px-4 py-1.5 hover:bg-neon-pink transition-all font-bold shadow-[0_0_15px_rgba(255,0,127,0.2)]"
                     >
                         Kredi Yükle
                     </button>
@@ -90,52 +90,59 @@ export default function PavyonPage() {
                         </button>
                     )}
 
-                    <LiveRadio />
-
-                    <div className="grid grid-cols-2 gap-3 mb-1 shrink-0">
-                        {/* Bonkörler (Givers) */}
-                        <div className="glass-panel rounded-xl p-3 border-gold-500/20">
-                            <h4 className="text-[10px] font-bold text-gold-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                                <Trophy className="w-3 h-3" /> Bonkörler
-                            </h4>
-                            <div className="flex gap-2 justify-center sm:justify-start">
-                                {[
-                                    { id: 101, name: "Baron", avatar: "/avatars/male_avatar_1.png", age: 34 },
-                                    { id: 102, name: "Reis", avatar: "/avatars/male_avatar_2.png", age: 41 },
-                                    { id: 103, name: "Dayı", avatar: "/avatars/male_avatar_3.png", age: 45 }
-                                ].map((user, i) => (
-                                    <div
-                                        key={user.id}
-                                        className="relative cursor-pointer hover:scale-110 transition-transform active:scale-95"
-                                        onClick={() => setSelectedUserProfile(user)}
-                                    >
-                                        <img src={user.avatar} className="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-gold-400 shadow-[0_0_10px_rgba(255,215,0,0.3)] object-cover" />
-                                        <div className="absolute -top-1 -right-1 bg-black text-[7px] px-1 rounded border border-gold-400 font-bold">{i + 1}</div>
-                                    </div>
-                                ))}
-                            </div>
+                    <div className="flex flex-col md:flex-row gap-2 shrink-0">
+                        <div className="flex-1">
+                            <LiveRadio />
                         </div>
 
-                        {/* Ünlüler (Receivers) */}
-                        <div className="glass-panel rounded-xl p-3 border-neon-pink/20">
-                            <h4 className="text-[10px] font-bold text-neon-pink uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                                <Sparkles className="w-3 h-3" /> Ünlüler
-                            </h4>
-                            <div className="flex gap-2 justify-center sm:justify-start">
-                                {[
-                                    { id: 201, name: "Selin", avatar: "/avatars/female_avatar_1.png", age: 24 },
-                                    { id: 202, name: "Buse", avatar: "/avatars/female_avatar_2.png", age: 21 },
-                                    { id: 203, name: "Ceren", avatar: "/avatars/female_avatar_3.png", age: 23 }
-                                ].map((user, i) => (
-                                    <div
-                                        key={user.id}
-                                        className="relative cursor-pointer hover:scale-110 transition-transform active:scale-95"
-                                        onClick={() => setSelectedUserProfile(user)}
-                                    >
-                                        <img src={user.avatar} className="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-neon-pink shadow-[0_0_10px_rgba(255,0,127,0.3)] object-cover" />
-                                        <div className="absolute -top-1 -right-1 bg-black text-[7px] px-1 rounded border border-neon-pink font-bold">{i + 1}</div>
+                        {/* Compact Leaderboards on the same level as radio on tablet/desktop, nested on mobile */}
+                        <div className="grid grid-cols-2 gap-2">
+                            {/* Bonkörler (Givers) */}
+                            <div className="bg-black/40 border border-gold-500/20 rounded-xl p-2.5 flex items-center justify-between gap-3">
+                                <div className="flex flex-col">
+                                    <h4 className="text-[9px] font-black text-gold-400/80 uppercase tracking-tighter mb-1.5 flex items-center gap-1">
+                                        <Trophy className="w-3 h-3" /> BONKÖRLER
+                                    </h4>
+                                    <div className="flex -space-x-2">
+                                        {[
+                                            { id: 101, name: "Baron", avatar: "/avatars/male_avatar_1.png", age: 34 },
+                                            { id: 102, name: "Reis", avatar: "/avatars/male_avatar_2.png", age: 41 },
+                                            { id: 103, name: "Dayı", avatar: "/avatars/male_avatar_3.png", age: 45 }
+                                        ].map((user, i) => (
+                                            <div
+                                                key={user.id}
+                                                className="relative cursor-pointer hover:scale-110 active:scale-90 transition-all z-[10] hover:z-[20]"
+                                                onClick={() => setSelectedUserProfile(user)}
+                                            >
+                                                <img src={user.avatar} className="w-8 h-8 rounded-full border border-gold-400 object-cover shadow-lg" />
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
+                            </div>
+
+                            {/* Ünlüler (Receivers) */}
+                            <div className="bg-black/40 border border-neon-pink/20 rounded-xl p-2.5 flex items-center justify-between gap-3">
+                                <div className="flex flex-col">
+                                    <h4 className="text-[9px] font-black text-neon-pink/80 uppercase tracking-tighter mb-1.5 flex items-center gap-1">
+                                        <Sparkles className="w-3 h-3" /> ÜNLÜLER
+                                    </h4>
+                                    <div className="flex -space-x-2">
+                                        {[
+                                            { id: 201, name: "Selin", avatar: "/avatars/female_avatar_1.png", age: 24 },
+                                            { id: 202, name: "Buse", avatar: "/avatars/female_avatar_2.png", age: 21 },
+                                            { id: 203, name: "Ceren", avatar: "/avatars/female_avatar_3.png", age: 23 }
+                                        ].map((user, i) => (
+                                            <div
+                                                key={user.id}
+                                                className="relative cursor-pointer hover:scale-110 active:scale-90 transition-all z-[10] hover:z-[20]"
+                                                onClick={() => setSelectedUserProfile(user)}
+                                            >
+                                                <img src={user.avatar} className="w-8 h-8 rounded-full border border-neon-pink object-cover shadow-lg" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

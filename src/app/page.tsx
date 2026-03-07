@@ -44,11 +44,11 @@ export default function Home() {
         </motion.div>
 
         <h1
-          className="text-5xl md:text-6xl font-black mb-4 text-white tracking-tighter leading-tight font-heading"
+          className="text-4xl md:text-6xl font-black mb-4 text-white tracking-tighter leading-tight font-heading"
           style={{
             color: 'white',
             textShadow: '0 0 15px #ff007f, 0 0 30px rgba(255,0,127,0.5)',
-            fontSize: 'clamp(2.5rem, 8vw, 4rem)'
+            fontSize: 'clamp(2rem, 10vw, 3.5rem)'
           }}
         >
           THE PAVYON

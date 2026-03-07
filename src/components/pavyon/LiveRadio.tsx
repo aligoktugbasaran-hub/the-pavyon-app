@@ -85,46 +85,79 @@ export function LiveRadio() {
     };
 
     return (
-        <div className="w-full bg-black/60 border border-white/10 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 glass-panel relative z-30 mb-2 shadow-[0_0_30px_rgba(255,0,127,0.1)]">
+        <div className="w-full bg-black/60 border border-white/10 rounded-2xl p-4 flex flex-col items-stretch gap-4 glass-panel relative z-30 mb-2 shadow-[0_0_30px_rgba(255,0,127,0.1)]">
 
-            {/* Sol Taraf: Canlı Sahne Info */}
-            <div className="flex items-center gap-4">
-                <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-neon-pink to-purple-900 border border-neon-pink/50 flex items-center justify-center shadow-[0_0_15px_rgba(255,0,127,0.4)]">
-                    <Music className="w-6 h-6 text-white animate-pulse" />
-                    {isPlaying && (
-                        <div className="absolute -top-1 -right-1 flex gap-0.5">
-                            <span className="w-1.5 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                            <span className="w-1.5 h-4 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                            <span className="w-1.5 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
-                        </div>
-                    )}
-                </div>
-                <div className="flex flex-col">
-                    <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 bg-red-600 rounded text-[10px] font-bold text-white tracking-widest uppercase flex items-center gap-1 shadow-[0_0_10px_rgba(220,38,38,0.8)]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                            Canlı Sahne
-                        </span>
-                        <h3 className="font-bold text-white text-lg tracking-wide">{currentRadio.name}</h3>
+            {/* Top Row: Info + Controls (On same line for mobile efficiency) */}
+            <div className="flex items-center justify-between gap-2 overflow-hidden">
+                <div className="flex items-center gap-3 overflow-hidden">
+                    <div className="relative w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br from-neon-pink to-purple-900 border border-neon-pink/50 flex items-center justify-center shadow-[0_0_15px_rgba(255,0,127,0.4)]">
+                        <Music className="w-5 h-5 text-white animate-pulse" />
+                        {isPlaying && (
+                            <div className="absolute -top-1 -right-1 flex gap-0.5">
+                                <span className="w-1 h-2.5 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                                <span className="w-1 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                                <span className="w-1 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                            </div>
+                        )}
                     </div>
-                    <p className="text-xs text-white/50">{currentRadio.streamLabel} • Pavyon Ortak Yayın</p>
+                    <div className="flex flex-col min-w-0">
+                        <div className="flex items-center gap-2">
+                            <span className="shrink-0 px-1.5 py-0.5 bg-red-600 rounded-[4px] text-[8px] font-black text-white tracking-tighter uppercase flex items-center gap-1 shadow-[0_0_10px_rgba(220,38,38,0.8)]">
+                                <span className="w-1 h-1 rounded-full bg-white animate-pulse"></span>
+                                CANLI
+                            </span>
+                            <h3 className="font-bold text-white text-sm md:text-lg tracking-tight truncate">{currentRadio.name}</h3>
+                        </div>
+                        <p className="text-[10px] text-white/50 truncate hidden xs:block">{currentRadio.streamLabel}</p>
+                    </div>
+                </div>
+
+                {/* Right controls - Merged into top row for space */}
+                <div className="flex items-center gap-2 bg-white/5 px-2 py-1.5 rounded-xl border border-white/5 shrink-0">
+                    {/* Oynat / Durdur */}
+                    <button
+                        onClick={togglePlay}
+                        className="w-8 h-8 rounded-full flex items-center justify-center bg-neon-pink text-white transition-all shadow-lg hover:shadow-[0_0_15px_rgba(255,0,127,0.6)] active:scale-95"
+                    >
+                        {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+                    </button>
+
+                    {/* Radyo Seçici Dropdown */}
+                    <div className="relative">
+                        <button
+                            onClick={() => setIsRadioMenuOpen(!isRadioMenuOpen)}
+                            className="flex items-center gap-1 text-[10px] font-black text-white/80 hover:text-white px-2 py-1.5 rounded-lg border border-white/10 bg-white/5 transition-all"
+                        >
+                            <Radio className="w-3.5 h-3.5 text-gold-400" />
+                            <span className="hidden sm:inline">KANAL</span>
+                        </button>
+
+                        {isRadioMenuOpen && (
+                            <div className="absolute top-12 right-0 w-48 bg-black/98 border border-white/20 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.95)] p-2 z-[60] animate-in fade-in zoom-in-95 duration-200 backdrop-blur-xl">
+                                {RADIOS.map((radio) => (
+                                    <button
+                                        key={radio.id}
+                                        onClick={() => {
+                                            setCurrentRadio(radio);
+                                            setIsRadioMenuOpen(false);
+                                            if (!isPlaying) togglePlay();
+                                        }}
+                                        className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold transition-all flex flex-col gap-0.5 mb-1 last:mb-0 ${currentRadio.id === radio.id ? 'bg-neon-pink text-white shadow-lg' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                                    >
+                                        <span>{radio.name}</span>
+                                        <span className={`text-[9px] font-normal ${currentRadio.id === radio.id ? 'text-white/80' : 'opacity-60'}`}>{radio.streamLabel}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {/* Orta/Sağ Alan: Kontroller */}
-            <div className="flex items-center gap-3 md:gap-6 bg-black/40 px-3 md:px-6 py-1.5 rounded-full border border-white/5">
-
-                {/* Oynat / Durdur */}
-                <button
-                    onClick={togglePlay}
-                    className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-white/10 hover:bg-neon-pink text-white hover:text-white transition-all shadow-lg hover:shadow-[0_0_15px_rgba(255,0,127,0.6)] hover:scale-105"
-                >
-                    {isPlaying ? <Pause className="w-4 h-4 md:w-5 md:h-5 fill-current" /> : <Play className="w-4 h-4 md:w-5 md:h-5 fill-current ml-0.5" />}
-                </button>
-
-                {/* Ses Kontrol */}
-                <div className="hidden sm:flex items-center gap-2 group">
-                    <button onClick={toggleMute} className="text-white/60 hover:text-white transition-colors">
+            {/* Bottom Row: Compact Volume (Only visible if needed or toggled) */}
+            <div className="hidden md:flex items-center gap-4 border-t border-white/5 pt-3">
+                <div className="flex items-center gap-2 group flex-1">
+                    <button onClick={toggleMute} className="text-white/40 hover:text-white transition-colors">
                         {isMuted || volume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                     </button>
                     <input
@@ -134,41 +167,12 @@ export function LiveRadio() {
                         step="0.05"
                         value={isMuted ? 0 : volume}
                         onChange={handleVolumeChange}
-                        className="w-16 md:w-24 h-1 rounded-full bg-white/20 appearance-none cursor-pointer accent-neon-pink"
+                        className="w-full h-1 rounded-full bg-white/20 appearance-none cursor-pointer accent-neon-pink"
                     />
                 </div>
-
-                {/* Radyo Seçici Dropdown */}
-                <div className="relative border-l border-white/10 pl-3 md:pl-6 ml-1">
-                    <button
-                        onClick={() => setIsRadioMenuOpen(!isRadioMenuOpen)}
-                        className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-white/80 hover:text-white px-2 md:px-3 py-1 md:py-1.5 rounded-lg border border-white/10 hover:bg-white/5 transition-all"
-                    >
-                        <Radio className="w-3.5 h-3.5 text-gold-400" />
-                        <span className="hidden xs:inline">Kanal Değiştir</span>
-                        <span className="xs:hidden">Radyo</span>
-                    </button>
-
-                    {isRadioMenuOpen && (
-                        <div className="absolute top-12 right-0 w-48 bg-black/95 border border-white/20 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] p-2 z-50 animate-in fade-in zoom-in-95 duration-200">
-                            {RADIOS.map((radio) => (
-                                <button
-                                    key={radio.id}
-                                    onClick={() => {
-                                        setCurrentRadio(radio);
-                                        setIsRadioMenuOpen(false);
-                                        if (!isPlaying) togglePlay(); // Auto play if they were paused
-                                    }}
-                                    className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex flex-col gap-0.5 ${currentRadio.id === radio.id ? 'bg-neon-pink/20 text-neon-pink font-bold border border-neon-pink/30' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
-                                >
-                                    <span>{radio.name}</span>
-                                    <span className="text-[9px] opacity-60 font-normal">{radio.streamLabel}</span>
-                                </button>
-                            ))}
-                        </div>
-                    )}
+                <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest whitespace-nowrap">
+                    Pavyon Ortak Yayın
                 </div>
-
             </div>
         </div>
     );

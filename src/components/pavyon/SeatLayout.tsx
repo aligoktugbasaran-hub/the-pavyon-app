@@ -132,9 +132,9 @@ export function SeatLayout() {
             const angle = total === 1 ? Math.PI / 2 : startAngle + (index / (total - 1)) * angleSpan;
 
             // Even smaller for maximum chat space
-            const radiusX = isVip ? 80 : 65;
-            const radiusY = isVip ? 45 : 35;
-            const yOffset = -45; // Move much further up
+            const radiusX = isVip ? 70 : 55;
+            const radiusY = isVip ? 40 : 30;
+            const yOffset = -55; // Move much further up
 
             return {
                 left: `calc(50% + ${Math.cos(angle) * radiusX}px - 14px)`, // 14px is half of w-7
@@ -215,8 +215,8 @@ export function SeatLayout() {
                 {/* Background effects for focused view */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,127,0.1),transparent_70%)] opacity-30 pointer-events-none" />
 
-                <div className="flex-1 flex flex-col items-center justify-start relative p-3 md:p-8 min-h-[15vh] md:min-h-0 pt-16 md:pt-8 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
-                    <div className="relative w-full max-w-[150px] md:max-w-sm aspect-square flex items-center justify-center scale-60 md:scale-110 lg:scale-125 -mt-20 md:mt-0">
+                <div className="flex-1 flex flex-col items-center justify-start relative p-3 md:p-8 min-h-[10vh] md:min-h-0 pt-12 md:pt-8 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
+                    <div className="relative w-full max-w-[120px] md:max-w-sm aspect-square flex items-center justify-center scale-50 md:scale-110 lg:scale-125 -mt-24 md:mt-0">
                         {/* Kırmızı Hilal Şeklinde Koltuk (Sofa) */}
                         <div
                             className="absolute rounded-full border-red-900 shadow-[inset_0_10px_30px_rgba(80,0,0,0.9),0_15px_40px_rgba(220,38,38,0.2)] z-0 flex items-center justify-center before:absolute before:inset-0 before:rounded-full before:border-[2px] before:border-red-500/30 before:border-t-transparent after:absolute after:inset-1 after:rounded-full after:border-[1px] after:border-white/5 after:border-t-transparent"
@@ -301,7 +301,7 @@ export function SeatLayout() {
                 </div>
 
                 {/* Sağ Taraf: Masaya Özel Kurallı Chat - Expanded on Mobile */}
-                <div className="w-full h-[75%] md:h-full md:w-80 lg:w-96 border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden shrink-0 z-10 mt-0 md:mt-4 lg:mt-6 rounded-tr-2xl">
+                <div className="w-full h-[85%] md:h-full md:w-80 lg:w-96 border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden shrink-0 z-10 mt-0 md:mt-4 lg:mt-6 rounded-tr-2xl">
                     <div className="p-4 border-b border-white/10 bg-black/60 shadow-md flex items-center justify-between">
                         <div>
                             <h3 className="font-bold text-white flex items-center gap-2">
@@ -470,7 +470,7 @@ export function SeatLayout() {
                     <p className="text-sm text-white/60 mt-2">Dilediğin masaya veya genel locaya geç otur, profilleri incele, sohbete katıl.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-2 lg:gap-y-4 w-full max-w-5xl mx-auto pb-10">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-2 lg:gap-y-4 w-full max-w-5xl mx-auto pb-10">
                     {ALL_TABLES.filter(t => t.id !== 99).map((table) => {
                         const isVip = table.type === "vip";
                         // In the main view, joinedTableId is null, so we just show currentUsers
@@ -494,14 +494,14 @@ export function SeatLayout() {
                                 </div>
 
                                 {/* Fiziksel Masa / Loca Çizimi */}
-                                <div className={`${isVip ? 'w-32 h-20 rounded-3xl' : 'w-20 h-20 rounded-full'} border-[2px] flex flex-col items-center justify-center shadow-[0_0_20px_rgba(0,0,0,1)] z-10 transition-all ${displayUsers >= (table.capacity ?? 10) ? 'bg-red-900/30 border-red-500/30' : (isVip ? 'bg-black border-gold-500/30 group-hover:border-gold-500/80' : 'bg-black border-neon-pink/30 group-hover:border-neon-pink/80')} `}>
-                                    <span className="text-2xl drop-shadow-lg opacity-90 group-hover:scale-110 transition-transform">{table.icon}</span>
-                                    <span className={`text-[8px] font-black mt-0.5 uppercase tracking-tighter text-center leading-tight mx-2 ${isVip ? 'text-gold-400' : 'text-neon-pink'} `}>{table.name}</span>
+                                <div className={`${isVip ? 'w-24 h-16 md:w-32 md:h-20 rounded-2xl md:rounded-3xl' : 'w-16 h-16 md:w-20 md:h-20 rounded-full'} border-[2px] flex flex-col items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-10 transition-all ${displayUsers >= (table.capacity ?? 10) ? 'bg-red-900/30 border-red-500/30' : (isVip ? 'bg-black border-gold-500/30 group-hover:border-gold-500/80 shadow-[0_0_15px_rgba(255,215,0,0.1)]' : 'bg-black border-neon-pink/30 group-hover:border-neon-pink/80 shadow-[0_0_15px_rgba(255,0,127,0.1)]')} `}>
+                                    <span className="text-xl md:text-2xl drop-shadow-lg opacity-90 group-hover:scale-110 transition-transform">{table.icon}</span>
                                     <button
                                         onClick={(e) => { e.stopPropagation(); handleJoinTable(table.id, table.currentUsers, table.capacity); }}
-                                        className="mt-1 px-3 py-0.5 bg-white/10 hover:bg-white/20 rounded-full text-[7px] font-black uppercase text-white border border-white/20"
+                                        className={`mt-1.5 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase text-white shadow-[0_0_15px_rgba(255,0,127,0.4)] transition-all active:scale-90 flex items-center justify-center gap-1 ${displayUsers >= table.capacity ? 'bg-gray-700' : 'bg-gradient-to-r from-neon-pink to-purple-600 border border-white/20'}`}
                                     >
-                                        OTUR
+                                        <Users className="w-3 h-3 md:w-4 h-4" />
+                                        {displayUsers >= table.capacity ? 'DOLU' : 'OTUR'}
                                     </button>
                                 </div>
 
