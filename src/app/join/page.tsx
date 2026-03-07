@@ -58,15 +58,13 @@ export default function PavyonAuthPage() {
             {/* Tabela / Logo Alanı */}
             <div className="z-10 flex flex-col items-center mb-8">
                 <img
-                    // Yeni üretilen lüks pavyon logosu
                     src="/logo.png"
                     alt="The Pavyon Icon"
-                    className="w-40 h-40 md:w-56 md:h-56 object-contain drop-shadow-[0_0_20px_rgba(255,215,0,0.6)] mb-2 mix-blend-lighten"
+                    className="w-40 h-40 md:w-56 md:h-56 object-contain drop-shadow-[0_0_30px_rgba(255,215,0,0.4)] mb-2"
                     style={{
-                        width: '160px',
-                        height: '160px',
-                        WebkitMaskImage: 'radial-gradient(circle, black 40%, transparent 75%)',
-                        maskImage: 'radial-gradient(circle, black 40%, transparent 75%)'
+                        width: '180px',
+                        height: '180px',
+                        scale: '1.2'
                     }}
                 />
                 <p className="text-[#ff007f] mt-2 tracking-widest text-sm uppercase opacity-80 shadow-black drop-shadow-lg">

@@ -90,31 +90,31 @@ export default function PavyonPage() {
                         </button>
                     )}
 
-                    <div className="flex flex-col md:flex-row gap-2 shrink-0">
-                        <div className="flex-1">
+                    <div className="flex flex-col gap-2 shrink-0">
+                        <div className="w-full">
                             <LiveRadio />
                         </div>
 
-                        {/* Compact Leaderboards on the same level as radio on tablet/desktop, stacked on mobile */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {/* Combined Leaders Row: Saves space on all devices */}
+                        <div className="grid grid-cols-2 gap-2">
                             {/* Bonkörler (Givers) */}
-                            <div className="bg-black/60 border border-gold-500/30 rounded-xl p-2 md:p-2.5 flex items-center justify-between gap-3 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
-                                <div className="flex flex-col flex-1">
-                                    <h4 className="text-[9px] font-black text-gold-400/90 uppercase tracking-tighter mb-1.5 flex items-center gap-1">
-                                        <Trophy className="w-3 h-3" /> BONKÖRLER
+                            <div className="bg-black/60 border border-gold-500/30 rounded-xl p-2 flex items-center justify-between gap-2 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
+                                <div className="flex flex-col flex-1 min-w-0">
+                                    <h4 className="text-[8px] font-black text-gold-400/90 uppercase tracking-tighter mb-1 flex items-center gap-1">
+                                        <Trophy className="w-2.5 h-2.5" /> BONKÖRLER
                                     </h4>
-                                    <div className="flex -space-x-2.5">
+                                    <div className="flex -space-x-2">
                                         {[
                                             { id: 101, name: "Baron", avatar: "/avatars/male_avatar_1.png", age: 34 },
                                             { id: 102, name: "Reis", avatar: "/avatars/male_avatar_2.png", age: 41 },
                                             { id: 103, name: "Dayı", avatar: "/avatars/male_avatar_3.png", age: 45 }
-                                        ].map((user, i) => (
+                                        ].map((user) => (
                                             <div
                                                 key={user.id}
-                                                className="relative cursor-pointer hover:scale-125 hover:-translate-y-1 active:scale-90 transition-all z-[10] hover:z-[50]"
+                                                className="relative cursor-pointer hover:scale-110 transition-all z-[10] hover:z-[50] shrink-0"
                                                 onClick={() => setSelectedUserProfile(user)}
                                             >
-                                                <img src={user.avatar} className="w-7 h-7 rounded-full border border-gold-400 object-cover shadow-lg" />
+                                                <img src={user.avatar} className="w-6 h-6 rounded-full border border-gold-400 object-cover shadow-md" />
                                             </div>
                                         ))}
                                     </div>
@@ -122,23 +122,23 @@ export default function PavyonPage() {
                             </div>
 
                             {/* Ünlüler (Receivers) */}
-                            <div className="bg-black/60 border border-neon-pink/30 rounded-xl p-2 md:p-2.5 flex items-center justify-between gap-3 shadow-[0_0_15px_rgba(255,0,127,0.1)]">
-                                <div className="flex flex-col flex-1">
-                                    <h4 className="text-[9px] font-black text-neon-pink/90 uppercase tracking-tighter mb-1.5 flex items-center gap-1">
-                                        <Sparkles className="w-3 h-3" /> ÜNLÜLER
+                            <div className="bg-black/60 border border-neon-pink/30 rounded-xl p-2 flex items-center justify-between gap-2 shadow-[0_0_15px_rgba(255,0,127,0.1)]">
+                                <div className="flex flex-col flex-1 min-w-0">
+                                    <h4 className="text-[8px] font-black text-neon-pink/90 uppercase tracking-tighter mb-1 flex items-center gap-1">
+                                        <Sparkles className="w-2.5 h-2.5" /> ÜNLÜLER
                                     </h4>
-                                    <div className="flex -space-x-2.5">
+                                    <div className="flex -space-x-2">
                                         {[
                                             { id: 201, name: "Selin", avatar: "/avatars/female_avatar_1.png", age: 24 },
                                             { id: 202, name: "Buse", avatar: "/avatars/female_avatar_2.png", age: 21 },
                                             { id: 203, name: "Ceren", avatar: "/avatars/female_avatar_3.png", age: 23 }
-                                        ].map((user, i) => (
+                                        ].map((user) => (
                                             <div
                                                 key={user.id}
-                                                className="relative cursor-pointer hover:scale-125 hover:-translate-y-1 active:scale-90 transition-all z-[10] hover:z-[50]"
+                                                className="relative cursor-pointer hover:scale-110 transition-all z-[10] hover:z-[50] shrink-0"
                                                 onClick={() => setSelectedUserProfile(user)}
                                             >
-                                                <img src={user.avatar} className="w-7 h-7 rounded-full border border-neon-pink object-cover shadow-lg" />
+                                                <img src={user.avatar} className="w-6 h-6 rounded-full border border-neon-pink object-cover shadow-md" />
                                             </div>
                                         ))}
                                     </div>
