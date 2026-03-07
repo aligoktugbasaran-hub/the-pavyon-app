@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Mail, Lock, User as UserIcon, CheckCircle2, Wand2, Sparkles, X, Camera as CameraIcon } from 'lucide-react';
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { AvatarBuilder } from "@/components/pavyon/AvatarBuilder";
 import { Camera, CameraResultType } from '@capacitor/camera';
+import { fetchWithBase } from "@/lib/api";
 
 export default function PavyonAuthPage() {
     const router = useRouter();
@@ -22,8 +23,63 @@ export default function PavyonAuthPage() {
     const [verificationCode, setVerificationCode] = useState("");
     const [isPrivacyAccepted, setIsPrivacyAccepted] = useState(false);
     const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
+    const [nicknameError, setNicknameError] = useState("");
+    const [isCheckingNickname, setIsCheckingNickname] = useState(false);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // If email is provided, check if user exists and auto-fill nickname
+    useEffect(() => {
+        const timeoutId = setTimeout(async () => {
+            if (email && /^\S+@\S+\.\S+$/.test(email)) {
+                try {
+                    const res = await fetchWithBase(`/api/auth?email=${encodeURIComponent(email)}`);
+                    if (res.user) {
+                        setNickname(res.user.nickname);
+                        if (res.user.photos && res.user.photos.length > 0) {
+                            setCustomAvatar(res.user.photos[0]);
+                            setSelectedAvatar(-1);
+                        }
+                    }
+                } catch (e) {
+                    console.log("No existing user found for this email");
+                }
+            }
+        }, 500);
+        return () => clearTimeout(timeoutId);
+    }, [email]);
+
+    // Check if nickname is taken
+    useEffect(() => {
+        const checkNickname = async () => {
+            if (nickname.trim().length < 3) {
+                setNicknameError("");
+                return;
+            };
+            setIsCheckingNickname(true);
+            try {
+                const res = await fetchWithBase(`/api/auth?nickname=${encodeURIComponent(nickname.trim())}`);
+                if (res.isTaken) {
+                    // Check if the taken nickname belongs to THIS email if email is provided
+                    const existingRes = await fetchWithBase(`/api/auth?email=${encodeURIComponent(email)}`);
+                    if (existingRes.user && existingRes.user.nickname === nickname.trim()) {
+                        setNicknameError("");
+                    } else {
+                        setNicknameError("Bu lakap başkası tarafından alınmış!");
+                    }
+                } else {
+                    setNicknameError("");
+                }
+            } catch (e) {
+                console.error("Nickname check failed", e);
+            } finally {
+                setIsCheckingNickname(false);
+            }
+        };
+
+        const timeoutId = setTimeout(checkNickname, 500);
+        return () => clearTimeout(timeoutId);
+    }, [nickname, email]);
 
     // Avatar listesi: Pavyon kültürüne daha uygun
     const avatars = [
@@ -75,8 +131,8 @@ export default function PavyonAuthPage() {
         }
     };
 
-    const handleJoin = () => {
-        if (!nickname.trim()) {
+    const handleJoin = async () => {
+        if (!nickname.trim() || nicknameError) {
             setStep(1);
             return;
         }
@@ -91,8 +147,24 @@ export default function PavyonAuthPage() {
             finalAvatar = avatars[0];
         }
 
-        login(nickname || "Anonim", finalAvatar, "Gizli");
-        router.push("/pavyon");
+        try {
+            // Persist to DB or Auth logic
+            const res = await fetchWithBase("/api/auth", {
+                method: "POST",
+                body: JSON.stringify({ email, nickname, avatar: finalAvatar })
+            });
+
+            if (res.error) {
+                alert(res.error);
+                return;
+            }
+
+            // Sync with local store
+            login(res.nickname, res.photos?.[0] || finalAvatar, "Gizli");
+            router.push("/pavyon");
+        } catch (e) {
+            alert("Giriş yapılamadı, lütfen tekrar deneyin.");
+        }
     };
 
     return (
@@ -155,16 +227,26 @@ export default function PavyonAuthPage() {
                                 />
                             </div>
                             <div className="relative">
-                                <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-yellow-500/40" />
+                                <UserIcon className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${nicknameError ? 'text-red-500' : 'text-yellow-500/40'}`} />
                                 <input
                                     type="text"
                                     value={nickname}
                                     onChange={(e) => setNickname(e.target.value)}
                                     placeholder="Pavyon Lakabın (Zorunlu)"
                                     required
-                                    className="w-full bg-black/40 border border-yellow-500/20 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-yellow-500/50 transition-all font-bold"
+                                    className={`w-full bg-black/40 border ${nicknameError ? 'border-red-500/50' : 'border-yellow-500/20'} rounded-xl py-3 pl-11 pr-10 text-sm text-white placeholder-white/20 focus:outline-none focus:border-yellow-500/50 transition-all font-bold`}
                                 />
+                                {isCheckingNickname && (
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                        <div className="w-4 h-4 border-2 border-yellow-500/20 border-t-yellow-500 rounded-full animate-spin" />
+                                    </div>
+                                )}
                             </div>
+                            {nicknameError && (
+                                <p className="text-[10px] text-red-500 font-bold px-1 animate-in fade-in slide-in-from-top-1">
+                                    {nicknameError}
+                                </p>
+                            )}
                         </div>
 
                         <div className="bg-black/40 border border-white/5 p-4 rounded-xl mb-4">
@@ -186,14 +268,16 @@ export default function PavyonAuthPage() {
                             onClick={() => {
                                 if (nickname.trim() === "") {
                                     alert("Lütfen bir lakap giriniz!");
+                                } else if (nicknameError) {
+                                    alert(nicknameError);
                                 } else if (!isPrivacyAccepted) {
                                     alert("Lütfen sorumluluk reddini kabul ediniz!");
                                 } else {
                                     setStep(email ? 1.5 : 2);
                                 }
                             }}
-                            disabled={nickname.trim() === "" || !isPrivacyAccepted}
-                            className={`w-full mt-4 py-4 px-6 rounded-2xl font-black transition-all transform flex items-center justify-center gap-2 uppercase tracking-widest text-xs ${nickname.trim() === "" || !isPrivacyAccepted ? 'bg-white/5 text-white/20 cursor-not-allowed opacity-50' : 'bg-gradient-to-r from-[#ff007f] to-purple-600 text-white shadow-[0_10px_25px_rgba(255,0,127,0.3)] active:scale-95'}`}
+                            disabled={nickname.trim() === "" || !isPrivacyAccepted || !!nicknameError || isCheckingNickname}
+                            className={`w-full mt-4 py-4 px-6 rounded-2xl font-black transition-all transform flex items-center justify-center gap-2 uppercase tracking-widest text-xs ${nickname.trim() === "" || !isPrivacyAccepted || !!nicknameError || isCheckingNickname ? 'bg-white/5 text-white/20 cursor-not-allowed opacity-50' : 'bg-gradient-to-r from-[#ff007f] to-purple-600 text-white shadow-[0_10px_25px_rgba(255,0,127,0.3)] active:scale-95'}`}
                         >
                             <Sparkles className="w-4 h-4" /> Devam Et
                         </button>

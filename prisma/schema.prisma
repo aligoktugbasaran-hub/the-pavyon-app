@@ -8,10 +8,11 @@ datasource db {
 
 model User {
   id            String    @id @default(uuid())
-  nickname      String
+  email         String?   @unique
+  nickname      String    @unique
   photos        String[] // max 2 URL
   gender        String?
-  credits       Int       @default(0)
+  credits       Int       @default(100)
   earnings      Float     @default(0)
   createdAt     DateTime  @default(now())
   messages      Message[]
