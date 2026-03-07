@@ -13,13 +13,31 @@ import { NotificationMenu } from "@/components/pavyon/NotificationMenu";
 import { PublicProfileModal } from "@/components/pavyon/PublicProfileModal";
 import { CreditModal } from "@/components/pavyon/CreditModal";
 import { MessageSquare, Trophy, Sparkles, X } from "lucide-react";
+import { getDailyLeaderboardAction } from "@/actions/leaderboard";
 
 export default function PavyonPage() {
     const { isLoggedIn, nickname, avatarUrl, credits } = useUserStore();
     const router = useRouter();
-    const [selectedUserProfile, setSelectedUserProfile] = useState<{ id: number, name: string, avatar: string, age: number } | null>(null);
+    const [selectedUserProfile, setSelectedUserProfile] = useState<{ id: any, name: string, avatar: string, age: number } | null>(null);
     const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
     const [isGlobalChatOpen, setIsGlobalChatOpen] = useState(true);
+    const [leaderboard, setLeaderboard] = useState<{ givers: any[], receivers: any[] }>({ givers: [], receivers: [] });
+
+    // Fetch Leaderboard
+    const fetchLeaderboard = async () => {
+        try {
+            const data = await getDailyLeaderboardAction();
+            setLeaderboard(data);
+        } catch (e) {
+            console.error("Leaderboard fetch error", e);
+        }
+    };
+
+    useEffect(() => {
+        fetchLeaderboard();
+        const interval = setInterval(fetchLeaderboard, 30000); // 30s refresh
+        return () => clearInterval(interval);
+    }, []);
 
     // Otomatik kapatma mobilde
     useEffect(() => {
@@ -45,7 +63,7 @@ export default function PavyonPage() {
                 <UserProfileMenu />
 
                 <div className="flex-1 hidden md:flex items-center justify-center">
-                    <TopReceivers onUserClick={setSelectedUserProfile} />
+                    <TopReceivers users={leaderboard.receivers} onUserClick={setSelectedUserProfile} />
                 </div>
 
                 <div className="flex items-center gap-3 md:gap-6 shrink-0">
@@ -104,19 +122,19 @@ export default function PavyonPage() {
                                         <Trophy className="w-2.5 h-2.5" /> BONKÖRLER
                                     </h4>
                                     <div className="flex -space-x-2">
-                                        {[
-                                            { id: 101, name: "Baron", avatar: "/avatars/male_avatar_1.png", age: 34 },
-                                            { id: 102, name: "Reis", avatar: "/avatars/male_avatar_2.png", age: 41 },
-                                            { id: 103, name: "Dayı", avatar: "/avatars/male_avatar_3.png", age: 45 }
-                                        ].map((user) => (
-                                            <div
-                                                key={user.id}
-                                                className="relative cursor-pointer hover:scale-110 transition-all z-[10] hover:z-[50] shrink-0"
-                                                onClick={() => setSelectedUserProfile(user)}
-                                            >
-                                                <img src={user.avatar} className="w-6 h-6 rounded-full border border-gold-400 object-cover shadow-md" />
-                                            </div>
-                                        ))}
+                                        {leaderboard.givers.length > 0 ? (
+                                            leaderboard.givers.map((user) => (
+                                                <div
+                                                    key={user.id}
+                                                    className="relative cursor-pointer hover:scale-110 transition-all z-[10] hover:z-[50] shrink-0"
+                                                    onClick={() => setSelectedUserProfile({ ...user, age: 30 })}
+                                                >
+                                                    <img src={user.avatar} className="w-6 h-6 rounded-full border border-gold-400 object-cover shadow-md" />
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <span className="text-[8px] text-white/20 italic">Henüz yok</span>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -128,19 +146,19 @@ export default function PavyonPage() {
                                         <Sparkles className="w-2.5 h-2.5" /> ÜNLÜLER
                                     </h4>
                                     <div className="flex -space-x-2">
-                                        {[
-                                            { id: 201, name: "Selin", avatar: "/avatars/female_avatar_1.png", age: 24 },
-                                            { id: 202, name: "Buse", avatar: "/avatars/female_avatar_2.png", age: 21 },
-                                            { id: 203, name: "Ceren", avatar: "/avatars/female_avatar_3.png", age: 23 }
-                                        ].map((user) => (
-                                            <div
-                                                key={user.id}
-                                                className="relative cursor-pointer hover:scale-110 transition-all z-[10] hover:z-[50] shrink-0"
-                                                onClick={() => setSelectedUserProfile(user)}
-                                            >
-                                                <img src={user.avatar} className="w-6 h-6 rounded-full border border-neon-pink object-cover shadow-md" />
-                                            </div>
-                                        ))}
+                                        {leaderboard.receivers.length > 0 ? (
+                                            leaderboard.receivers.slice(0, 3).map((user) => (
+                                                <div
+                                                    key={user.id}
+                                                    className="relative cursor-pointer hover:scale-110 transition-all z-[10] hover:z-[50] shrink-0"
+                                                    onClick={() => setSelectedUserProfile(user)}
+                                                >
+                                                    <img src={user.avatar} className="w-6 h-6 rounded-full border border-neon-pink object-cover shadow-md" />
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <span className="text-[8px] text-white/20 italic">Henüz yok</span>
+                                        )}
                                     </div>
                                 </div>
                             </div>

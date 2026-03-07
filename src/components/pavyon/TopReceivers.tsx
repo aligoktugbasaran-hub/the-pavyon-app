@@ -14,10 +14,13 @@ const TOP_10 = [
 ];
 
 interface TopReceiversProps {
-    onUserClick?: (user: { id: number; name: string; avatar: string; age: number }) => void;
+    users?: Array<{ id: string | number; name: string; avatar: string; age: number; amount?: string | number }>;
+    onUserClick?: (user: { id: any; name: string; avatar: string; age: number }) => void;
 }
 
-export function TopReceivers({ onUserClick }: TopReceiversProps) {
+export function TopReceivers({ users = [], onUserClick }: TopReceiversProps) {
+    if (users.length === 0) return null; // Or show placeholder
+
     return (
         <div className="flex items-center justify-center gap-4 bg-black/40 px-6 py-2 rounded-full border border-white/5 mx-4 shrink-0 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
             <div className="flex items-center gap-1.5 shrink-0">
@@ -26,7 +29,7 @@ export function TopReceivers({ onUserClick }: TopReceiversProps) {
             </div>
 
             <div className="flex items-center gap-2 border-l border-white/10 pl-3">
-                {TOP_10.map((user, index) => (
+                {users.map((user, index) => (
                     <div
                         key={user.id}
                         className="relative group cursor-pointer flex shrink-0"
@@ -45,7 +48,7 @@ export function TopReceivers({ onUserClick }: TopReceiversProps) {
                         {/* Hover Tooltip */}
                         <div className="absolute top-14 left-1/2 -translate-x-1/2 bg-black/95 text-white text-xs font-bold px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-[9999] pointer-events-none border border-white/10 flex flex-col items-center shadow-xl">
                             <span>{user.name}</span>
-                            <span className="text-neon-pink text-[10px] mt-0.5">{user.giftAmount} Hediye</span>
+                            <span className="text-neon-pink text-[10px] mt-0.5">{user.amount || '0'} Hediye</span>
                         </div>
                     </div>
                 ))}

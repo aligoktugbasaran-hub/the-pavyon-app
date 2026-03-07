@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Gift, Check, AlertTriangle, Flame } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
+import { registerGiftAction } from "@/actions/leaderboard";
 
 const GIFTS = [
     { id: "lighter", name: "Çakmak", price: 25, icon: "🔥" },
@@ -32,12 +33,12 @@ export function GiftPanel() {
     const [recipient, setRecipient] = useState("");
     const [status, setStatus] = useState<"idle" | "sending" | "success" | "insufficient">("idle");
 
-    const { credits, removeCredits } = useUserStore();
+    const { id: senderId, nickname: senderName, avatarUrl: senderAvatar, credits, removeCredits } = useUserStore();
 
     const selectedGift = GIFTS.find(g => g.id === selectedGiftId) || null;
     const canSend = !!selectedGift && !!recipient;
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (!canSend || !selectedGift) return;
 
         if (credits < selectedGift.price) {
@@ -47,8 +48,25 @@ export function GiftPanel() {
         }
 
         setStatus("sending");
-        setTimeout(() => {
+        try {
+            // Deduct credits locally (Zustand)
             removeCredits(selectedGift.price);
+
+            // Register gift in DB (Server Action)
+            // Note: Recipient logic is still simplified, using the label as name/id for now
+            const targetRecipient = RECIPIENTS.find(r => r.value === recipient);
+
+            await registerGiftAction({
+                senderId: senderId || "anonymous-web",
+                senderNickname: senderName || "Misafir",
+                senderAvatar: senderAvatar || "/avatars/male_avatar_1.png",
+                receiverId: recipient, // Table or Specific User ID
+                receiverNickname: targetRecipient?.label || recipient,
+                receiverAvatar: "/avatars/female_avatar_1.png", // Mock receiver avatar
+                giftType: selectedGift.name,
+                creditCost: selectedGift.price,
+                tlValue: selectedGift.price * 0.20,
+            });
 
             const earnings = selectedGift.price * 0.20;
             const txId = `TX-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
@@ -59,11 +77,11 @@ export function GiftPanel() {
                 setStatus("idle");
                 setSelectedGiftId(null);
                 setRecipient("");
-                if (recipient !== "all") {
-                    alert(`Tebrikler! ${recipient} bu hediyeden ₺${earnings.toFixed(2)} kazanç sağladı.\n\nGüvenli İşlem ID: ${txId}`);
-                }
             }, 2000);
-        }, 700);
+        } catch (err) {
+            console.error(err);
+            setStatus("idle");
+        }
     };
 
     return (
