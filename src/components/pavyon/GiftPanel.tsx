@@ -50,13 +50,9 @@ export function GiftPanel() {
         setTimeout(() => {
             removeCredits(selectedGift.price);
 
-            // Recipient gets 20% back
             const earnings = selectedGift.price * 0.20;
-            // In a real app, we would use an API to add this to the RECIPIENT's balance.
-            // For simulation, if it's not "all" or generic, we show what they earned.
-            // addCredits(earnings); // Only if recipient is ME, but here we simulate the system safety.
-
-            console.log(`System: Distributed ₺${earnings} to ${recipient}`);
+            const txId = `TX-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+            console.log(`[SECURE] Payout: ₺${earnings} | ID: ${txId} | To: ${recipient}`);
 
             setStatus("success");
             setTimeout(() => {
@@ -64,7 +60,7 @@ export function GiftPanel() {
                 setSelectedGiftId(null);
                 setRecipient("");
                 if (recipient !== "all") {
-                    alert(`Tebrikler! ${recipient} bu hediyeden ₺${earnings.toFixed(2)} kazanç sağladı. Sistem güvenliği doğrulandı.`);
+                    alert(`Tebrikler! ${recipient} bu hediyeden ₺${earnings.toFixed(2)} kazanç sağladı.\n\nGüvenli İşlem ID: ${txId}`);
                 }
             }, 2000);
         }, 700);

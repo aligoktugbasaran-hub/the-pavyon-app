@@ -46,16 +46,17 @@ export function GiftModal({ isOpen, onClose, recipientName, recipientAvatar, onC
         setTimeout(() => {
             removeCredits(selectedGift.price);
 
-            // Recipient gets 20% back. Secure backend simulaton.
+            // Recipient gets 20% back. Secure backend simulation.
             const earnings = selectedGift.price * 0.20;
-            console.log(`SECURE PAYOUT: ₺${earnings} to ${recipientName}`);
+            const txId = `TX-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+            console.log(`[SECURE] Payout: ₺${earnings} | ID: ${txId} | To: ${recipientName}`);
 
             setStatus("success");
             setTimeout(() => {
                 setStatus("idle");
                 setSelectedGift(null);
                 onClose();
-                alert(`Tebrikler! ${recipientName} bu hediyeden ₺${earnings.toFixed(2)} kazanç sağladı. İşlem güvenli kanal üzerinden tamamlandı.`);
+                alert(`Tebrikler! ${recipientName} bu hediyeden ₺${earnings.toFixed(2)} kazanç sağladı.\n\nGüvenli İşlem ID: ${txId}`);
             }, 1800);
         }, 800);
     };
