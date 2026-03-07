@@ -47,5 +47,15 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Görüntülü görüşmeler yapmak ve profil fotoğrafı çekmek için kameranıza erişim gereklidir.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Görüntülü görüşmeler sırasında sesinizi iletmek için mikrofonunuza erişim gereklidir.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Galerinizden profil fotoğrafı seçebilmeniz için fotoğraflarınıza erişim gereklidir.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Profil fotoğraflarınızı kaydetmek için galeriye yazma izni gereklidir.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>
