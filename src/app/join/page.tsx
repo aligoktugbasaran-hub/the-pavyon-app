@@ -37,6 +37,10 @@ export default function PavyonAuthPage() {
     ];
 
     const handleJoin = () => {
+        if (!nickname.trim()) {
+            setStep(1);
+            return;
+        }
         // For now we just use the selected avatar and nickname to login locally
         const avatarUrl = selectedAvatar !== null ? avatars[selectedAvatar] : avatars[0];
         login(nickname || "Anonim", avatarUrl, "Gizli");

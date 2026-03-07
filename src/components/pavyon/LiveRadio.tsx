@@ -85,7 +85,7 @@ export function LiveRadio() {
     };
 
     return (
-        <div className="w-full bg-black/60 border border-white/10 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 glass-panel relative z-30 mb-6 shadow-[0_0_30px_rgba(255,0,127,0.1)]">
+        <div className="w-full bg-black/60 border border-white/10 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 glass-panel relative z-30 mb-2 shadow-[0_0_30px_rgba(255,0,127,0.1)]">
 
             {/* Sol Taraf: Canlı Sahne Info */}
             <div className="flex items-center gap-4">
