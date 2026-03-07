@@ -16,6 +16,8 @@ export default function PavyonAuthPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isAvatarBuilderOpen, setIsAvatarBuilderOpen] = useState(false);
+    const [verificationCode, setVerificationCode] = useState("");
+    const [isPrivacyAccepted, setIsPrivacyAccepted] = useState(false);
 
     // Avatar listesi: Pavyon kültürüne daha uygun, gerçekçi ve iddialı görseller (Neon/Makyajlı/Ağır Abi/Gece Kulübü hissi)
     const avatars = [
@@ -114,19 +116,75 @@ export default function PavyonAuthPage() {
                             </div>
                         </div>
 
+                        <div className="bg-black/40 border border-white/5 p-4 rounded-xl mb-4">
+                            <div className="flex items-start gap-3">
+                                <input
+                                    type="checkbox"
+                                    id="privacy"
+                                    checked={isPrivacyAccepted}
+                                    onChange={(e) => setIsPrivacyAccepted(e.target.checked)}
+                                    className="mt-1 w-4 h-4 accent-neon-pink"
+                                />
+                                <label htmlFor="privacy" className="text-[10px] text-white/50 leading-relaxed font-medium">
+                                    <span className="text-neon-pink font-bold">SORUMLULUK REDDİ:</span> Paylaştığınız kişisel bilgilerin (isim, soyisim, fotoğraf vb.) sorumluluğu tamamen size aittir. The Pavyon yönetimi bu bilgilerin üçüncü kişilerce kullanımından sorumlu tutulamaz.
+                                </label>
+                            </div>
+                        </div>
+
                         <button
                             onClick={() => {
                                 if (nickname.trim() === "") {
                                     alert("Lütfen bir lakap giriniz!");
+                                } else if (!isPrivacyAccepted) {
+                                    alert("Lütfen sorumluluk reddini kabul ediniz!");
                                 } else {
-                                    setStep(2);
+                                    setStep(email ? 1.5 : 2);
                                 }
                             }}
-                            disabled={nickname.trim() === ""}
-                            className={`w-full mt-4 py-4 px-6 rounded-2xl font-black transition-all transform flex items-center justify-center gap-2 uppercase tracking-widest text-xs ${nickname.trim() === "" ? 'bg-white/5 text-white/20 cursor-not-allowed opacity-50' : 'bg-gradient-to-r from-[#ff007f] to-purple-600 text-white shadow-[0_10px_25px_rgba(255,0,127,0.3)] active:scale-95'}`}
+                            disabled={nickname.trim() === "" || !isPrivacyAccepted}
+                            className={`w-full mt-4 py-4 px-6 rounded-2xl font-black transition-all transform flex items-center justify-center gap-2 uppercase tracking-widest text-xs ${nickname.trim() === "" || !isPrivacyAccepted ? 'bg-white/5 text-white/20 cursor-not-allowed opacity-50' : 'bg-gradient-to-r from-[#ff007f] to-purple-600 text-white shadow-[0_10px_25px_rgba(255,0,127,0.3)] active:scale-95'}`}
                         >
-                            <Sparkles className="w-4 h-4" /> Karakterimi Seç
+                            <Sparkles className="w-4 h-4" /> Devam Et
                         </button>
+                    </div>
+                )}
+
+                {/* Step 1.5: E-Posta Doğrulama (Simüle) */}
+                {step === 1.5 && (
+                    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500 text-center">
+                        <div className="w-16 h-16 bg-neon-pink/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-neon-pink/30">
+                            <Mail className="w-8 h-8 text-neon-pink" />
+                        </div>
+                        <h2 className="text-xl font-bold text-white">E-Postanı Doğrula</h2>
+                        <p className="text-sm text-white/50">
+                            <span className="text-white font-medium">{email}</span> adresine bir onay kodu gönderdik. Lütfen aşağıdaki alana girin.
+                        </p>
+
+                        <div className="flex justify-center gap-2">
+                            <input
+                                type="text"
+                                maxLength={6}
+                                value={verificationCode}
+                                onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ""))}
+                                placeholder="000000"
+                                className="w-48 bg-black/40 border border-white/10 rounded-xl py-4 text-center text-2xl font-black tracking-[0.5em] text-white focus:outline-none focus:border-neon-pink/50 transition-all"
+                            />
+                        </div>
+
+                        <button
+                            onClick={() => {
+                                if (verificationCode.length === 6) {
+                                    setStep(2);
+                                } else {
+                                    alert("Lütfen 6 haneli doğrulama kodunu girin (Simülasyon için herhangi bir 6 hane)");
+                                }
+                            }}
+                            className="w-full bg-neon-pink text-white font-black py-4 rounded-2xl shadow-[0_10px_25px_rgba(255,0,127,0.3)] uppercase tracking-widest text-xs active:scale-95 transition-all"
+                        >
+                            Doğrula ve Karakter Seç
+                        </button>
+
+                        <button onClick={() => setStep(1)} className="text-xs text-white/30 hover:text-neon-pink transition-colors uppercase font-bold tracking-widest pt-2">E-Postayı Değiştir</button>
                     </div>
                 )}
 

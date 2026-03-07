@@ -25,7 +25,15 @@ const MOCK_USER_NAMES = ["Ahmet", "Ayşe", "Mehmet", "Fatma", "Ali", "Zeynep", "
 // Chat kuralları için basit fonksiyon
 const checkMessageRules = (text: string) => {
     const forbiddenWords = ["küfür1", "küfür2", "reklam.com"];
-    return !forbiddenWords.some(word => text.toLowerCase().includes(word));
+    // Regex for phone numbers, social media handles, and emails
+    const contactInfoPattern = /([0-9\s-]{8,})|(@[a-zA-Z0-9._]+)|(ig:|fb:|wp:|\+90|\+1|whatsapp|telegram)/gi;
+
+    if (forbiddenWords.some(word => text.toLowerCase().includes(word))) return false;
+    if (contactInfoPattern.test(text)) {
+        alert("Güvenliğiniz için telefon numarası veya sosyal medya hesabı paylaşamazsınız!");
+        return false;
+    }
+    return true;
 };
 
 export function SeatLayout() {
@@ -215,8 +223,8 @@ export function SeatLayout() {
                 {/* Background effects for focused view */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,127,0.1),transparent_70%)] opacity-30 pointer-events-none" />
 
-                <div className="flex-1 flex flex-col items-center justify-start relative p-3 md:p-8 min-h-[10vh] md:min-h-0 pt-12 md:pt-8 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
-                    <div className="relative w-full max-w-[120px] md:max-w-sm aspect-square flex items-center justify-center scale-50 md:scale-110 lg:scale-125 -mt-24 md:mt-0">
+                <div className="flex-1 flex flex-col items-center justify-start relative p-3 md:p-8 min-h-[10vh] md:min-h-0 pt-20 md:pt-14 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
+                    <div className="relative w-full max-w-[120px] md:max-w-sm aspect-square flex items-center justify-center scale-75 md:scale-110 lg:scale-125 -mt-16 md:mt-0">
                         {/* Kırmızı Hilal Şeklinde Koltuk (Sofa) */}
                         <div
                             className="absolute rounded-full border-red-900 shadow-[inset_0_10px_30px_rgba(80,0,0,0.9),0_15px_40px_rgba(220,38,38,0.2)] z-0 flex items-center justify-center before:absolute before:inset-0 before:rounded-full before:border-[2px] before:border-red-500/30 before:border-t-transparent after:absolute after:inset-1 after:rounded-full after:border-[1px] after:border-white/5 after:border-t-transparent"

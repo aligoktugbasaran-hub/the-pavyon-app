@@ -35,8 +35,8 @@ export default function Home() {
           <img
             src="/logo.png"
             alt="The Pavyon Logo"
-            className="w-32 h-32 object-contain relative z-10"
-            style={{ width: '85%', height: '85%' }}
+            className="w-24 h-24 md:w-32 md:h-32 object-contain relative z-10"
+            style={{ width: '70%', height: '70%' }}
             onError={(e) => {
               e.currentTarget.src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
             }}

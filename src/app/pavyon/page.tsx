@@ -95,15 +95,15 @@ export default function PavyonPage() {
                             <LiveRadio />
                         </div>
 
-                        {/* Compact Leaderboards on the same level as radio on tablet/desktop, nested on mobile */}
-                        <div className="grid grid-cols-2 gap-2">
+                        {/* Compact Leaderboards on the same level as radio on tablet/desktop, stacked on mobile */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                             {/* Bonkörler (Givers) */}
-                            <div className="bg-black/40 border border-gold-500/20 rounded-xl p-2.5 flex items-center justify-between gap-3">
-                                <div className="flex flex-col">
-                                    <h4 className="text-[9px] font-black text-gold-400/80 uppercase tracking-tighter mb-1.5 flex items-center gap-1">
+                            <div className="bg-black/60 border border-gold-500/30 rounded-xl p-2 md:p-2.5 flex items-center justify-between gap-3 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
+                                <div className="flex flex-col flex-1">
+                                    <h4 className="text-[9px] font-black text-gold-400/90 uppercase tracking-tighter mb-1.5 flex items-center gap-1">
                                         <Trophy className="w-3 h-3" /> BONKÖRLER
                                     </h4>
-                                    <div className="flex -space-x-2">
+                                    <div className="flex -space-x-2.5">
                                         {[
                                             { id: 101, name: "Baron", avatar: "/avatars/male_avatar_1.png", age: 34 },
                                             { id: 102, name: "Reis", avatar: "/avatars/male_avatar_2.png", age: 41 },
@@ -111,10 +111,10 @@ export default function PavyonPage() {
                                         ].map((user, i) => (
                                             <div
                                                 key={user.id}
-                                                className="relative cursor-pointer hover:scale-110 active:scale-90 transition-all z-[10] hover:z-[20]"
+                                                className="relative cursor-pointer hover:scale-125 hover:-translate-y-1 active:scale-90 transition-all z-[10] hover:z-[50]"
                                                 onClick={() => setSelectedUserProfile(user)}
                                             >
-                                                <img src={user.avatar} className="w-8 h-8 rounded-full border border-gold-400 object-cover shadow-lg" />
+                                                <img src={user.avatar} className="w-7 h-7 rounded-full border border-gold-400 object-cover shadow-lg" />
                                             </div>
                                         ))}
                                     </div>
@@ -122,12 +122,12 @@ export default function PavyonPage() {
                             </div>
 
                             {/* Ünlüler (Receivers) */}
-                            <div className="bg-black/40 border border-neon-pink/20 rounded-xl p-2.5 flex items-center justify-between gap-3">
-                                <div className="flex flex-col">
-                                    <h4 className="text-[9px] font-black text-neon-pink/80 uppercase tracking-tighter mb-1.5 flex items-center gap-1">
+                            <div className="bg-black/60 border border-neon-pink/30 rounded-xl p-2 md:p-2.5 flex items-center justify-between gap-3 shadow-[0_0_15px_rgba(255,0,127,0.1)]">
+                                <div className="flex flex-col flex-1">
+                                    <h4 className="text-[9px] font-black text-neon-pink/90 uppercase tracking-tighter mb-1.5 flex items-center gap-1">
                                         <Sparkles className="w-3 h-3" /> ÜNLÜLER
                                     </h4>
-                                    <div className="flex -space-x-2">
+                                    <div className="flex -space-x-2.5">
                                         {[
                                             { id: 201, name: "Selin", avatar: "/avatars/female_avatar_1.png", age: 24 },
                                             { id: 202, name: "Buse", avatar: "/avatars/female_avatar_2.png", age: 21 },
@@ -135,10 +135,10 @@ export default function PavyonPage() {
                                         ].map((user, i) => (
                                             <div
                                                 key={user.id}
-                                                className="relative cursor-pointer hover:scale-110 active:scale-90 transition-all z-[10] hover:z-[20]"
+                                                className="relative cursor-pointer hover:scale-125 hover:-translate-y-1 active:scale-90 transition-all z-[10] hover:z-[50]"
                                                 onClick={() => setSelectedUserProfile(user)}
                                             >
-                                                <img src={user.avatar} className="w-8 h-8 rounded-full border border-neon-pink object-cover shadow-lg" />
+                                                <img src={user.avatar} className="w-7 h-7 rounded-full border border-neon-pink object-cover shadow-lg" />
                                             </div>
                                         ))}
                                     </div>

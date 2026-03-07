@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme {
+:root {
   --color-bordeaux-500: #4A0404;
   --color-bordeaux-900: #2a0202;
   --color-purple-900: #2E0249;
@@ -8,35 +8,50 @@
   --color-gold-400: #FFD700;
   --color-gold-500: #e6c200;
   --color-neon-pink: #FF007F;
-  --color-pavyon-bg: #09010E;
+  --color-pavyon-bg: #05000a;
 
   /* User Requested Colors */
   --color-pavyon-dark: #0a0510;
   --color-pavyon-neonPink: #ff007f;
   --color-pavyon-gold: #ffd700;
-  --color-pavyon-cardBg: rgba(20, 10, 30, 0.7);
+  --color-pavyon-cardBg: rgba(20, 10, 30, 0.85);
 
-  --font-heading: var(--font-playfair);
-  --font-body: var(--font-inter);
-  --font-sans: var(--font-inter);
+  --font-heading: sans-serif;
+  /* Fallback */
+  --font-body: sans-serif;
+}
+
+@theme {
+  --color-neon-pink: #FF007F;
+  --color-pavyon-bg: #050010;
+  --color-gold-400: #FFD700;
+  --color-gold-500: #e6c200;
 }
 
 @layer base {
   body {
-    background-color: var(--color-pavyon-bg);
-    background-image: 
+    background-color: #05000a;
+    background-image:
       radial-gradient(circle at 10% 20%, rgba(46, 2, 73, 0.4) 0%, transparent 40%),
       radial-gradient(circle at 90% 80%, rgba(255, 0, 127, 0.15) 0%, transparent 40%),
-      radial-gradient(circle at 50% 50%, rgba(9, 1, 14, 1) 0%, rgba(5, 0, 8, 1) 100%);
+      radial-gradient(circle at 50% 50%, #05000a 0%, #000000 100%);
     background-attachment: fixed;
     color: #FAFAFA;
-    font-family: var(--font-body);
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    overscroll-behavior-none: none;
+    /* Native look */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading);
     letter-spacing: -0.02em;
   }
@@ -81,7 +96,7 @@
   .neon-text-gold {
     text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.4);
   }
-  
+
   .pavyon-grid {
     background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
