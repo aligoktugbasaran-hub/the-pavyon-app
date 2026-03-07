@@ -112,18 +112,18 @@ export function LiveRadio() {
             </div>
 
             {/* Orta/Sağ Alan: Kontroller */}
-            <div className="flex items-center gap-4 md:gap-6 bg-black/40 px-6 py-2 rounded-full border border-white/5">
+            <div className="flex items-center gap-3 md:gap-6 bg-black/40 px-3 md:px-6 py-1.5 rounded-full border border-white/5">
 
                 {/* Oynat / Durdur */}
                 <button
                     onClick={togglePlay}
-                    className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 hover:bg-neon-pink text-white hover:text-white transition-all shadow-lg hover:shadow-[0_0_15px_rgba(255,0,127,0.6)] hover:scale-105"
+                    className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-white/10 hover:bg-neon-pink text-white hover:text-white transition-all shadow-lg hover:shadow-[0_0_15px_rgba(255,0,127,0.6)] hover:scale-105"
                 >
-                    {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-1" />}
+                    {isPlaying ? <Pause className="w-4 h-4 md:w-5 md:h-5 fill-current" /> : <Play className="w-4 h-4 md:w-5 md:h-5 fill-current ml-0.5" />}
                 </button>
 
                 {/* Ses Kontrol */}
-                <div className="flex items-center gap-2 group">
+                <div className="hidden sm:flex items-center gap-2 group">
                     <button onClick={toggleMute} className="text-white/60 hover:text-white transition-colors">
                         {isMuted || volume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                     </button>
@@ -134,18 +134,19 @@ export function LiveRadio() {
                         step="0.05"
                         value={isMuted ? 0 : volume}
                         onChange={handleVolumeChange}
-                        className="w-20 md:w-24 h-1.5 rounded-full bg-white/20 appearance-none cursor-pointer accent-neon-pink"
+                        className="w-16 md:w-24 h-1 rounded-full bg-white/20 appearance-none cursor-pointer accent-neon-pink"
                     />
                 </div>
 
                 {/* Radyo Seçici Dropdown */}
-                <div className="relative border-l border-white/10 pl-4 md:pl-6 ml-2">
+                <div className="relative border-l border-white/10 pl-3 md:pl-6 ml-1">
                     <button
                         onClick={() => setIsRadioMenuOpen(!isRadioMenuOpen)}
-                        className="flex items-center gap-2 text-xs font-bold text-white/80 hover:text-white px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/5 transition-all"
+                        className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-white/80 hover:text-white px-2 md:px-3 py-1 md:py-1.5 rounded-lg border border-white/10 hover:bg-white/5 transition-all"
                     >
-                        <Radio className="w-4 h-4 text-gold-400" />
-                        Kanal Değiştir
+                        <Radio className="w-3.5 h-3.5 text-gold-400" />
+                        <span className="hidden xs:inline">Kanal Değiştir</span>
+                        <span className="xs:hidden">Radyo</span>
                     </button>
 
                     {isRadioMenuOpen && (

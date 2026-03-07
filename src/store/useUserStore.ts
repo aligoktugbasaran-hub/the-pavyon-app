@@ -66,7 +66,7 @@ export const useUserStore = create<UserState>()(
 
             login: (nickname, avatarUrl, gender) =>
                 set({
-                    id: crypto.randomUUID(),
+                    id: Math.random().toString(36).substring(2, 9) + Date.now().toString(36),
                     nickname,
                     avatarUrl,
                     gender,

@@ -6,7 +6,6 @@ import { useUserStore } from "@/store/useUserStore";
 export function NotificationMenu() {
     const [isOpen, setIsOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
-    const [panelPos, setPanelPos] = useState({ top: 0, right: 0 });
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     const notifications = useUserStore(state => state.notifications);
@@ -25,13 +24,6 @@ export function NotificationMenu() {
     }, []);
 
     const handleOpen = () => {
-        if (buttonRef.current) {
-            const rect = buttonRef.current.getBoundingClientRect();
-            setPanelPos({
-                top: rect.bottom + 8,
-                right: window.innerWidth - rect.right,
-            });
-        }
         setIsOpen(!isOpen);
     };
 
@@ -51,10 +43,9 @@ export function NotificationMenu() {
             {/* Backdrop */}
             <div className="fixed inset-0 z-[9000]" onClick={() => setIsOpen(false)} />
 
-            {/* Dropdown */}
+            {/* Dropdown - Fixed for Mobile (centered with margins) and md:w-80 for desktop near the button */}
             <div
-                className="fixed z-[9001] w-80 bg-black/95 border border-white/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
-                style={{ top: panelPos.top, right: panelPos.right }}
+                className="fixed z-[9001] top-16 right-4 left-4 md:left-auto md:right-10 md:w-80 bg-black/95 border border-white/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
             >
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-white/10 bg-gradient-to-r from-neon-pink/10 to-transparent">
@@ -131,7 +122,7 @@ export function NotificationMenu() {
                                                 </button>
                                                 <button
                                                     onClick={() => removeNotification(notif.id)}
-                                                    className="w-8 shrink-0 bg-white/5 hover:bg-white/10 text-white/60 text-[10px] font-bold py-1.5 rounded-lg flex items-center justify-center transition-all"
+                                                    className="w-8 shrink-0 bg-white/5 hover:bg-white/10 text-white/60 text-[10px) font-bold py-1.5 rounded-lg flex items-center justify-center transition-all"
                                                 >
                                                     <X className="w-3 h-3" />
                                                 </button>

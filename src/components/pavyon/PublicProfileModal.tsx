@@ -59,18 +59,18 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
 
             <div className="relative w-full max-w-md bg-[#0d0714] border border-white/20 rounded-3xl shadow-[0_30px_60px_rgba(0,0,0,0.9)] overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
 
-                {/* Header */}
-                <div className="h-32 bg-gradient-to-br from-neon-pink/40 via-purple-900/40 to-black relative shrink-0">
+                {/* Header - Smaller for Mobile */}
+                <div className="h-24 md:h-32 bg-gradient-to-br from-neon-pink/40 via-purple-900/40 to-black relative shrink-0">
                     <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full transition-colors backdrop-blur-md z-10">
                         <X className="w-5 h-5" />
                     </button>
-                    <div className="absolute -bottom-12 left-6">
-                        <img src={user.avatar} alt={user.name} className="w-24 h-24 rounded-full border-4 border-[#0d0714] object-cover shadow-[0_0_20px_rgba(255,0,127,0.4)]" />
+                    <div className="absolute -bottom-10 left-6 md:-bottom-12">
+                        <img src={user.avatar} alt={user.name} className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-[#0d0714] object-cover shadow-[0_0_20px_rgba(255,0,127,0.4)]" />
                     </div>
                 </div>
 
-                {/* Profile Info */}
-                <div className="pt-14 px-6 pb-6 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
+                {/* Profile Info - Fixed Scrolling for Mobile */}
+                <div className="pt-10 md:pt-14 px-4 md:px-6 pb-6 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
                     <div className="flex justify-between items-start mb-4">
                         <div>
                             <h2 className="text-2xl font-bold text-white flex items-center gap-2">

@@ -142,18 +142,18 @@ export default function PavyonAuthPage() {
 
                         {/* Avatar Grid */}
                         <div>
-                            <p className="text-sm text-gray-400 mb-3 text-center">Seni yansıtacak bir avatar seç...</p>
-                            <div className="grid grid-cols-4 md:grid-cols-6 gap-3 max-h-48 overflow-y-auto p-1 rounded-xl scrollbar-thin scrollbar-thumb-[#ff007f]/50">
+                            <p className="text-xs text-gray-400 mb-3 text-center">Seni yansıtacak bir avatar seç...</p>
+                            <div className="grid grid-cols-5 md:grid-cols-6 gap-2 max-h-40 overflow-y-auto p-1 rounded-xl scrollbar-thin scrollbar-thumb-[#ff007f]/50">
                                 {avatars.map((avatar, idx) => (
                                     <div
                                         key={idx}
                                         onClick={() => setSelectedAvatar(idx)}
-                                        className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${selectedAvatar === idx ? 'border-yellow-400 shadow-[0_0_15px_rgba(255,215,0,0.6)] scale-110 relative z-10' : 'border-transparent hover:border-white/20'}`}
+                                        className={`cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${selectedAvatar === idx ? 'border-yellow-400 shadow-[0_0_10px_rgba(255,215,0,0.6)] scale-105 relative z-10' : 'border-transparent hover:border-white/20'}`}
                                     >
                                         <img src={avatar} alt={`Avatar ${idx}`} className="w-full h-full object-cover aspect-square bg-black/50" />
                                         {selectedAvatar === idx && (
-                                            <div className="absolute top-1 right-1 bg-black rounded-full text-yellow-400">
-                                                <CheckCircle2 className="w-4 h-4" />
+                                            <div className="absolute top-0.5 right-0.5 bg-black rounded-full text-yellow-400">
+                                                <CheckCircle2 className="w-3 h-3" />
                                             </div>
                                         )}
                                     </div>
