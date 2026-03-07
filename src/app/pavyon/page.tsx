@@ -63,8 +63,12 @@ export default function PavyonPage() {
                 <UserProfileMenu />
 
                 <div className="flex-1 hidden md:flex items-center justify-center">
-                    {/* Placeholder for center title or secondary info if needed */}
-                    <div className="text-gold-400 font-heading font-black tracking-widest text-xl drop-shadow-[0_0_10px_rgba(255,215,0,0.3)]">THE PAVYON</div>
+                    <img
+                        src="/logo.png"
+                        alt="The Pavyon Logo"
+                        className="h-12 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,215,0,0.4)] hover:scale-110 transition-transform cursor-pointer"
+                        onClick={() => window.location.reload()}
+                    />
                 </div>
 
                 <div className="flex items-center gap-3 md:gap-6 shrink-0">
