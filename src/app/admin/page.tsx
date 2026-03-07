@@ -102,7 +102,7 @@ export default function AdminDashboard() {
             {/* Sidebar */}
             <aside className="w-full md:w-64 bg-black/60 border-b md:border-b-0 md:border-r border-white/10 flex flex-col z-20 shrink-0 backdrop-blur-xl">
                 <div className="p-6 flex items-center gap-3 border-b border-white/10">
-                    <img src="/logo.png" className="w-8 h-8 object-contain" alt="Admin Logo" />
+                    <img src="/logo.png" className="w-10 h-10 object-contain drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]" alt="Admin Logo" />
                     <span className="font-heading font-black text-lg text-gold-400 tracking-tighter">PAVYON <span className="text-white/40 text-[10px] tracking-widest ml-1">ADMIN</span></span>
                 </div>
 

@@ -21,22 +21,26 @@ export default function Home() {
         transition={{ duration: 1, ease: "easeOut" }}
         className="text-center z-10 max-w-xl flex flex-col items-center"
       >
-        {/* Logo Container - Large & Pulsing */}
+        {/* Unified Premium Logo - Large, Glowing & Pulsing */}
         <motion.div
           animate={{
             scale: [1, 1.05, 1],
-            filter: ["drop-shadow(0 0 10px rgba(255,215,0,0.2))", "drop-shadow(0 0 20px rgba(255,215,0,0.4))", "drop-shadow(0 0 10px rgba(255,215,0,0.2))"]
+            filter: [
+              "drop-shadow(0 0 15px rgba(255,215,0,0.3))",
+              "drop-shadow(0 0 30px rgba(255,215,0,0.5))",
+              "drop-shadow(0 0 15px rgba(255,215,0,0.3))"
+            ]
           }}
           transition={{ duration: 4, repeat: Infinity }}
-          className="w-40 h-40 md:w-48 md:h-48 mb-8 rounded-full border-[3px] border-gold-500/30 flex items-center justify-center p-2 relative bg-black/40 backdrop-blur-sm shadow-[0_0_40px_rgba(0,0,0,0.5)]"
-          style={{ width: '160px', height: '160px' }}
+          className="mb-8 relative"
         >
-          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-gold-500/10 to-transparent blur-md -z-10" />
           <img
             src="/logo.png"
-            alt="The Pavyon Logo"
-            className="w-32 h-32 object-contain relative z-10"
-            style={{ width: '85%', height: '85%' }}
+            alt="The Pavyon Original Logo"
+            className="w-48 h-48 md:w-64 md:h-64 object-contain relative z-10"
+            style={{
+              filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.8))'
+            }}
             onError={(e) => {
               e.currentTarget.src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
             }}

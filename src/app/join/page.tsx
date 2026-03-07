@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Upload, Mail, Lock, User as UserIcon, CheckCircle2, Wand2, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { AvatarBuilder } from "@/components/pavyon/AvatarBuilder";
@@ -55,18 +56,28 @@ export default function PavyonAuthPage() {
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#ff007f] rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse"></div>
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#ffd700] rounded-full mix-blend-screen filter blur-[150px] opacity-10"></div>
 
-            {/* Tabela / Logo Alanı */}
+            {/* Unified Premium Logo */}
             <div className="z-10 flex flex-col items-center mb-8">
-                <img
-                    src="/logo.png"
-                    alt="The Pavyon Icon"
-                    className="w-40 h-40 md:w-56 md:h-56 object-contain drop-shadow-[0_0_30px_rgba(255,215,0,0.4)] mb-2"
-                    style={{
-                        width: '180px',
-                        height: '180px',
-                        scale: '1.2'
+                <motion.div
+                    animate={{
+                        scale: [1, 1.05, 1],
+                        filter: [
+                            "drop-shadow(0 0 15px rgba(255,215,0,0.3))",
+                            "drop-shadow(0 0 30px rgba(255,215,0,0.5))",
+                            "drop-shadow(0 0 15px rgba(255,215,0,0.3))"
+                        ]
                     }}
-                />
+                    transition={{ duration: 4, repeat: Infinity }}
+                >
+                    <img
+                        src="/logo.png"
+                        alt="The Pavyon Original Logo"
+                        className="w-40 h-40 md:w-56 md:h-56 object-contain"
+                        style={{
+                            filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.8))'
+                        }}
+                    />
+                </motion.div>
                 <p className="text-[#ff007f] mt-2 tracking-widest text-sm uppercase opacity-80 shadow-black drop-shadow-lg">
                     Gerçek kimliğini kapıda bırak
                 </p>
