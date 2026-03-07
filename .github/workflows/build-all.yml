@@ -21,8 +21,16 @@ jobs:
       - name: Install Deps
         run: npm ci
 
+      - name: Generate Prisma
+        run: npx prisma generate
+
+      - name: Prep Static Export (Remove API)
+        run: rm -rf src/app/api
+
       - name: Build Web
         run: npm run build
+        env:
+          IS_CAPACITOR: true
 
       - name: Capacitor Sync
         run: npx cap sync ios
@@ -59,8 +67,16 @@ jobs:
       - name: Install Deps
         run: npm ci
 
+      - name: Generate Prisma
+        run: npx prisma generate
+
+      - name: Prep Static Export (Remove API)
+        run: rm -rf src/app/api
+
       - name: Build Web
         run: npm run build
+        env:
+          IS_CAPACITOR: true
 
       - name: Fix Android Assets Prefix
         run: |

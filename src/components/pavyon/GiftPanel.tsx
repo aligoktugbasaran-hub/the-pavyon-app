@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Gift, Check, AlertTriangle, Flame } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
-import { registerGiftAction } from "@/actions/leaderboard";
+import { fetchWithBase } from "@/lib/api";
 
 const GIFTS = [
     { id: "lighter", name: "Çakmak", price: 25, icon: "🔥" },
@@ -52,20 +52,22 @@ export function GiftPanel() {
             // Deduct credits locally (Zustand)
             removeCredits(selectedGift.price);
 
-            // Register gift in DB (Server Action)
-            // Note: Recipient logic is still simplified, using the label as name/id for now
+            // Register gift in DB (API Call)
             const targetRecipient = RECIPIENTS.find(r => r.value === recipient);
 
-            await registerGiftAction({
-                senderId: senderId || "anonymous-web",
-                senderNickname: senderName || "Misafir",
-                senderAvatar: senderAvatar || "/avatars/male_avatar_1.png",
-                receiverId: recipient, // Table or Specific User ID
-                receiverNickname: targetRecipient?.label || recipient,
-                receiverAvatar: "/avatars/female_avatar_1.png", // Mock receiver avatar
-                giftType: selectedGift.name,
-                creditCost: selectedGift.price,
-                tlValue: selectedGift.price * 0.20,
+            await fetchWithBase("/api/gift", {
+                method: "POST",
+                body: JSON.stringify({
+                    senderId: senderId || "anonymous-web",
+                    senderNickname: senderName || "Misafir",
+                    senderAvatar: senderAvatar || "/avatars/male_avatar_1.png",
+                    receiverId: recipient,
+                    receiverNickname: targetRecipient?.label || recipient,
+                    receiverAvatar: "/avatars/female_avatar_1.png",
+                    giftType: selectedGift.name,
+                    creditCost: selectedGift.price,
+                    tlValue: selectedGift.price * 0.20,
+                })
             });
 
             const earnings = selectedGift.price * 0.20;

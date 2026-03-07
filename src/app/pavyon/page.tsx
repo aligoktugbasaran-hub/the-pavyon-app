@@ -13,7 +13,7 @@ import { NotificationMenu } from "@/components/pavyon/NotificationMenu";
 import { PublicProfileModal } from "@/components/pavyon/PublicProfileModal";
 import { CreditModal } from "@/components/pavyon/CreditModal";
 import { MessageSquare, Trophy, Sparkles, X } from "lucide-react";
-import { getDailyLeaderboardAction } from "@/actions/leaderboard";
+import { fetchWithBase } from "@/lib/api";
 
 export default function PavyonPage() {
     const { isLoggedIn, nickname, avatarUrl, credits } = useUserStore();
@@ -26,7 +26,7 @@ export default function PavyonPage() {
     // Fetch Leaderboard
     const fetchLeaderboard = async () => {
         try {
-            const data = await getDailyLeaderboardAction();
+            const data = await fetchWithBase("/api/leaderboard");
             setLeaderboard(data);
         } catch (e) {
             console.error("Leaderboard fetch error", e);
@@ -63,7 +63,8 @@ export default function PavyonPage() {
                 <UserProfileMenu />
 
                 <div className="flex-1 hidden md:flex items-center justify-center">
-                    <TopReceivers users={leaderboard.receivers} onUserClick={setSelectedUserProfile} />
+                    {/* Placeholder for center title or secondary info if needed */}
+                    <div className="text-gold-400 font-heading font-black tracking-widest text-xl drop-shadow-[0_0_10px_rgba(255,215,0,0.3)]">THE PAVYON</div>
                 </div>
 
                 <div className="flex items-center gap-3 md:gap-6 shrink-0">
@@ -96,8 +97,8 @@ export default function PavyonPage() {
                     </div>
                 </aside>
 
-                {/* Center Content: Live Radio + Leaderboards + Seats */}
-                <main className="flex-1 flex flex-col gap-2 shrink min-w-0 h-full relative">
+                {/* Center Content: Leaderboards (TOP) + Live Radio + Seats */}
+                <main className="flex-1 flex flex-col gap-4 shrink min-w-0 h-full relative">
                     {/* Chat Toggle Button (Visible when chat closed) */}
                     {!isGlobalChatOpen && (
                         <button
@@ -108,60 +109,64 @@ export default function PavyonPage() {
                         </button>
                     )}
 
-                    <div className="flex flex-col gap-2 shrink-0">
-                        <div className="w-full">
-                            <LiveRadio />
-                        </div>
-
-                        {/* Combined Leaders Row: Saves space on all devices */}
-                        <div className="grid grid-cols-2 gap-2">
+                    <div className="flex flex-col gap-4 shrink-0">
+                        {/* Combined Leaders Row: MOVED TO TOP AND ENLARGED */}
+                        <div className="grid grid-cols-2 gap-4">
                             {/* Bonkörler (Givers) */}
-                            <div className="bg-black/60 border border-gold-500/30 rounded-xl p-2 flex items-center justify-between gap-2 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
+                            <div className="bg-black/60 border-2 border-gold-500/40 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-[0_0_25px_rgba(255,215,0,0.15)] backdrop-blur-md">
                                 <div className="flex flex-col flex-1 min-w-0">
-                                    <h4 className="text-[8px] font-black text-gold-400/90 uppercase tracking-tighter mb-1 flex items-center gap-1">
-                                        <Trophy className="w-2.5 h-2.5" /> BONKÖRLER
+                                    <h4 className="text-[10px] md:text-xs font-black text-gold-400 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                                        <Trophy className="w-4 h-4" /> GÜNÜN BONKÖRLERİ
                                     </h4>
-                                    <div className="flex -space-x-2">
+                                    <div className="flex -space-x-3 items-center">
                                         {leaderboard.givers.length > 0 ? (
-                                            leaderboard.givers.map((user) => (
+                                            leaderboard.givers.map((user, idx) => (
                                                 <div
                                                     key={user.id}
-                                                    className="relative cursor-pointer hover:scale-110 transition-all z-[10] hover:z-[50] shrink-0"
+                                                    className={`relative cursor-pointer hover:scale-110 transition-all z-[${10 - idx}] hover:z-[50] shrink-0 group`}
                                                     onClick={() => setSelectedUserProfile({ ...user, age: 30 })}
                                                 >
-                                                    <img src={user.avatar} className="w-6 h-6 rounded-full border border-gold-400 object-cover shadow-md" />
+                                                    <div className="absolute -inset-1 bg-gold-400/20 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                    <img src={user.avatar} className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-2 border-gold-400 object-cover shadow-[0_0_15px_rgba(255,215,0,0.3)] bg-black ${idx === 0 ? 'scale-110' : ''}`} />
+                                                    {idx === 0 && <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xl">👑</div>}
                                                 </div>
                                             ))
                                         ) : (
-                                            <span className="text-[8px] text-white/20 italic">Henüz yok</span>
+                                            <span className="text-xs text-white/20 italic ml-2">İkram bekliyor...</span>
                                         )}
                                     </div>
                                 </div>
                             </div>
 
                             {/* Ünlüler (Receivers) */}
-                            <div className="bg-black/60 border border-neon-pink/30 rounded-xl p-2 flex items-center justify-between gap-2 shadow-[0_0_15px_rgba(255,0,127,0.1)]">
+                            <div className="bg-black/60 border-2 border-neon-pink/40 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-[0_0_25px_rgba(255,0,127,0.15)] backdrop-blur-md">
                                 <div className="flex flex-col flex-1 min-w-0">
-                                    <h4 className="text-[8px] font-black text-neon-pink/90 uppercase tracking-tighter mb-1 flex items-center gap-1">
-                                        <Sparkles className="w-2.5 h-2.5" /> ÜNLÜLER
+                                    <h4 className="text-[10px] md:text-xs font-black text-neon-pink uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                                        <Sparkles className="w-4 h-4" /> GÜNÜN ÜNLÜLERİ
                                     </h4>
-                                    <div className="flex -space-x-2">
+                                    <div className="flex -space-x-3 items-center">
                                         {leaderboard.receivers.length > 0 ? (
-                                            leaderboard.receivers.slice(0, 3).map((user) => (
+                                            leaderboard.receivers.slice(0, 5).map((user, idx) => (
                                                 <div
                                                     key={user.id}
-                                                    className="relative cursor-pointer hover:scale-110 transition-all z-[10] hover:z-[50] shrink-0"
+                                                    className={`relative cursor-pointer hover:scale-110 transition-all z-[${10 - idx}] hover:z-[50] shrink-0 group`}
                                                     onClick={() => setSelectedUserProfile(user)}
                                                 >
-                                                    <img src={user.avatar} className="w-6 h-6 rounded-full border border-neon-pink object-cover shadow-md" />
+                                                    <div className="absolute -inset-1 bg-neon-pink/20 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                    <img src={user.avatar} className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-2 border-neon-pink object-cover shadow-[0_0_15px_rgba(255,0,127,0.3)] bg-black ${idx === 0 ? 'scale-110' : idx > 2 ? 'opacity-60 grayscale-[0.5]' : ''}`} />
+                                                    {idx === 0 && <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xl text-neon-pink drop-shadow-[0_0_5px_rgba(255,0,127,0.8)]">✨</div>}
                                                 </div>
                                             ))
                                         ) : (
-                                            <span className="text-[8px] text-white/20 italic">Henüz yok</span>
+                                            <span className="text-xs text-white/20 italic ml-2">Sahne boş...</span>
                                         )}
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div className="w-full">
+                            <LiveRadio />
                         </div>
                     </div>
 
