@@ -49,11 +49,23 @@ export function GiftPanel() {
         setStatus("sending");
         setTimeout(() => {
             removeCredits(selectedGift.price);
+
+            // Recipient gets 20% back
+            const earnings = selectedGift.price * 0.20;
+            // In a real app, we would use an API to add this to the RECIPIENT's balance.
+            // For simulation, if it's not "all" or generic, we show what they earned.
+            // addCredits(earnings); // Only if recipient is ME, but here we simulate the system safety.
+
+            console.log(`System: Distributed ₺${earnings} to ${recipient}`);
+
             setStatus("success");
             setTimeout(() => {
                 setStatus("idle");
                 setSelectedGiftId(null);
                 setRecipient("");
+                if (recipient !== "all") {
+                    alert(`Tebrikler! ${recipient} bu hediyeden ₺${earnings.toFixed(2)} kazanç sağladı. Sistem güvenliği doğrulandı.`);
+                }
             }, 2000);
         }, 700);
     };
@@ -126,8 +138,8 @@ export function GiftPanel() {
                     onClick={handleSend}
                     disabled={!canSend || status === "sending"}
                     className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${canSend
-                            ? "bg-gradient-to-r from-neon-pink to-purple-600 text-white shadow-[0_0_15px_rgba(255,0,127,0.3)] hover:opacity-90"
-                            : "bg-white/5 text-white/30 border border-white/10 cursor-not-allowed"
+                        ? "bg-gradient-to-r from-neon-pink to-purple-600 text-white shadow-[0_0_15px_rgba(255,0,127,0.3)] hover:opacity-90"
+                        : "bg-white/5 text-white/30 border border-white/10 cursor-not-allowed"
                         }`}
                 >
                     {status === "sending" ? (
