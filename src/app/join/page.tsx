@@ -1,52 +1,97 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Upload, Mail, Lock, User as UserIcon, CheckCircle2, Wand2, Sparkles } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Upload, Mail, Lock, User as UserIcon, CheckCircle2, Wand2, Sparkles, X, Camera as CameraIcon } from 'lucide-react';
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { AvatarBuilder } from "@/components/pavyon/AvatarBuilder";
+import { Camera, CameraResultType } from '@capacitor/camera';
 
 export default function PavyonAuthPage() {
     const router = useRouter();
     const login = useUserStore((state) => state.login);
 
     const [step, setStep] = useState(1);
-    const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
+    const [selectedAvatar, setSelectedAvatar] = useState<number | null>(0);
+    const [customAvatar, setCustomAvatar] = useState<string | null>(null);
     const [nickname, setNickname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isAvatarBuilderOpen, setIsAvatarBuilderOpen] = useState(false);
     const [verificationCode, setVerificationCode] = useState("");
     const [isPrivacyAccepted, setIsPrivacyAccepted] = useState(false);
+    const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
 
-    // Avatar listesi: Pavyon kültürüne daha uygun, gerçekçi ve iddialı görseller (Neon/Makyajlı/Ağır Abi/Gece Kulübü hissi)
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Avatar listesi: Pavyon kültürüne daha uygun
     const avatars = [
-        // Kadınlar (İddialı, gece makyajlı, dekolte/neon ışıklı vb. vibe)
-        "/avatars/female_avatar_1.png", // Neon Işıklı
-        "/avatars/female_avatar_2.png", // Siyah, iddialı
-        "/avatars/female_avatar_3.png", // Ağır makyajlı
-        "/avatars/female_avatar_4.png", // Model, dik bakış
-        "/avatars/female_avatar_5.png", // Parti/Gece kızı
-        "/avatars/female_avatar_6.png", // Renkli saçlı, abartılı
-
-        // Erkekler (Ağır abi, ceketli, karanlık, maço vibe)
-        "/avatars/male_avatar_1.png", // Karanlık, ciddi
-        "/avatars/male_avatar_2.png", // Takım elbiseli, sert abi
-        "/avatars/male_avatar_3.png", // Maço stil
-        "/avatars/male_avatar_4.png", // Özgüvenli patron
-        "/avatars/male_avatar_5.png", // Sakallı ağır takılan
-        "/avatars/male_avatar_6.png"  // Gözlüklü gece kulübü mafyası
+        "/avatars/female_avatar_1.png",
+        "/avatars/female_avatar_2.png",
+        "/avatars/female_avatar_3.png",
+        "/avatars/female_avatar_4.png",
+        "/avatars/female_avatar_5.png",
+        "/avatars/female_avatar_6.png",
+        "/avatars/male_avatar_1.png",
+        "/avatars/male_avatar_2.png",
+        "/avatars/male_avatar_3.png",
+        "/avatars/male_avatar_4.png",
+        "/avatars/male_avatar_5.png",
+        "/avatars/male_avatar_6.png"
     ];
+
+    const pickImageNative = async () => {
+        try {
+            const image = await Camera.getPhoto({
+                quality: 90,
+                allowEditing: true,
+                resultType: CameraResultType.Base64
+            });
+            if (image.base64String) {
+                const dataUrl = `data:image/jpeg;base64,${image.base64String}`;
+                setUploadedPhotos(prev => [dataUrl, ...prev].slice(0, 2));
+                setCustomAvatar(dataUrl);
+                setSelectedAvatar(-1);
+            }
+        } catch (e) {
+            console.log("User cancelled camera or error", e);
+            // Fallback to web input
+            fileInputRef.current?.click();
+        }
+    };
+
+    const handleWebFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const dataUrl = reader.result as string;
+                setUploadedPhotos(prev => [dataUrl, ...prev].slice(0, 2));
+                setCustomAvatar(dataUrl);
+                setSelectedAvatar(-1);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handleJoin = () => {
         if (!nickname.trim()) {
             setStep(1);
             return;
         }
-        // For now we just use the selected avatar and nickname to login locally
-        const avatarUrl = selectedAvatar !== null ? avatars[selectedAvatar] : avatars[0];
-        login(nickname || "Anonim", avatarUrl, "Gizli");
+
+        // Final avatar logic
+        let finalAvatar = "";
+        if (customAvatar) {
+            finalAvatar = customAvatar;
+        } else if (selectedAvatar !== null && selectedAvatar >= 0) {
+            finalAvatar = avatars[selectedAvatar];
+        } else {
+            finalAvatar = avatars[0];
+        }
+
+        login(nickname || "Anonim", finalAvatar, "Gizli");
         router.push("/pavyon");
     };
 
@@ -73,23 +118,20 @@ export default function PavyonAuthPage() {
                         src="/logo.png"
                         alt="The Pavyon Original Logo"
                         className="w-40 h-40 md:w-56 md:h-56 object-contain"
-                        style={{
-                            filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.8))'
-                        }}
+                        style={{ filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.8))' }}
                     />
                 </motion.div>
-                <p className="text-[#ff007f] mt-2 tracking-widest text-sm uppercase opacity-80 shadow-black drop-shadow-lg">
+                <p className="text-[#ff007f] mt-2 tracking-widest text-sm uppercase opacity-80 shadow-black drop-shadow-lg font-black">
                     Gerçek kimliğini kapıda bırak
                 </p>
             </div>
 
-            {/* Cam Görünümlü Kart (Glassmorphism) */}
+            {/* Cam Görünümlü Kart */}
             <div className="z-10 w-full max-w-xl bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-[0_0_40px_rgba(255,0,127,0.15)] relative">
 
-                {/* Step 1: Hesap Bilgileri */}
                 {step === 1 && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <h2 className="text-2xl font-semibold text-white/90 mb-4 text-center">Masaya Rezerve Yap</h2>
+                        <h2 className="text-2xl font-bold text-white/90 mb-4 text-center">Masaya Rezerve Yap</h2>
 
                         <div className="space-y-3">
                             <div className="relative">
@@ -99,7 +141,7 @@ export default function PavyonAuthPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Gizli E-Posta (İsteğe Bağlı)"
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-neon-pink/50 transition-all"
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-neon-pink/50 transition-all font-medium"
                                 />
                             </div>
                             <div className="relative">
@@ -109,7 +151,7 @@ export default function PavyonAuthPage() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Şifren (En az 6 hane)"
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-neon-pink/50 transition-all"
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-neon-pink/50 transition-all font-medium"
                                 />
                             </div>
                             <div className="relative">
@@ -120,7 +162,7 @@ export default function PavyonAuthPage() {
                                     onChange={(e) => setNickname(e.target.value)}
                                     placeholder="Pavyon Lakabın (Zorunlu)"
                                     required
-                                    className="w-full bg-black/40 border border-yellow-500/20 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-yellow-500/50 transition-all"
+                                    className="w-full bg-black/40 border border-yellow-500/20 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-yellow-500/50 transition-all font-bold"
                                 />
                             </div>
                         </div>
@@ -134,8 +176,8 @@ export default function PavyonAuthPage() {
                                     onChange={(e) => setIsPrivacyAccepted(e.target.checked)}
                                     className="mt-1 w-4 h-4 accent-neon-pink"
                                 />
-                                <label htmlFor="privacy" className="text-[10px] text-white/50 leading-relaxed font-medium">
-                                    <span className="text-neon-pink font-bold">SORUMLULUK REDDİ:</span> Paylaştığınız kişisel bilgilerin (isim, soyisim, fotoğraf vb.) sorumluluğu tamamen size aittir. The Pavyon yönetimi bu bilgilerin üçüncü kişilerce kullanımından sorumlu tutulamaz.
+                                <label htmlFor="privacy" className="text-[10px] text-white/50 leading-relaxed font-bold">
+                                    <span className="text-neon-pink uppercase">Sorumluluk Reddi:</span> Paylaştığınız kişisel bilgilerin sorumluluğu tamamen size aittir. The Pavyon yönetimi sorumlu tutulamaz.
                                 </label>
                             </div>
                         </div>
@@ -158,7 +200,6 @@ export default function PavyonAuthPage() {
                     </div>
                 )}
 
-                {/* Step 1.5: E-Posta Doğrulama (Simüle) */}
                 {step === 1.5 && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500 text-center">
                         <div className="w-16 h-16 bg-neon-pink/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-neon-pink/30">
@@ -166,7 +207,7 @@ export default function PavyonAuthPage() {
                         </div>
                         <h2 className="text-xl font-bold text-white">E-Postanı Doğrula</h2>
                         <p className="text-sm text-white/50">
-                            <span className="text-white font-medium">{email}</span> adresine bir onay kodu gönderdik. Lütfen aşağıdaki alana girin.
+                            <span className="text-white font-medium">{email}</span> adresine bir onay kodu gönderdik.
                         </p>
 
                         <div className="flex justify-center gap-2">
@@ -185,7 +226,7 @@ export default function PavyonAuthPage() {
                                 if (verificationCode.length === 6) {
                                     setStep(2);
                                 } else {
-                                    alert("Lütfen 6 haneli doğrulama kodunu girin (Simülasyon için herhangi bir 6 hane)");
+                                    alert("Lütfen 6 haneli doğrulama kodunu girin");
                                 }
                             }}
                             className="w-full bg-neon-pink text-white font-black py-4 rounded-2xl shadow-[0_10px_25px_rgba(255,0,127,0.3)] uppercase tracking-widest text-xs active:scale-95 transition-all"
@@ -197,23 +238,46 @@ export default function PavyonAuthPage() {
                     </div>
                 )}
 
-                {/* Step 2: Avatar ve Fotoğraf Yükleme */}
                 {step === 2 && (
                     <div className="space-y-5 animate-in fade-in slide-in-from-right-8 duration-500">
                         <div className="flex justify-between items-center mb-1">
                             <button onClick={() => setStep(1)} className="text-white/40 hover:text-white text-[10px] font-bold uppercase tracking-widest border border-white/10 px-3 py-1 rounded-lg">Geri</button>
-                            <h2 className="text-lg font-bold text-center text-yellow-500 uppercase tracking-tighter">Görünümünü Seç</h2>
+                            <h2 className="text-lg font-bold text-center text-yellow-500 uppercase tracking-tighter">Profilini Belirle</h2>
                             <div className="w-12"></div>
                         </div>
 
+                        {/* Custom Avatar / Photo Preview */}
+                        {customAvatar && (
+                            <div className="flex flex-col items-center gap-2 animate-in zoom-in-50 duration-300">
+                                <div className="relative group">
+                                    <img src={customAvatar} className="w-24 h-24 rounded-full border-4 border-neon-pink shadow-[0_0_20px_rgba(255,0,127,0.5)] object-cover bg-black" />
+                                    <button
+                                        onClick={() => { setCustomAvatar(null); setSelectedAvatar(0); }}
+                                        className="absolute -top-2 -right-2 bg-red-600 rounded-full p-1 text-white shadow-lg"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                </div>
+                                <span className="text-[10px] text-white/50 uppercase font-black tracking-widest">Senin Seçimin</span>
+                            </div>
+                        )}
+
                         {/* Avatar Grid */}
                         <div className="bg-black/40 p-3 rounded-2xl border border-white/5">
-                            <p className="text-[10px] text-white/30 mb-3 text-center uppercase font-black tracking-widest">Seni yansıtacak bir avatar seç...</p>
-                            <div className="grid grid-cols-5 gap-2 max-h-36 overflow-y-auto p-1 scrollbar-thin scrollbar-thumb-neon-pink/50">
+                            <div className="flex justify-between items-center mb-3">
+                                <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">Hazır Avatarlar...</p>
+                                <button
+                                    onClick={() => setIsAvatarBuilderOpen(true)}
+                                    className="text-[10px] text-neon-pink font-black uppercase flex items-center gap-1 hover:scale-105 transition-all active:scale-95"
+                                >
+                                    <Wand2 className="w-3 h-3" /> Avatar Tasarla
+                                </button>
+                            </div>
+                            <div className="grid grid-cols-4 gap-2 max-h-36 overflow-y-auto p-1 scrollbar-thin scrollbar-thumb-neon-pink/50">
                                 {avatars.map((avatar, idx) => (
                                     <div
                                         key={idx}
-                                        onClick={() => setSelectedAvatar(idx)}
+                                        onClick={() => { setSelectedAvatar(idx); setCustomAvatar(null); }}
                                         className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all aspect-square ${selectedAvatar === idx ? 'border-neon-pink shadow-[0_0_15px_rgba(255,0,127,0.4)] scale-105 active:scale-95' : 'border-white/5 hover:border-white/20'}`}
                                     >
                                         <img src={avatar} alt={`Avatar ${idx}`} className="w-full h-full object-cover bg-black/50" />
@@ -225,23 +289,34 @@ export default function PavyonAuthPage() {
                         {/* Gerçek Fotoğraf Yükleme */}
                         <div className="pt-2">
                             <p className="text-[10px] text-white/30 mb-2 text-center uppercase font-black tracking-widest">veya gerçek fotoğrafını yükle</p>
-                            <div className="flex gap-3 justify-center">
-                                <label className="flex flex-col items-center justify-center w-20 h-24 border-2 border-dashed border-white/10 rounded-xl bg-black/30 hover:bg-neon-pink/10 cursor-pointer transition-all active:scale-95">
-                                    <Upload className="w-5 h-5 text-neon-pink mb-1" />
-                                    <span className="text-[8px] text-white/40 uppercase font-black">Yükle</span>
-                                    <input type="file" className="hidden" accept="image/*" />
-                                </label>
-                                <label className="flex flex-col items-center justify-center w-20 h-24 border-2 border-dashed border-white/10 rounded-xl bg-black/30 hover:bg-neon-pink/10 cursor-pointer transition-all active:scale-95">
-                                    <Upload className="w-5 h-5 text-neon-pink mb-1" />
-                                    <span className="text-[8px] text-white/40 uppercase font-black">Yükle</span>
-                                    <input type="file" className="hidden" accept="image/*" />
-                                </label>
+                            <div className="flex gap-4 justify-center">
+                                <div
+                                    onClick={pickImageNative}
+                                    className="flex flex-col items-center justify-center w-24 h-24 border-2 border-dashed border-white/10 rounded-2xl bg-black/30 hover:border-neon-pink/40 hover:bg-neon-pink/10 cursor-pointer transition-all active:scale-95 group"
+                                >
+                                    <CameraIcon className="w-6 h-6 text-neon-pink mb-1 group-hover:scale-110 transition-transform" />
+                                    <span className="text-[8px] text-white/40 uppercase font-black">Foto Çek</span>
+                                </div>
+                                <div
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="flex flex-col items-center justify-center w-24 h-24 border-2 border-dashed border-white/10 rounded-2xl bg-black/30 hover:border-gold-500/40 hover:bg-gold-500/10 cursor-pointer transition-all active:scale-95 group"
+                                >
+                                    <Upload className="w-6 h-6 text-gold-500 mb-1 group-hover:scale-110 transition-transform" />
+                                    <span className="text-[8px] text-white/40 uppercase font-black">Dosya Seç</span>
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        className="hidden"
+                                        accept="image/*"
+                                        onChange={handleWebFileUpload}
+                                    />
+                                </div>
                             </div>
                         </div>
 
                         <button
                             onClick={handleJoin}
-                            className="w-full mt-4 bg-gradient-to-r from-neon-pink to-purple-700 hover:from-pink-500 hover:to-purple-600 text-white font-black py-3.5 px-6 rounded-2xl shadow-[0_10px_30px_rgba(255,0,127,0.3)] transition-all transform active:scale-[0.98] text-sm uppercase tracking-widest"
+                            className="w-full mt-4 bg-gradient-to-r from-neon-pink to-purple-700 hover:from-pink-500 hover:to-purple-600 text-white font-black py-4 px-6 rounded-2xl shadow-[0_10px_30px_rgba(255,0,127,0.3)] transition-all transform active:scale-95 text-sm uppercase tracking-[0.2em]"
                         >
                             Masaya Geç
                         </button>
@@ -254,7 +329,11 @@ export default function PavyonAuthPage() {
             <AvatarBuilder
                 isOpen={isAvatarBuilderOpen}
                 onClose={() => setIsAvatarBuilderOpen(false)}
-                onSave={(avatarDataUrl) => {
+                onSave={(avatarId) => {
+                    // Logic to handle custom avatar from builder
+                    // For now, using a premium looking placeholder since builder is simplified
+                    const mockAvatarFromBuilder = "/avatars/female_avatar_5.png";
+                    setCustomAvatar(mockAvatarFromBuilder);
                     setSelectedAvatar(-1);
                 }}
             />

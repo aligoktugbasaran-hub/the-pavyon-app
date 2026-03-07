@@ -1,20 +1,21 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useUserStore } from "@/store/useUserStore";
-import { Settings, Users, LogOut, X, Edit2, Check } from "lucide-react";
+import { Settings, Users, LogOut, X, Edit2, Check, Camera as CameraIcon, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Camera, CameraResultType } from "@capacitor/camera";
 
 export function UserProfileMenu() {
-    const { nickname, avatarUrl, logout } = useUserStore();
+    const { nickname, avatarUrl, logout, login } = useUserStore();
     const router = useRouter();
 
     const [isOpen, setIsOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<"menu" | "edit" | "friends">("menu");
 
-    // Mock user data state for editing
     const [bio, setBio] = useState("Buraya kendin hakkında bir şeyler yaz...");
     const [interests, setInterests] = useState("Müzik, Sinema, Eğlence");
-
     const [isSaving, setIsSaving] = useState(false);
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Mock friends list
     const MOCK_FRIENDS = [
@@ -26,6 +27,33 @@ export function UserProfileMenu() {
     const handleLogout = () => {
         logout();
         router.push("/");
+    };
+
+    const pickImageNative = async () => {
+        try {
+            const image = await Camera.getPhoto({
+                quality: 90,
+                allowEditing: true,
+                resultType: CameraResultType.Base64
+            });
+            if (image.base64String) {
+                const dataUrl = `data:image/jpeg;base64,${image.base64String}`;
+                login(nickname, dataUrl, "Gizli");
+            }
+        } catch (e) {
+            fileInputRef.current?.click();
+        }
+    };
+
+    const handleWebFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                login(nickname, reader.result as string, "Gizli");
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleSaveProfile = () => {
@@ -43,14 +71,13 @@ export function UserProfileMenu() {
                 onClick={() => { setIsOpen(!isOpen); setActiveTab("menu"); }}
                 className="flex items-center gap-3 hover:bg-white/5 p-1 pr-3 rounded-full transition-colors"
             >
-                <img src={avatarUrl} alt={nickname} className="w-10 h-10 rounded-full border-2 border-gold-400 shadow-[0_0_10px_rgba(255,215,0,0.3)]" />
+                <img src={avatarUrl} alt={nickname} className="w-10 h-10 rounded-full border-2 border-gold-400 shadow-[0_0_10px_rgba(255,215,0,0.3)] object-cover" />
                 <span className="font-bold text-lg text-white">{nickname}</span>
             </button>
 
             {/* Dropdown Modal */}
             {isOpen && (
                 <>
-                    {/* Backdrop for closing when clicking outside */}
                     <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
 
                     <div className="absolute top-14 left-0 w-80 bg-black/95 border border-white/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200 flex flex-col">
@@ -77,13 +104,60 @@ export function UserProfileMenu() {
                             {/* Main Menu */}
                             {activeTab === "menu" && (
                                 <div className="flex flex-col gap-2">
-                                    {/* Big Profile Banner */}
                                     <div className="flex items-center gap-4 mb-4 bg-white/5 p-3 rounded-xl border border-white/5">
                                         <img src={avatarUrl} alt={nickname} className="w-14 h-14 rounded-full border-2 border-neon-pink object-cover" />
                                         <div>
                                             <h4 className="font-bold text-lg text-white">{nickname}</h4>
-                                            <p className="text-xs text-gold-400">Üye</p>
+                                            <p className="text-xs text-gold-400 font-bold uppercase tracking-widest">Sitede Çevrimiçi</p>
                                         </div>
+                                    </div>
+
+                                    <button onClick={() => setActiveTab("edit")} className="flex items-center gap-3 w-full p-3 text-left rounded-xl hover:bg-white/10 transition-colors text-white/80 hover:text-white group">
+                                        <div className="bg-neon-pink/20 p-2 rounded-lg group-hover:bg-neon-pink/40 transition-colors">
+                                            <Settings className="w-4 h-4 text-neon-pink" />
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-sm">Profili Düzenle</div>
+                                            <div className="text-[10px] text-white/40">Fotağraf, bio, hakkında...</div>
+                                        </div>
+                                    </button>
+
+                                    <button onClick={() => setActiveTab("friends")} className="flex items-center gap-3 w-full p-3 text-left rounded-xl hover:bg-white/10 transition-colors text-white/80 hover:text-white group">
+                                        <div className="bg-purple-500/20 p-2 rounded-lg group-hover:bg-purple-500/40 transition-colors">
+                                            <Users className="w-4 h-4 text-purple-400" />
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-sm">Arkadaşlarım</div>
+                                            <div className="text-[10px] text-white/40">Sohbet ettiğin kişiler...</div>
+                                        </div>
+                                    </button>
+
+                                    <div className="h-px w-full bg-white/10 my-2" />
+
+                                    <button onClick={handleLogout} className="flex items-center gap-3 w-full p-3 text-left rounded-xl hover:bg-red-900/40 transition-colors text-red-400 hover:text-red-300 group">
+                                        <LogOut className="w-4 h-4" />
+                                        <span className="font-bold text-sm">Çıkış Yap</span>
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Edit Profile Tab */}
+                            {activeTab === "edit" && (
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex justify-center mb-2 relative group">
+                                        <div className="relative cursor-pointer" onClick={pickImageNative}>
+                                            <img src={avatarUrl} alt={nickname} className="w-20 h-20 rounded-full border-2 border-neon-pink object-cover group-hover:opacity-70 transition-opacity" />
+                                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 rounded-full">
+                                                <CameraIcon className="w-6 h-6 text-white" />
+                                            </div>
+                                        </div>
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            className="hidden"
+                                            accept="image/*"
+                                            onChange={handleWebFileUpload}
+                                        />
                                     </div>
 
                                     <button onClick={() => setActiveTab("edit")} className="flex items-center gap-3 w-full p-3 text-left rounded-xl hover:bg-white/10 transition-colors text-white/80 hover:text-white group">
