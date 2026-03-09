@@ -186,10 +186,37 @@ export function AvatarBuilder({ isOpen, onClose, onSave }: AvatarBuilderProps) {
                     </button>
                     <button
                         onClick={() => {
-                            // Pass a generated avatar identifier back. In a real implementation
-                            // this would encode the config into a server-rendered image URL.
-                            const avatarId = `custom_${skinTone.replace('#', '')}_${hairStyle}_${expression}`;
-                            onSave(avatarId);
+                            // Create temporary canvas
+                            const canvas = document.createElement('canvas');
+                            canvas.width = 200;
+                            canvas.height = 200;
+                            const ctx = canvas.getContext('2d');
+                            if (ctx) {
+                                // Background
+                                ctx.fillStyle = skinTone;
+                                ctx.beginPath();
+                                ctx.arc(100, 100, 90, 0, Math.PI * 2);
+                                ctx.fill();
+
+                                // Hair
+                                ctx.font = "100px Arial";
+                                ctx.textAlign = "center";
+                                ctx.textBaseline = "middle";
+                                ctx.fillText(HAIR_STYLES[hairStyle], 100, 80);
+
+                                // Expression
+                                ctx.font = "60px Arial";
+                                ctx.fillText(EXPRESSIONS[expression].icon, 100, 120);
+
+                                // Accessory
+                                if (accessory > 0) {
+                                    ctx.font = "50px Arial";
+                                    ctx.fillText(ACCESSORIES[accessory].icon, 100, 50);
+                                }
+
+                                const dataUrl = canvas.toDataURL("image/png");
+                                onSave(dataUrl);
+                            }
                             onClose();
                         }}
                         className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-neon-pink to-purple-600 hover:opacity-90 text-white font-bold text-sm flex items-center gap-2 transition-opacity shadow-[0_0_20px_rgba(255,0,127,0.3)]"

@@ -8,6 +8,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { AvatarBuilder } from "@/components/pavyon/AvatarBuilder";
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { fetchWithBase } from "@/lib/api";
+import { PavyonToast } from "@/components/pavyon/PavyonToast";
 
 export default function PavyonAuthPage() {
     const router = useRouter();
@@ -27,6 +28,8 @@ export default function PavyonAuthPage() {
     const [isCheckingNickname, setIsCheckingNickname] = useState(false);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const showToast = useUserStore((state) => state.showToast);
 
     // If email is provided, check if user exists and auto-fill nickname
     useEffect(() => {
@@ -65,7 +68,7 @@ export default function PavyonAuthPage() {
                     if (existingRes.user && existingRes.user.nickname === nickname.trim()) {
                         setNicknameError("");
                     } else {
-                        setNicknameError("Bu lakap başkası tarafından alınmış!");
+                        setNicknameError("Bu lakabı başkası kapmış, başka bir tane bul bakalım!");
                     }
                 } else {
                     setNicknameError("");
@@ -155,20 +158,24 @@ export default function PavyonAuthPage() {
             });
 
             if (res.error) {
-                alert(res.error);
+                showToast(res.error, "error");
                 return;
             }
 
             // Sync with local store
-            login(res.nickname, res.photos?.[0] || finalAvatar, "Gizli");
+            login(res.nickname, res.photos?.[0] || finalAvatar, "Gizli", res.id);
             router.push("/pavyon");
-        } catch (e) {
-            alert("Giriş yapılamadı, lütfen tekrar deneyin.");
+        } catch (e: any) {
+            console.error("Android join error:", e);
+            showToast("Kapıdaki fedailer bir sorun çıkardı, mekana giriş yapamıyoruz!", "error");
         }
     };
 
     return (
         <div className="min-h-screen bg-[#0a0510] relative overflow-hidden flex flex-col items-center justify-center p-4 font-sans text-white" style={{ backgroundColor: '#0a0510', color: 'white' }}>
+            {/* Pavyon Toast System */}
+            <PavyonToast />
+
             {/* Arka plan ışık efektleri (Glow) */}
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#ff007f] rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse"></div>
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#ffd700] rounded-full mix-blend-screen filter blur-[150px] opacity-10"></div>
@@ -193,8 +200,8 @@ export default function PavyonAuthPage() {
                         style={{ filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.8))' }}
                     />
                 </motion.div>
-                <p className="text-[#ff007f] mt-2 tracking-widest text-sm uppercase opacity-80 shadow-black drop-shadow-lg font-black">
-                    Gerçek kimliğini kapıda bırak
+                <p className="text-[#ff007f] mt-2 tracking-widest text-sm uppercase opacity-80 shadow-black drop-shadow-lg font-black text-center">
+                    Gerçek kimliğini kapıda bırak <br /> <span className="text-[10px] text-white/40 font-normal">Gecenin yıldızı olmaya hazır mısın?</span>
                 </p>
             </div>
 
@@ -203,29 +210,12 @@ export default function PavyonAuthPage() {
 
                 {step === 1 && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <h2 className="text-2xl font-bold text-white/90 mb-4 text-center">Masaya Rezerve Yap</h2>
+                        <div className="text-center">
+                            <h2 className="text-2xl font-bold text-white/90 mb-1">Masaya Rezerve Yap</h2>
+                            <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">Takma adınla hemen içeri gir</p>
+                        </div>
 
                         <div className="space-y-3">
-                            <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Gizli E-Posta (İsteğe Bağlı)"
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-neon-pink/50 transition-all font-medium"
-                                />
-                            </div>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Şifren (En az 6 hane)"
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-neon-pink/50 transition-all font-medium"
-                                />
-                            </div>
                             <div className="relative">
                                 <UserIcon className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${nicknameError ? 'text-red-500' : 'text-yellow-500/40'}`} />
                                 <input
@@ -247,6 +237,34 @@ export default function PavyonAuthPage() {
                                     {nicknameError}
                                 </p>
                             )}
+
+                            <div className="relative pt-2">
+                                <p className="text-[10px] text-white/30 mb-2 uppercase font-black px-1">Hesabını Korumak İster misin? (Opsiyonel)</p>
+                                <div className="space-y-2">
+                                    <div className="relative">
+                                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                                        <input
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="Gizli E-Posta (Yedekleme İçin)"
+                                            className="w-full bg-black/20 border border-white/5 rounded-xl py-2.5 pl-11 pr-4 text-xs text-white placeholder-white/10 focus:outline-none focus:border-neon-pink/30 transition-all"
+                                        />
+                                    </div>
+                                    {email && (
+                                        <div className="relative animate-in slide-in-from-top-2 duration-300">
+                                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                                            <input
+                                                type="password"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                placeholder="Şifreni Belirle"
+                                                className="w-full bg-black/20 border border-white/5 rounded-xl py-2.5 pl-11 pr-4 text-xs text-white placeholder-white/10 focus:outline-none focus:border-neon-pink/30 transition-all"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
 
                         <div className="bg-black/40 border border-white/5 p-4 rounded-xl mb-4">
@@ -267,19 +285,23 @@ export default function PavyonAuthPage() {
                         <button
                             onClick={() => {
                                 if (nickname.trim() === "") {
-                                    alert("Lütfen bir lakap giriniz!");
+                                    showToast("Lütfen bir lakap giriniz!", "info");
                                 } else if (nicknameError) {
-                                    alert(nicknameError);
+                                    showToast(nicknameError, "error");
                                 } else if (!isPrivacyAccepted) {
-                                    alert("Lütfen sorumluluk reddini kabul ediniz!");
+                                    showToast("Lütfen sorumluluk reddini kabul ediniz!", "info");
                                 } else {
-                                    setStep(email ? 1.5 : 2);
+                                    // Sadece lakap varsa veya henüz onay sistemi aktif olmadığı için direkt karakter seçimine geç
+                                    setStep(2);
                                 }
                             }}
                             disabled={nickname.trim() === "" || !isPrivacyAccepted || !!nicknameError || isCheckingNickname}
-                            className={`w-full mt-4 py-4 px-6 rounded-2xl font-black transition-all transform flex items-center justify-center gap-2 uppercase tracking-widest text-xs ${nickname.trim() === "" || !isPrivacyAccepted || !!nicknameError || isCheckingNickname ? 'bg-white/5 text-white/20 cursor-not-allowed opacity-50' : 'bg-gradient-to-r from-[#ff007f] to-purple-600 text-white shadow-[0_10px_25px_rgba(255,0,127,0.3)] active:scale-95'}`}
+                            className={`w-full mt-4 py-4 px-6 rounded-2xl font-black transition-all transform flex flex-col items-center justify-center gap-1 uppercase tracking-widest ${nickname.trim() === "" || !isPrivacyAccepted || !!nicknameError || isCheckingNickname ? 'bg-white/5 text-white/20 cursor-not-allowed opacity-50' : 'bg-gradient-to-r from-[#ff007f] to-purple-600 text-white shadow-[0_10px_25px_rgba(255,0,127,0.3)] active:scale-95'}`}
                         >
-                            <Sparkles className="w-4 h-4" /> Devam Et
+                            <span className="text-xs flex items-center gap-2">
+                                <Sparkles className="w-4 h-4" /> Masaya Geç
+                            </span>
+                            {!email && <span className="text-[8px] opacity-60">Üye Olmadan Katıl</span>}
                         </button>
                     </div>
                 )}
@@ -310,7 +332,7 @@ export default function PavyonAuthPage() {
                                 if (verificationCode.length === 6) {
                                     setStep(2);
                                 } else {
-                                    alert("Lütfen 6 haneli doğrulama kodunu girin");
+                                    showToast("Kodun eksik gibi görünüyor, tekrar kontrol eder misin?", "error");
                                 }
                             }}
                             className="w-full bg-neon-pink text-white font-black py-4 rounded-2xl shadow-[0_10px_25px_rgba(255,0,127,0.3)] uppercase tracking-widest text-xs active:scale-95 transition-all"
@@ -413,11 +435,8 @@ export default function PavyonAuthPage() {
             <AvatarBuilder
                 isOpen={isAvatarBuilderOpen}
                 onClose={() => setIsAvatarBuilderOpen(false)}
-                onSave={(avatarId) => {
-                    // Logic to handle custom avatar from builder
-                    // For now, using a premium looking placeholder since builder is simplified
-                    const mockAvatarFromBuilder = "/avatars/female_avatar_5.png";
-                    setCustomAvatar(mockAvatarFromBuilder);
+                onSave={(dataUrl) => {
+                    setCustomAvatar(dataUrl);
                     setSelectedAvatar(-1);
                 }}
             />

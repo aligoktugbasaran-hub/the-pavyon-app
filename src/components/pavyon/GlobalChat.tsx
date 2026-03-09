@@ -12,7 +12,7 @@ const AD_WORDS = ["satılık", "reklam", "ucuz fiyat", "hesap sat", "takipçi", 
 
 const PAVYON_EMOJIS = ["🔥", "💸", "🥂", "🌹", "💃", "👑", "🚬", "🥃"];
 
-export function GlobalChat() {
+export function GlobalChat({ onProfileClick }: { onProfileClick?: (user: any) => void }) {
     const { nickname, avatarUrl, id: userId, blockedUsers } = useUserStore();
     const [msg, setMsg] = useState("");
     type ChatMessage = { id: number; sender: string; content: string; isSystem?: boolean; avatar?: string };
@@ -119,7 +119,12 @@ export function GlobalChat() {
                             <>
                                 <img src={m.avatar} alt={m.sender} className="w-8 h-8 object-cover rounded-full bg-black/50 shrink-0 border border-white/10" />
                                 <div className="flex flex-col max-w-[80%]">
-                                    <span className="font-bold text-yellow-500 text-xs mb-1">{m.sender}</span>
+                                    <button
+                                        onClick={() => onProfileClick?.({ id: m.sender, name: m.sender, avatar: m.avatar || "" })}
+                                        className="font-bold text-yellow-500 text-xs mb-1 text-left hover:underline"
+                                    >
+                                        {m.sender}
+                                    </button>
                                     <p className="bg-black/40 p-3 rounded-2xl rounded-tl-none text-white/90 border border-white/5 leading-relaxed break-words shadow-sm">
                                         {m.content}
                                     </p>

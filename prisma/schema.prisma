@@ -7,17 +7,24 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String?   @unique
-  nickname      String    @unique
-  photos        String[] // max 2 URL
+  id            String       @id @default(uuid())
+  email         String?      @unique
+  nickname      String       @unique
+  photos        String[]     // max 2 URL
   gender        String?
-  credits       Int       @default(100)
-  earnings      Float     @default(0)
-  createdAt     DateTime  @default(now())
+  credits       Int          @default(100)
+  earnings      Float        @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt @default(now())
   messages      Message[]
-  giftsGiven    Gift[]    @relation("GiftSender")
-  giftsReceived Gift[]    @relation("GiftReceiver")
+  giftsGiven    Gift[]       @relation("GiftSender")
+  giftsReceived Gift[]       @relation("GiftReceiver")
+  
+  // Friends & Blocking
+  friendsSent      Friendship[] @relation("FriendSender")
+  friendsReceived  Friendship[] @relation("FriendReceiver")
+  blockedByMe      Block[]      @relation("Blocker")
+  blockedMe        Block[]      @relation("Blocked")
 }
 
 model Room {
@@ -26,6 +33,8 @@ model Room {
   capacity  Int       @default(10)
   messages  Message[]
   isPrivate Boolean   @default(false)
+  ownerId   String?
+  createdAt DateTime  @default(now())
 }
 
 model Message {
@@ -48,4 +57,28 @@ model Gift {
   sender     User     @relation("GiftSender", fields: [senderId], references: [id])
   receiver   User     @relation("GiftReceiver", fields: [receiverId], references: [id])
   createdAt  DateTime @default(now())
+}
+
+model Friendship {
+  id         String   @id @default(uuid())
+  senderId   String
+  receiverId String
+  status     String   @default("PENDING") // PENDING, ACCEPTED, REJECTED
+  sender     User     @relation("FriendSender", fields: [senderId], references: [id])
+  receiver   User     @relation("FriendReceiver", fields: [receiverId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([senderId, receiverId])
+}
+
+model Block {
+  id         String   @id @default(uuid())
+  blockerId  String
+  blockedId  String
+  blocker    User     @relation("Blocker", fields: [blockerId], references: [id])
+  blocked    User     @relation("Blocked", fields: [blockedId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@unique([blockerId, blockedId])
 }

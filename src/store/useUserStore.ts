@@ -4,6 +4,7 @@ import { persist } from "zustand/middleware";
 export interface Notification {
     id: number;
     type: "friend_request" | "gift" | "like" | "loca_invite";
+    userId?: string;
     user: string;
     avatar: string;
     time: string;
@@ -29,7 +30,7 @@ export interface UserState {
     friends: FriendEntry[];
     blockedUsers: string[]; // stores user names (or ids)
 
-    login: (nickname: string, avatarUrl?: string, gender?: string) => void;
+    login: (nickname: string, avatarUrl?: string, gender?: string, id?: string) => void;
     logout: () => void;
     addCredits: (amount: number) => void;
     removeCredits: (amount: number) => void;
@@ -39,6 +40,11 @@ export interface UserState {
     clearNotifications: () => void;
 
     // Friend & block actions
+    setFriends: (friends: FriendEntry[]) => void;
+    setBlockedUsers: (users: string[]) => void;
+    setCredits: (credits: number) => void;
+    toast: { message: string, type: 'error' | 'success' | 'info' | null };
+    showToast: (message: string, type?: 'error' | 'success' | 'info') => void;
     addFriend: (friend: FriendEntry) => void;
     removeFriend: (name: string) => void;
     blockUser: (name: string) => void;
@@ -63,10 +69,16 @@ export const useUserStore = create<UserState>()(
             ],
             friends: [],
             blockedUsers: [],
+            toast: { message: "", type: null },
 
-            login: (nickname, avatarUrl, gender) =>
+            showToast: (message: string, type: 'error' | 'success' | 'info' = 'info') => {
+                set({ toast: { message, type } });
+                setTimeout(() => set({ toast: { message: "", type: null } }), 4000);
+            },
+
+            login: (nickname: string, avatarUrl?: string, gender?: string, id?: string) =>
                 set({
-                    id: Math.random().toString(36).substring(2, 9) + Date.now().toString(36),
+                    id: id || Math.random().toString(36).substring(2, 9) + Date.now().toString(36),
                     nickname,
                     avatarUrl,
                     gender,
@@ -84,6 +96,10 @@ export const useUserStore = create<UserState>()(
                 notifications: state.notifications.filter(n => n.id !== id)
             })),
             clearNotifications: () => set({ notifications: [] }),
+
+            setFriends: (friends) => set({ friends }),
+            setBlockedUsers: (blockedUsers) => set({ blockedUsers }),
+            setCredits: (credits) => set({ credits }),
 
             // Friend management
             addFriend: (friend) => set((state) => ({

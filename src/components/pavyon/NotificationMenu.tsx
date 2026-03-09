@@ -27,9 +27,26 @@ export function NotificationMenu() {
         setIsOpen(!isOpen);
     };
 
-    const handleAcceptFriend = (id: number, user: string, avatar: string) => {
-        addFriend({ id: String(id), name: user, avatar });
-        removeNotification(id);
+    const myId = useUserStore(state => state.id);
+
+    const handleAcceptFriend = async (notif: any) => {
+        if (!notif.userId) {
+            // Fallback for mock notifications without userId
+            addFriend({ id: String(notif.id), name: notif.user, avatar: notif.avatar });
+            removeNotification(notif.id);
+            return;
+        }
+
+        try {
+            await fetch("/api/friends", {
+                method: "POST",
+                body: JSON.stringify({ senderId: notif.userId, receiverId: myId, action: "ACCEPT" })
+            });
+            addFriend({ id: notif.userId, name: notif.user, avatar: notif.avatar });
+            removeNotification(notif.id);
+        } catch (e) {
+            console.error("Failed to accept friend", e);
+        }
     };
 
     const handleAcceptLocaInvite = (id: number, tableId?: number) => {
@@ -98,7 +115,7 @@ export function NotificationMenu() {
                                         {notif.type === 'friend_request' && (
                                             <div className="flex gap-2 mt-2">
                                                 <button
-                                                    onClick={() => handleAcceptFriend(notif.id, notif.user, notif.avatar)}
+                                                    onClick={() => handleAcceptFriend(notif)}
                                                     className="flex-1 bg-neon-pink/20 hover:bg-neon-pink text-neon-pink hover:text-white text-[10px] font-bold py-1.5 rounded-lg flex items-center justify-center gap-1 border border-neon-pink/30 transition-all"
                                                 >
                                                     <Check className="w-3 h-3" /> Kabul Et

@@ -14,9 +14,10 @@ import { PublicProfileModal } from "@/components/pavyon/PublicProfileModal";
 import { CreditModal } from "@/components/pavyon/CreditModal";
 import { MessageSquare, Trophy, Sparkles, X } from "lucide-react";
 import { fetchWithBase } from "@/lib/api";
+import { PavyonToast } from "@/components/pavyon/PavyonToast";
 
 export default function PavyonPage() {
-    const { isLoggedIn, nickname, avatarUrl, credits } = useUserStore();
+    const { isLoggedIn, nickname, avatarUrl, credits, id: userId, setFriends, setBlockedUsers, showToast } = useUserStore();
     const router = useRouter();
     const [selectedUserProfile, setSelectedUserProfile] = useState<{ id: any, name: string, avatar: string, age: number } | null>(null);
     const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
@@ -30,14 +31,35 @@ export default function PavyonPage() {
             setLeaderboard(data);
         } catch (e) {
             console.error("Leaderboard fetch error", e);
+            showToast("Gecenin en bonkörleri henüz belli değil, listeler karıştı!", "info");
+        }
+    };
+
+    // Fetch User Data (Friends, Blocks)
+    const fetchUserData = async () => {
+        if (!userId) return;
+        try {
+            const friendsData = await fetchWithBase(`/api/friends?userId=${userId}`);
+            const blocksData = await fetchWithBase(`/api/blocks?userId=${userId}`);
+
+            setFriends(friendsData.map((f: any) => ({
+                id: f.id,
+                name: f.nickname,
+                avatar: f.avatar
+            })));
+            setBlockedUsers(blocksData);
+        } catch (e) {
+            console.error("User data fetch error", e);
+            showToast("Arkadaş listen kapıdaki kalabalıkta kayboldu, bi' daha dene!", "error");
         }
     };
 
     useEffect(() => {
         fetchLeaderboard();
+        fetchUserData();
         const interval = setInterval(fetchLeaderboard, 30000); // 30s refresh
         return () => clearInterval(interval);
-    }, []);
+    }, [userId]);
 
     // Otomatik kapatma mobilde
     useEffect(() => {
@@ -55,7 +77,8 @@ export default function PavyonPage() {
     if (!isLoggedIn) return null; // Avoid hydration mismatch or flash
 
     return (
-        <div className="min-h-screen bg-transparent text-white flex flex-col p-3 md:p-6 gap-2 md:gap-4 h-screen overflow-hidden relative">
+        <div className="min-h-screen bg-black text-white relative flex flex-col md:flex-row overflow-hidden">
+            <PavyonToast />
             {/* Background Grid Overlay */}
             <div className="fixed inset-0 pavyon-grid pointer-events-none opacity-20 z-0" />
             {/* Top Navbar / User Profile Strip */}
@@ -97,7 +120,7 @@ export default function PavyonPage() {
                         <div className="md:hidden flex justify-end mb-2">
                             <button onClick={() => setIsGlobalChatOpen(false)} className="bg-white/10 p-2 rounded-full"><X className="w-5 h-5" /></button>
                         </div>
-                        <GlobalChat />
+                        <GlobalChat onProfileClick={setSelectedUserProfile} />
                     </div>
                 </aside>
 

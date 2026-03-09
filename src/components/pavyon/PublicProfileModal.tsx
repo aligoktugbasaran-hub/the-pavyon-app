@@ -46,11 +46,61 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
     const blocked = isBlocked(user.name);
     const friend = isFriend(user.name);
 
-    const handleConfirm = () => {
-        if (confirmAction === "block") blockUser(user.name);
-        else if (confirmAction === "unfriend") removeFriend(user.name);
+    const me = useUserStore();
+
+    const handleConfirm = async () => {
+        if (!user.id) return;
+
+        try {
+            if (confirmAction === "block") {
+                await fetch("/api/blocks", {
+                    method: "POST",
+                    body: JSON.stringify({ blockerId: me.id, blockedId: user.id })
+                });
+                blockUser(user.name);
+            } else if (confirmAction === "unfriend") {
+                await fetch("/api/friends", {
+                    method: "POST",
+                    body: JSON.stringify({ senderId: me.id, receiverId: user.id, action: "REMOVE" })
+                });
+                removeFriend(user.name);
+            }
+        } catch (e) {
+            console.error("Action failed", e);
+        }
         setConfirmAction(null);
         onClose();
+    };
+
+    const handleFriendRequest = async () => {
+        if (!user.id) return;
+        try {
+            await fetch("/api/friends", {
+                method: "POST",
+                body: JSON.stringify({ senderId: me.id, receiverId: user.id, action: "REQUEST" })
+            });
+            addNotification({
+                type: "friend_request",
+                user: user.name,
+                avatar: user.avatar,
+            });
+            setRequestSent(true);
+        } catch (e) {
+            alert("İstek gönderilemedi.");
+        }
+    };
+
+    const handleUnblock = async () => {
+        if (!user.id) return;
+        try {
+            await fetch("/api/blocks", {
+                method: "DELETE",
+                body: JSON.stringify({ blockerId: me.id, blockedId: user.id })
+            });
+            unblockUser(user.name);
+        } catch (e) {
+            console.error("Unblock failed", e);
+        }
     };
 
     const profileModal = createPortal(
@@ -151,7 +201,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
 
                         {/* Arkadaş Ekle / Çıkar / Engeli Kaldır */}
                         {blocked ? (
-                            <button onClick={() => unblockUser(user.name)} className="col-span-1 bg-white/10 hover:bg-white/20 text-green-400 font-bold py-3 text-[10px] md:text-sm rounded-xl flex items-center justify-center gap-1 transition-all border border-green-500/20">
+                            <button onClick={handleUnblock} className="col-span-1 bg-white/10 hover:bg-white/20 text-green-400 font-bold py-3 text-[10px] md:text-sm rounded-xl flex items-center justify-center gap-1 transition-all border border-green-500/20">
                                 <ShieldCheck className="w-4 h-4" /> Engeli Kaldır
                             </button>
                         ) : friend ? (
@@ -164,17 +214,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
                             </button>
                         ) : (
                             <button
-                                onClick={() => {
-                                    // Simulate sending a friend request notification to the other user.
-                                    // In production, this would go to the backend / realtime channel.
-                                    // For demo: the request appears in OUR notifications so we can test accept/reject.
-                                    addNotification({
-                                        type: "friend_request",
-                                        user: user.name,
-                                        avatar: user.avatar,
-                                    });
-                                    setRequestSent(true);
-                                }}
+                                onClick={handleFriendRequest}
                                 className="col-span-1 bg-white/10 hover:bg-white/20 text-white font-bold py-3 text-[10px] md:text-sm rounded-xl flex items-center justify-center gap-1 transition-all border border-white/5"
                             >
                                 <UserPlus className="w-4 h-4" /> Arkadaş Ekle

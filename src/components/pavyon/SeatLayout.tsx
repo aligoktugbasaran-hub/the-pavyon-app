@@ -48,7 +48,7 @@ export function SeatLayout() {
     const [hoveredUser, setHoveredUser] = useState<{ tableId: number, seatIndex: number } | null>(null);
 
     // Public profile modal state
-    const [selectedUserProfile, setSelectedUserProfile] = useState<{ id: number, name: string, avatar: string, age: number } | null>(null);
+    const [selectedUserProfile, setSelectedUserProfile] = useState<{ id: string | number, name: string, avatar: string, age: number } | null>(null);
 
     // Gift modal state
     const [giftTarget, setGiftTarget] = useState<{ name: string, avatar: string } | null>(null);
@@ -262,7 +262,7 @@ export function SeatLayout() {
                                     onMouseLeave={() => setHoveredUser(null)}
                                     onClick={() => {
                                         if (isOccupied && !isMySeat) {
-                                            setSelectedUserProfile({ id: i, name: mockName, avatar: avatarUrl, age: mockAge });
+                                            setSelectedUserProfile({ id: mockName, name: mockName, avatar: avatarUrl, age: mockAge });
                                             setHoveredUser(null);
                                         }
                                     }}
@@ -402,6 +402,8 @@ export function SeatLayout() {
         );
     }
 
+    const friends = useUserStore(state => state.friends);
+
     // --- MAIN MEKAN VIEW (GENEL GÖRÜNÜM) ---
     return (
         <div className="w-full h-full flex flex-col relative overflow-hidden bg-transparent">
@@ -416,7 +418,7 @@ export function SeatLayout() {
                         <div>
                             <h3 className={`font-bold text-sm text-red-400`}>Özel Localarım</h3>
                             <p className="text-xs text-white/40">
-                                Sadece karşılıklı onay ile açtığınız kapalı odalar.
+                                Sadece arkadaşlarınıza özel kapalı odalar.
                             </p>
                         </div>
                     </div>
@@ -426,39 +428,44 @@ export function SeatLayout() {
                             onClick={() => setIsLocalarimOpen(!isLocalarimOpen)}
                             className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${isLocalarimOpen ? 'bg-black border border-red-500/50 text-red-400 hover:bg-red-900/20' : 'bg-gradient-to-r from-gold-600 to-yellow-500 text-black hover:scale-105 shadow-[0_0_10px_rgba(255,215,0,0.3)]'}`}
                         >
-                            <KeyRound className="w-3 h-3" /> Localarım (1)
+                            <KeyRound className="w-3 h-3" /> Localarım ({friends.length})
                         </button>
 
                         {/* Dropdown for Localarım */}
                         {isLocalarimOpen && (
                             <div className="absolute top-12 right-0 w-72 bg-black/95 border border-red-500/30 rounded-xl shadow-[0_10px_30px_rgba(255,0,0,0.2)] backdrop-blur-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                                 <div className="p-3 border-b border-white/10 flex items-center justify-between bg-red-900/20">
-                                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Onaylanmış Localar</span>
+                                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Onaylanmış İlişkiler</span>
                                 </div>
-                                <div className="flex flex-col">
-                                    {/* Mock Private Loca 1 */}
-                                    <div className="p-3 hover:bg-white/5 transition-colors flex items-center justify-between group">
-                                        <div className="flex items-center gap-3">
-                                            <div className="relative">
-                                                <img src="/avatars/female_avatar_2.png" className="w-8 h-8 rounded-full border border-white/20" alt="Ceren" />
-                                                <div className="absolute -bottom-1 -right-1 bg-green-500 w-3 h-3 rounded-full border border-black shadow-[0_0_5px_rgba(34,197,94,0.8)]"></div>
+                                <div className="flex flex-col max-h-60 overflow-y-auto">
+                                    {friends.length === 0 ? (
+                                        <div className="p-4 text-center text-white/30 text-[10px]">Henüz onaylı bir locanız yok.</div>
+                                    ) : (
+                                        friends.map(friend => (
+                                            <div key={friend.id} className="p-3 hover:bg-white/5 transition-colors flex items-center justify-between group">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="relative">
+                                                        <img src={friend.avatar} className="w-8 h-8 rounded-full border border-white/20" alt={friend.name} />
+                                                        <div className="absolute -bottom-1 -right-1 bg-green-500 w-3 h-3 rounded-full border border-black shadow-[0_0_5px_rgba(34,197,94,0.8)]"></div>
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-bold text-white group-hover:text-gold-400 transition-colors">{friend.name} ile Loca</span>
+                                                        <span className="text-[10px] text-green-400">Aktif</span>
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    onClick={() => {
+                                                        // 99 is assigned for private sessions in this demo
+                                                        setJoinedTableId(99);
+                                                        setIsLocalarimOpen(false);
+                                                    }}
+                                                    className="px-3 py-1.5 bg-white/10 group-hover:bg-gold-500 group-hover:text-black text-white text-xs font-bold rounded-lg transition-colors"
+                                                >
+                                                    Git
+                                                </button>
                                             </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-sm font-bold text-white group-hover:text-gold-400 transition-colors">Ceren ile Loca</span>
-                                                <span className="text-[10px] text-green-400">Aktif Sohbet</span>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={() => {
-                                                // 99 is a mock ID for a private room
-                                                setJoinedTableId(99);
-                                                setIsLocalarimOpen(false);
-                                            }}
-                                            className="px-3 py-1.5 bg-white/10 group-hover:bg-gold-500 group-hover:text-black text-white text-xs font-bold rounded-lg transition-colors"
-                                        >
-                                            Git
-                                        </button>
-                                    </div>
+                                        ))
+                                    )}
                                 </div>
                                 <div className="p-2 border-t border-white/10 bg-black/50">
                                     <button className="w-full py-1.5 border border-dashed border-white/20 text-white/50 hover:text-white hover:border-white/50 text-[10px] font-bold rounded-lg transition-colors flex items-center justify-center gap-1">
