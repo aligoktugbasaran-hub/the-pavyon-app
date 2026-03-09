@@ -39,8 +39,8 @@ export default function PavyonAuthPage() {
                     const res = await fetchWithBase(`/api/auth?email=${encodeURIComponent(email)}`);
                     if (res.user) {
                         setNickname(res.user.nickname);
-                        if (res.user.photos && res.user.photos.length > 0) {
-                            setCustomAvatar(res.user.photos[0]);
+                        if (res.user.avatar) {
+                            setCustomAvatar(res.user.avatar);
                             setSelectedAvatar(-1);
                         }
                     }
@@ -157,17 +157,13 @@ export default function PavyonAuthPage() {
                 body: JSON.stringify({ email, nickname, avatar: finalAvatar })
             });
 
-            if (res.error) {
-                showToast(res.error, "error");
-                return;
-            }
-
             // Sync with local store
-            login(res.nickname, res.photos?.[0] || finalAvatar, "Gizli", res.id);
+            login(res.nickname, res.avatar || finalAvatar, "Gizli", res.id);
             router.push("/pavyon");
         } catch (e: any) {
             console.error("Android join error:", e);
-            showToast("Kapıdaki fedailer bir sorun çıkardı, mekana giriş yapamıyoruz!", "error");
+            // fetchWithBase zaten hata fırlatıyor, içindeki mesajı gösterelim
+            showToast(e.message || "Kapıdaki fedailer bir sorun çıkardı, mekana giriş yapamıyoruz!", "error");
         }
     };
 

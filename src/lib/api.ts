@@ -1,8 +1,15 @@
 /**
  * Shared API base URL. Use env var if available.
- * Since this is Capacitor, we'll need to hit a real domain or local IP for mobile.
+ * On Web, we use relative paths. On Mobile, we need the full IP.
  */
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const getBaseUrl = () => {
+    if (typeof window === "undefined") return process.env.NEXT_PUBLIC_API_URL || "";
+    const isCapacitor = (window as any).Capacitor || window.location.protocol === "capacitor:";
+    if (isCapacitor) return process.env.NEXT_PUBLIC_API_URL || "";
+    return ""; // Web'de relative kullan
+};
+
+export const API_BASE_URL = getBaseUrl();
 
 export async function fetchWithBase(path: string, options?: RequestInit) {
     // If we're on a mobile device and no API URL is set, the request will likely fail.
@@ -23,11 +30,21 @@ export async function fetchWithBase(path: string, options?: RequestInit) {
 
         if (!res.ok) {
             const errBody = await res.json().catch(() => ({}));
-            throw new Error(errBody.error || `Kayıtlı kalmadı: ${res.status}`);
+            throw new Error(errBody.error || `Bir sorun çıktı: ${res.status}`);
         }
+
         return res.json();
     } catch (e: any) {
-        console.error("Fetch failed for URL:", url, e);
+        console.error("❌ FETCH FAILED:", {
+            url,
+            message: e.message,
+            stack: e.stack,
+            isNetworkError: e instanceof TypeError
+        });
+
+        if (e instanceof TypeError) {
+            throw new Error("Sunucuya bağlanılamadı. İnternet bağlantınızı veya sunucu adresini kontrol edin.");
+        }
         throw e;
     }
 }

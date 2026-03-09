@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
 
     if (!userId) return NextResponse.json({ error: "UserId required" }, { status: 400 });
 
-    const friendships = await prisma.friendship.findMany({
+    const friendships = await (prisma as any).friendship.findMany({
         where: {
             OR: [
                 { senderId: userId, status: "ACCEPTED" },
@@ -25,7 +27,7 @@ export async function GET(req: Request) {
         return {
             id: friend.id,
             nickname: friend.nickname,
-            avatar: friend.photos[0] || "/avatars/male_avatar_1.png"
+            avatar: friend.avatar || "/avatars/male_avatar_1.png"
         };
     });
 
@@ -33,7 +35,7 @@ export async function GET(req: Request) {
 }
 
 async function resolveUser(idOrNickname: string) {
-    let user = await prisma.user.findFirst({
+    let user = await (prisma.user as any).findFirst({
         where: {
             OR: [
                 { id: idOrNickname },
@@ -43,10 +45,10 @@ async function resolveUser(idOrNickname: string) {
     });
 
     if (!user && idOrNickname.length < 50) { // Probably a nickname
-        user = await prisma.user.create({
+        user = await (prisma.user as any).create({
             data: {
                 nickname: idOrNickname,
-                photos: [`/avatars/${Math.random() > 0.5 ? 'female' : 'male'}_avatar_${Math.floor(Math.random() * 6) + 1}.png`],
+                avatar: `/avatars/${Math.random() > 0.5 ? 'female' : 'male'}_avatar_${Math.floor(Math.random() * 6) + 1}.png`,
                 credits: 100
             }
         });

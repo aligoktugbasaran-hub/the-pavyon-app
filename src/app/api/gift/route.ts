@@ -20,16 +20,16 @@ export async function POST(req: Request) {
         });
 
         // 2. Upsert users
-        await prisma.user.upsert({
+        await (prisma.user as any).upsert({
             where: { id: data.senderId },
-            update: { nickname: data.senderNickname, photos: [data.senderAvatar] },
-            create: { id: data.senderId, nickname: data.senderNickname, photos: [data.senderAvatar] }
+            update: { nickname: data.senderNickname, avatar: data.senderAvatar },
+            create: { id: data.senderId, nickname: data.senderNickname, avatar: data.senderAvatar }
         });
 
-        await prisma.user.upsert({
+        await (prisma.user as any).upsert({
             where: { id: data.receiverId },
-            update: { nickname: data.receiverNickname, photos: [data.receiverAvatar] },
-            create: { id: data.receiverId, nickname: data.receiverNickname, photos: [data.receiverAvatar] }
+            update: { nickname: data.receiverNickname, avatar: data.receiverAvatar },
+            create: { id: data.receiverId, nickname: data.receiverNickname, avatar: data.receiverAvatar }
         });
 
         return NextResponse.json({ success: true });

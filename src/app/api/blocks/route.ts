@@ -33,7 +33,7 @@ async function resolveUser(idOrNickname: string) {
         user = await prisma.user.create({
             data: {
                 nickname: idOrNickname,
-                photos: [`/avatars/male_avatar_1.png`],
+                avatar: `/avatars/male_avatar_1.png`,
                 credits: 100
             }
         });

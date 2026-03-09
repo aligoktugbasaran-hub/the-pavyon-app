@@ -50,21 +50,21 @@ export async function GET() {
         });
 
         const givers = await Promise.all(topGiversRaw.map(async (g: any) => {
-            const user = await prisma.user.findUnique({ where: { id: g.senderId } });
+            const user = await (prisma.user as any).findUnique({ where: { id: g.senderId } });
             return {
                 id: user?.id || g.senderId,
                 name: user?.nickname || "Anonim",
-                avatar: user?.photos[0] || "/avatars/male_avatar_1.png",
+                avatar: user?.avatar || "/avatars/male_avatar_1.png",
                 amount: g._sum.creditCost || 0,
             };
         }));
 
         const receivers = await Promise.all(topReceiversRaw.map(async (r: any) => {
-            const user = await prisma.user.findUnique({ where: { id: r.receiverId } });
+            const user = await (prisma.user as any).findUnique({ where: { id: r.receiverId } });
             return {
                 id: user?.id || r.receiverId,
                 name: user?.nickname || "Anonim",
-                avatar: user?.photos[0] || "/avatars/female_avatar_1.png",
+                avatar: user?.avatar || "/avatars/female_avatar_1.png",
                 amount: r._sum.creditCost || 0,
                 age: 20 + Math.floor(Math.random() * 10),
             };

@@ -6,9 +6,9 @@ const config: CapacitorConfig = {
     webDir: "out",
     server: {
         androidScheme: "https",
-        // Uncomment for live reload during development:
-        // url: "http://192.168.x.x:3000",   // <-- local IP adresiniz
-        // cleartext: true,
+        // Live reload ve yerel test için (Wi-Fi):
+        url: "http://192.168.1.98:3000",
+        cleartext: true,
     },
     plugins: {
         SplashScreen: {
