@@ -5,10 +5,10 @@ import { Play, Pause, Radio, Volume2, VolumeX, Music } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 
 const RADIOS = [
-    { id: "kral", name: "Kral FM", url: "https://kralfm.turkmedya.com.tr/kralfm_low.mp3", streamLabel: "Arabesk & Damar" },
-    { id: "powerturk", name: "Power Türk", url: "https://powerturk.turkmedya.com.tr/powerturk_low.mp3", streamLabel: "Türkçe Pop" },
-    { id: "powerfm", name: "Power FM", url: "https://powerfm.turkmedya.com.tr/powerfm_low.mp3", streamLabel: "Hit Müzik" },
-    { id: "slow", name: "Slow Türk", url: "https://slowturk.turkmedya.com.tr/slowturk_low.mp3", streamLabel: "Slow & Aşk" },
+    { id: "kral", name: "Kral FM", url: "https://live.radyokral.com.tr/radyokral/mp3-128/icecast.audio", streamLabel: "Arabesk & Damar" },
+    { id: "metro", name: "Metro FM", url: "https://live.metrofm.com.tr/metrofm/mp3-128/icecast.audio", streamLabel: "Pop & Hit" },
+    { id: "slow", name: "Slow Türk", url: "https://live.slowturk.com.tr/slowturk/mp3-128/icecast.audio", streamLabel: "Slow & Aşk" },
+    { id: "number1", name: "Number One FM", url: "https://live.number1.com.tr/number1/mp3-128/icecast.audio", streamLabel: "Türkçe Pop" },
 ];
 
 export function LiveRadio() {

@@ -19,17 +19,16 @@ export async function POST(req: Request) {
             }
         });
 
-        // 2. Upsert users
-        await (prisma.user as any).upsert({
+        // 2. Kredi düş (sender)
+        await prisma.user.update({
             where: { id: data.senderId },
-            update: { nickname: data.senderNickname, avatar: data.senderAvatar },
-            create: { id: data.senderId, nickname: data.senderNickname, avatar: data.senderAvatar }
+            data: { credits: { decrement: data.creditCost } }
         });
 
-        await (prisma.user as any).upsert({
+        // 3. Kazanç ekle (receiver)
+        await prisma.user.update({
             where: { id: data.receiverId },
-            update: { nickname: data.receiverNickname, avatar: data.receiverAvatar },
-            create: { id: data.receiverId, nickname: data.receiverNickname, avatar: data.receiverAvatar }
+            data: { earnings: { increment: data.tlValue } }
         });
 
         return NextResponse.json({ success: true });
