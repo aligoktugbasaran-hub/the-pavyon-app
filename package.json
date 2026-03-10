@@ -9,7 +9,7 @@
     "build:mobile": "next build && npx cap sync",
     "open:android": "npx cap open android",
     "open:ios": "npx cap open ios",
-    "start": "next start",
+    "start": "node server.js",
     "lint": "eslint"
   },
   "dependencies": {
