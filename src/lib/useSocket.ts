@@ -37,21 +37,28 @@ interface UseSocketOptions {
 // Singleton socket — tüm hook instanceları aynı soketi paylaşır
 let globalSocket: Socket | null = null;
 
-function getSocket(): Socket {
-    if (!globalSocket || !globalSocket.connected) {
-        const baseUrl = (() => {
-            if (typeof window === "undefined") return "";
-            const isCapacitor =
-                (window as any).Capacitor || window.location.protocol === "capacitor:";
-            if (isCapacitor) return process.env.NEXT_PUBLIC_API_URL || "";
-            return ""; // web'de aynı origin
-        })();
+function getSocket(): Socket | null {
+    if (typeof window === "undefined") return null;
 
+    const isCapacitor =
+        (window as any).Capacitor || window.location.protocol === "capacitor:";
+
+    const baseUrl = isCapacitor
+        ? process.env.NEXT_PUBLIC_API_URL || ""
+        : "";
+
+    // Mobilde NEXT_PUBLIC_API_URL tanımlı değilse WebSocket'i devre dışı bırak
+    if (isCapacitor && !baseUrl) {
+        console.warn("[useSocket] Mobil ortamda NEXT_PUBLIC_API_URL tanımlı değil, WebSocket devre dışı.");
+        return null;
+    }
+
+    if (!globalSocket || !globalSocket.connected) {
         globalSocket = io(baseUrl, {
             autoConnect: true,
             reconnection: true,
-            reconnectionAttempts: 10,
-            reconnectionDelay: 1000,
+            reconnectionAttempts: 5,
+            reconnectionDelay: 2000,
             transports: ["websocket", "polling"],
         });
     }
@@ -73,6 +80,10 @@ export function useSocket({ roomType, tableId = null, enabled = true }: UseSocke
         if (!enabled || !userId) return;
 
         const socket = getSocket();
+        if (!socket) {
+            setIsConnected(false);
+            return;
+        }
         socketRef.current = socket;
 
         // ── Bağlantı olayları ──
