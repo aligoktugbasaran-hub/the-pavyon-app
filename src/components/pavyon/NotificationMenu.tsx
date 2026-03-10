@@ -14,6 +14,7 @@ export function NotificationMenu() {
     const clearNotifications = useUserStore(state => state.clearNotifications);
     const setJoinedTableId = useUserStore(state => state.setJoinedTableId);
     const addFriend = useUserStore(state => state.addFriend);
+    const myId = useUserStore(state => state.id);
 
     // Filter notifications from blocked users
     const filteredNotifications = notifications.filter(n => !blockedUsers.includes(n.user));
@@ -27,7 +28,7 @@ export function NotificationMenu() {
         setIsOpen(!isOpen);
     };
 
-    const myId = useUserStore(state => state.id);
+
 
     const handleAcceptFriend = async (notif: any) => {
         if (!notif.userId) {
