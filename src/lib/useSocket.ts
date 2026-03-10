@@ -77,7 +77,10 @@ export function useSocket({ roomType, tableId = null, enabled = true }: UseSocke
     const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
-        if (!enabled || !userId) return;
+        if (!enabled || !userId) {
+            setIsConnected(false);
+            return;
+        }
 
         const socket = getSocket();
         if (!socket) {
@@ -159,19 +162,14 @@ export function useSocket({ roomType, tableId = null, enabled = true }: UseSocke
         (content: string) => {
             if (!socketRef.current || !content.trim()) return;
             socketRef.current.emit("message:send", { content, roomType, tableId });
-
-            // Yazıyor göstergesini kapat
             socketRef.current.emit("typing:stop", { roomType, tableId });
         },
         [roomType, tableId]
     );
 
-    // ── YAZIYOR GÖSTERGESİ ──
     const notifyTyping = useCallback(() => {
         if (!socketRef.current) return;
         socketRef.current.emit("typing:start", { roomType, tableId });
-
-        // 2 saniye sonra otomatik durdur
         if (typingTimer.current) clearTimeout(typingTimer.current);
         typingTimer.current = setTimeout(() => {
             socketRef.current?.emit("typing:stop", { roomType, tableId });
