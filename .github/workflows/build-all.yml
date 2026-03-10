@@ -27,6 +27,11 @@ jobs:
       - name: Prep Static Export (Remove API)
         run: rm -rf src/app/api
 
+      - name: Remove server.js for static export
+        run: |
+          cp server.js server.js.bak || true
+          rm -f server.js
+
       - name: Build Web
         run: npm run build
         env:
@@ -34,6 +39,9 @@ jobs:
 
       - name: Capacitor Sync
         run: npx cap sync ios
+
+      - name: Restore server.js
+        run: mv server.js.bak server.js || true
 
       - name: Build App
         run: |
@@ -73,6 +81,11 @@ jobs:
       - name: Prep Static Export (Remove API)
         run: rm -rf src/app/api
 
+      - name: Remove server.js for static export
+        run: |
+          cp server.js server.js.bak || true
+          rm -f server.js
+
       - name: Build Web
         run: npm run build
         env:
@@ -89,6 +102,9 @@ jobs:
 
       - name: Capacitor Sync
         run: npx cap sync android
+
+      - name: Restore server.js
+        run: mv server.js.bak server.js || true
 
       - name: Setup Java
         uses: actions/setup-java@v4

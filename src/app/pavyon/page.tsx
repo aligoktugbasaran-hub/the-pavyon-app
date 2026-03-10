@@ -77,7 +77,7 @@ export default function PavyonPage() {
     if (!isLoggedIn) return null; // Avoid hydration mismatch or flash
 
     return (
-        <div className="min-h-screen bg-black text-white relative flex flex-col md:flex-row overflow-hidden">
+        <div className="min-h-screen bg-black text-white relative flex flex-col overflow-hidden">
             <PavyonToast />
             {/* Background Grid Overlay */}
             <div className="fixed inset-0 pavyon-grid pointer-events-none opacity-20 z-0" />

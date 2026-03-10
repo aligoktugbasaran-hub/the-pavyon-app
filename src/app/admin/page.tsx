@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { useUserStore } from "@/store/useUserStore";
+import { PavyonToast } from "@/components/pavyon/PavyonToast";
 
 // Mock data for Admin simulation
 const INITIAL_USERS = [
@@ -49,7 +51,7 @@ export default function AdminDashboard() {
         if (password === "pavyon2024") { // Hardcoded for prototype
             setIsAuthed(true);
         } else {
-            alert("Yanlış Şifre!");
+            useUserStore.getState().showToast("Yanlış Şifre!", "error");
         }
     };
 
@@ -57,6 +59,7 @@ export default function AdminDashboard() {
         return (
             <div className="min-h-screen bg-[#05000a] flex items-center justify-center p-4">
                 <div className="fixed inset-0 pavyon-grid opacity-10 pointer-events-none" />
+                <PavyonToast />
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}

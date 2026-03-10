@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Play, Pause, Radio, Volume2, VolumeX, Music } from "lucide-react";
+import { useUserStore } from "@/store/useUserStore";
 
 const RADIOS = [
     { id: "seymen", name: "Seymenler FM", url: "https://listen.radyoseymen.com.tr/seymen/seymen_low/icecast.audio", streamLabel: "Ankara Havaları" },
@@ -60,7 +61,7 @@ export function LiveRadio() {
                 .then(() => setIsPlaying(true))
                 .catch(err => {
                     console.error("Autoplay failed", err);
-                    alert("Radyoyu başlatmak için lütfen sayfaya bir kez tıklayın.");
+                    useUserStore.getState().showToast("Radyoyu başlatmak için lütfen sayfaya bir kez tıklayın.", "info");
                 });
         }
     };

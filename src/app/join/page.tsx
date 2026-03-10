@@ -101,6 +101,12 @@ export default function PavyonAuthPage() {
     ];
 
     const pickImageNative = async () => {
+        const isNative = typeof window !== "undefined" &&
+            ((window as any).Capacitor?.isNativePlatform?.() === true);
+        if (!isNative) {
+            fileInputRef.current?.click();
+            return;
+        }
         try {
             const image = await Camera.getPhoto({
                 quality: 90,
@@ -115,7 +121,6 @@ export default function PavyonAuthPage() {
             }
         } catch (e) {
             console.log("User cancelled camera or error", e);
-            // Fallback to web input
             fileInputRef.current?.click();
         }
     };

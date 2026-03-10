@@ -33,6 +33,10 @@ model Message {
   content   String
   senderId  String
   sender    User     @relation(fields: [senderId], references: [id])
+  tableId   Int?     // null = global chat, number = table room
+  roomType  String   @default("global") // "global" | "table"
+  senderNickname String @default("")
+  senderAvatar   String @default("")
   createdAt DateTime @default(now())
 }
 

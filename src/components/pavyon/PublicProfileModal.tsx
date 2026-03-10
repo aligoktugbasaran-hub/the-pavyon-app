@@ -26,14 +26,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
     const [confirmAction, setConfirmAction] = useState<"unfriend" | "block" | null>(null);
     const [requestSent, setRequestSent] = useState(false);
 
-    const addNotification = useUserStore(state => state.addNotification);
-    const joinedTableId = useUserStore(state => state.joinedTableId);
-    const addFriend = useUserStore(state => state.addFriend);
-    const removeFriend = useUserStore(state => state.removeFriend);
-    const blockUser = useUserStore(state => state.blockUser);
-    const unblockUser = useUserStore(state => state.unblockUser);
-    const isFriend = useUserStore(state => state.isFriend);
-    const isBlocked = useUserStore(state => state.isBlocked);
+    const { id: userId, nickname, avatarUrl, credits, id: meId, setFriends, setBlockedUsers, showToast, addNotification, joinedTableId, addFriend, removeFriend, blockUser, unblockUser, isFriend, isBlocked } = useUserStore();
 
     useEffect(() => { setMounted(true); }, []);
 
@@ -86,7 +79,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
             });
             setRequestSent(true);
         } catch (e) {
-            alert("İstek gönderilemedi.");
+            showToast("İstek gönderilemedi, bir sorun oluştu.", "error");
         }
     };
 

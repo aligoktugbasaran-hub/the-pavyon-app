@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, Gift, Check, AlertTriangle } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
+import { PavyonToast } from "@/components/pavyon/PavyonToast"; // Added PavyonToast import
 
 const GIFTS = [
     { id: "lighter", name: "Çakmak", price: 25, icon: "🔥" },
@@ -56,13 +57,15 @@ export function GiftModal({ isOpen, onClose, recipientName, recipientAvatar, onC
                 setStatus("idle");
                 setSelectedGift(null);
                 onClose();
-                alert(`Tebrikler! ${recipientName} bu hediyeden ₺${earnings.toFixed(2)} kazanç sağladı.\n\nGüvenli İşlem ID: ${txId}`);
+                const earningsStr = earnings.toFixed(2);
+                useUserStore.getState().showToast(`Tebrikler! ${recipientName} bu hediyeden ₺${earningsStr} kazanç sağladı.`, "success");
             }, 1800);
         }, 800);
     };
 
     return (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200">
+            <PavyonToast /> {/* Render PavyonToast */}
             <div className="relative bg-gradient-to-br from-[#110820] to-black border border-white/10 rounded-3xl w-full max-w-md shadow-[0_0_50px_rgba(255,0,127,0.2)] overflow-hidden">
 
                 {/* Close */}
