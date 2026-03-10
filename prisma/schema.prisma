@@ -1,55 +1,66 @@
 generator client {
-  provider      = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
   id            String       @id @default(uuid())
   email         String?      @unique
   nickname      String       @unique
-  avatar        String?      // Profile avatar URL or Base64
+  avatar        String?
   gender        String?
   credits       Int          @default(100)
   earnings      Float        @default(0)
+  isOnline      Boolean      @default(false)
+  lastSeenAt    DateTime?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt @default(now())
   messages      Message[]
   giftsGiven    Gift[]       @relation("GiftSender")
   giftsReceived Gift[]       @relation("GiftReceiver")
-  
-  // Friends & Blocking
   friendsSent      Friendship[] @relation("FriendSender")
   friendsReceived  Friendship[] @relation("FriendReceiver")
   blockedByMe      Block[]      @relation("Blocker")
   blockedMe        Block[]      @relation("Blocked")
+  sessions         Session[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique @default(uuid())
+  nickname  String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
 }
 
 model Message {
-  id        String   @id @default(uuid())
-  content   String
-  senderId  String
-  sender    User     @relation(fields: [senderId], references: [id])
-  tableId   Int?     // null = global chat, number = table room
-  roomType  String   @default("global") // "global" | "table"
-  senderNickname String @default("")
-  senderAvatar   String @default("")
-  createdAt DateTime @default(now())
+  id             String   @id @default(uuid())
+  content        String
+  senderId       String
+  sender         User     @relation(fields: [senderId], references: [id])
+  tableId        Int?
+  roomType       String   @default("global")
+  senderNickname String   @default("")
+  senderAvatar   String   @default("")
+  createdAt      DateTime @default(now())
 }
 
 model Gift {
-  id          String   @id @default(uuid())
-  type        String   // "ROSE", "CHAMPAGNE", etc.
-  creditCost  Int
-  tlValue     Float
-  senderId    String
-  sender      User     @relation("GiftSender", fields: [senderId], references: [id])
-  receiverId  String
-  receiver    User     @relation("GiftReceiver", fields: [receiverId], references: [id])
-  createdAt   DateTime @default(now())
+  id         String   @id @default(uuid())
+  type       String
+  creditCost Int
+  tlValue    Float
+  senderId   String
+  sender     User     @relation("GiftSender", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User     @relation("GiftReceiver", fields: [receiverId], references: [id])
+  createdAt  DateTime @default(now())
 }
 
 model Friendship {
@@ -58,9 +69,8 @@ model Friendship {
   sender     User     @relation("FriendSender", fields: [senderId], references: [id])
   receiverId String
   receiver   User     @relation("FriendReceiver", fields: [receiverId], references: [id])
-  status     String   @default("PENDING") // PENDING, ACCEPTED
+  status     String   @default("PENDING")
   createdAt  DateTime @default(now())
-
   @@unique([senderId, receiverId])
 }
 
@@ -71,6 +81,5 @@ model Block {
   blockedId String
   blocked   User     @relation("Blocked", fields: [blockedId], references: [id])
   createdAt DateTime @default(now())
-
   @@unique([blockerId, blockedId])
 }

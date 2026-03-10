@@ -27,6 +27,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
     const [requestSent, setRequestSent] = useState(false);
 
     const { id: userId, nickname, avatarUrl, credits, id: meId, setFriends, setBlockedUsers, showToast, addNotification, joinedTableId, addFriend, removeFriend, blockUser, unblockUser, isFriend, isBlocked } = useUserStore();
+    const me = { id: userId };
 
     useEffect(() => { setMounted(true); }, []);
 
@@ -39,7 +40,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
     const blocked = isBlocked(user.name);
     const friend = isFriend(user.name);
 
-    const me = useUserStore();
+
 
     const handleConfirm = async () => {
         if (!user.id) return;
