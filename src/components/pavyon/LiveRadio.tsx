@@ -5,10 +5,10 @@ import { Play, Pause, Radio, Volume2, VolumeX, Music } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 
 const RADIOS = [
-    { id: "seymen", name: "Seymenler FM", url: "https://listen.radyoseymen.com.tr/seymen/seymen_low/icecast.audio", streamLabel: "Ankara Havaları" },
     { id: "kral", name: "Kral FM", url: "https://kralfm.turkmedya.com.tr/kralfm_low.mp3", streamLabel: "Arabesk & Damar" },
-    { id: "fenomen", name: "Radyo Fenomen", url: "https://listen.radyofenomen.com/fenomen/128/icecast.audio", streamLabel: "Pop & Hit" },
-    { id: "slow", name: "JoyTurk", url: "https://listen.joyturk.com.tr/joyturk/128/icecast.audio", streamLabel: "Slow & Aşk" }
+    { id: "powerturk", name: "Power Türk", url: "https://powerturk.turkmedya.com.tr/powerturk_low.mp3", streamLabel: "Türkçe Pop" },
+    { id: "powerfm", name: "Power FM", url: "https://powerfm.turkmedya.com.tr/powerfm_low.mp3", streamLabel: "Hit Müzik" },
+    { id: "slow", name: "Slow Türk", url: "https://slowturk.turkmedya.com.tr/slowturk_low.mp3", streamLabel: "Slow & Aşk" },
 ];
 
 export function LiveRadio() {
