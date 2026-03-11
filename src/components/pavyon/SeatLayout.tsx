@@ -182,7 +182,7 @@ export function SeatLayout() {
                 {/* Background effects for focused view */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,127,0.1),transparent_70%)] opacity-30 pointer-events-none" />
 
-                <div className="flex-1 flex flex-col items-center justify-start relative p-4 md:p-10 min-h-[10vh] md:min-h-0 pt-16 md:pt-20 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
+                <div className="w-full md:w-64 shrink-0 flex flex-col items-center justify-start relative p-2 md:p-4 pt-12 md:pt-14 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
                     {/* Masa Bilgisi - En Üstte */}
                     <div className="w-full flex items-center gap-4 mb-20 md:mb-24 animate-in slide-in-from-top duration-700">
                         <div className={`w-14 h-14 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl border bg-black shadow-2xl ${isVip ? 'border-gold-500/50 shadow-gold-500/10' : 'border-neon-pink/50 shadow-neon-pink/10'}`}>
@@ -285,7 +285,7 @@ export function SeatLayout() {
                 </div>
 
                 {/* Sağ Taraf: Masaya Özel Kurallı Chat - Expanded on Mobile */}
-                <div className="w-full h-[85%] md:h-full md:w-80 lg:w-96 border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden shrink-0 z-10 mt-0 md:mt-4 lg:mt-6 rounded-tr-2xl">
+                <div className="flex-1 h-full border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden z-10 rounded-tr-2xl">
                     <div className="p-4 border-b border-white/10 bg-black/60 shadow-md flex items-center justify-between">
                         <div>
                             <h3 className="font-bold text-white flex items-center gap-2 truncate">

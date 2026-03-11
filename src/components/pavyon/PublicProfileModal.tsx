@@ -71,17 +71,23 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
     const handleFriendRequest = async () => {
         if (!user.id) return;
         try {
-            await fetch("/api/friends", {
+            const res = await fetch("/api/friends", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ senderId: me.id, receiverId: user.id, action: "REQUEST" })
+                body: JSON.stringify({ senderId: me.id, receiverId: String(user.id), action: "REQUEST" })
             });
+            const data = await res.json();
+            if (!res.ok) {
+                showToast(data.error || "İstek gönderilemedi.", "error");
+                return;
+            }
             addNotification({
                 type: "friend_request",
                 user: user.name,
                 avatar: user.avatar,
             });
             setRequestSent(true);
+            showToast(`${user.name} adlı kişiye arkadaşlık isteği gönderildi!`, "success");
         } catch (e) {
             showToast("İstek gönderilemedi, bir sorun oluştu.", "error");
         }

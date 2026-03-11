@@ -5,10 +5,10 @@ import { Play, Pause, Radio, Volume2, VolumeX, Music } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 
 const RADIOS = [
-    { id: "kral", name: "Kral FM", url: "https://live.radyokral.com.tr/radyokral/mp3-128/icecast.audio", streamLabel: "Arabesk & Damar" },
-    { id: "metro", name: "Metro FM", url: "https://live.metrofm.com.tr/metrofm/mp3-128/icecast.audio", streamLabel: "Pop & Hit" },
-    { id: "slow", name: "Slow Türk", url: "https://live.slowturk.com.tr/slowturk/mp3-128/icecast.audio", streamLabel: "Slow & Aşk" },
-    { id: "number1", name: "Number One FM", url: "https://live.number1.com.tr/number1/mp3-128/icecast.audio", streamLabel: "Türkçe Pop" },
+    { id: "seymen", name: "Seymenler FM", url: "https://radyoseymen.com.tr/radyo/seymen128.mp3", streamLabel: "Ankara Havaları" },
+    { id: "kral", name: "Kral FM", url: "https://strm.radyotvonline.net/kralfm", streamLabel: "Arabesk & Damar" },
+    { id: "metro", name: "Metro FM", url: "https://strm.radyotvonline.net/metrofm", streamLabel: "Pop & Hit" },
+    { id: "slow", name: "Slow Türk", url: "https://strm.radyotvonline.net/slowturk", streamLabel: "Slow & Aşk" },
 ];
 
 export function LiveRadio() {
@@ -86,7 +86,7 @@ export function LiveRadio() {
     };
 
     return (
-        <div className="w-full bg-black/60 border border-white/10 rounded-2xl p-4 flex flex-col items-stretch gap-4 glass-panel relative z-30 mb-2 shadow-[0_0_30px_rgba(255,0,127,0.1)]">
+        <div className="w-full bg-black/60 border border-white/10 rounded-xl p-2 flex items-center gap-3 glass-panel relative z-30 mb-2 shadow-[0_0_30px_rgba(255,0,127,0.1)]">
 
             {/* Top Row: Info + Controls (On same line for mobile efficiency) */}
             <div className="flex items-center justify-between gap-2 overflow-hidden">
@@ -155,26 +155,6 @@ export function LiveRadio() {
                 </div>
             </div>
 
-            {/* Bottom Row: Compact Volume (Only visible if needed or toggled) */}
-            <div className="hidden md:flex items-center gap-4 border-t border-white/5 pt-3">
-                <div className="flex items-center gap-2 group flex-1">
-                    <button onClick={toggleMute} className="text-white/40 hover:text-white transition-colors">
-                        {isMuted || volume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                    </button>
-                    <input
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.05"
-                        value={isMuted ? 0 : volume}
-                        onChange={handleVolumeChange}
-                        className="w-full h-1 rounded-full bg-white/20 appearance-none cursor-pointer accent-neon-pink"
-                    />
-                </div>
-                <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest whitespace-nowrap">
-                    Pavyon Ortak Yayın
-                </div>
-            </div>
         </div>
     );
 }
