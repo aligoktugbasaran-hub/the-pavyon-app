@@ -125,7 +125,7 @@ export default function PavyonPage() {
                 </aside>
 
                 {/* Center Content: Leaderboards (TOP) + Live Radio + Seats */}
-                <main className="flex-1 flex flex-col gap-4 shrink min-w-0 h-full relative">
+                <main className="flex-1 flex flex-col gap-4 shrink min-w-0 h-full relative overflow-hidden">
                     {/* Chat Toggle Button (Visible when chat closed) */}
                     {!isGlobalChatOpen && (
                         <button

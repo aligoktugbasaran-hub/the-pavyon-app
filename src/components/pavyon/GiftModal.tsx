@@ -23,10 +23,11 @@ interface GiftModalProps {
     onClose: () => void;
     recipientName: string;
     recipientAvatar?: string;
+    recipientId?: string;
     onCreditRedirect?: () => void;
 }
 
-export function GiftModal({ isOpen, onClose, recipientName, recipientAvatar, onCreditRedirect }: GiftModalProps) {
+export function GiftModal({ isOpen, onClose, recipientName, recipientAvatar, recipientId, onCreditRedirect }: GiftModalProps) {
     const [selectedGift, setSelectedGift] = useState<typeof GIFTS[0] | null>(null);
     const [status, setStatus] = useState<"idle" | "sending" | "success" | "insufficient">("idle");
 
@@ -34,33 +35,43 @@ export function GiftModal({ isOpen, onClose, recipientName, recipientAvatar, onC
 
     if (!isOpen) return null;
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (!selectedGift) return;
-
         if (credits < selectedGift.price) {
             setStatus("insufficient");
             setTimeout(() => setStatus("idle"), 2500);
             return;
         }
-
         setStatus("sending");
-        setTimeout(() => {
+        try {
+            const { id: senderId, nickname, avatarUrl } = useUserStore.getState();
+            await fetch("/api/gift", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    giftType: selectedGift.id,
+                    creditCost: selectedGift.price,
+                    tlValue: selectedGift.price * 0.20,
+                    senderId,
+                    receiverId: recipientId || senderId,
+                    senderNickname: nickname,
+                    senderAvatar: avatarUrl,
+                    receiverNickname: recipientName,
+                    receiverAvatar: recipientAvatar,
+                })
+            });
             removeCredits(selectedGift.price);
-
-            // Recipient gets 20% back. Secure backend simulation.
-            const earnings = selectedGift.price * 0.20;
-            const txId = `TX-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
-            console.log(`[SECURE] Payout: ₺${earnings} | ID: ${txId} | To: ${recipientName}`);
-
             setStatus("success");
             setTimeout(() => {
                 setStatus("idle");
                 setSelectedGift(null);
                 onClose();
-                const earningsStr = earnings.toFixed(2);
-                useUserStore.getState().showToast(`Tebrikler! ${recipientName} bu hediyeden ₺${earningsStr} kazanç sağladı.`, "success");
+                useUserStore.getState().showToast(`${selectedGift.name} gönderildi! 🎉`, "success");
             }, 1800);
-        }, 800);
+        } catch (e) {
+            setStatus("idle");
+            useUserStore.getState().showToast("Hediye gönderilemedi, tekrar dene.", "error");
+        }
     };
 
     return (

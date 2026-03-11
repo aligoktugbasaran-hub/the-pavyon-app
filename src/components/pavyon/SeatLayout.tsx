@@ -374,12 +374,12 @@ export function SeatLayout() {
                                     if (e.target.value) notifyTyping();
                                 }}
                                 placeholder={isConnected ? "Masaya yaz..." : "Bağlanıyor..."}
-                                disabled={!isConnected}
+                                disabled={false}
                                 className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-neon-pink/50 transition-colors disabled:opacity-50"
                             />
                             <button
                                 type="submit"
-                                disabled={!newMessage.trim() || !isConnected}
+                                disabled={!newMessage.trim()}
                                 className="p-2 bg-neon-pink text-white rounded-xl hover:bg-neon-pink/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 <Send className="w-5 h-5" />
