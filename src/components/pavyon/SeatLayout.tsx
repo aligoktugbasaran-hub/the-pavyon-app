@@ -62,14 +62,20 @@ export function SeatLayout() {
     // Active table object
     const activeTable = joinedTableId ? (
         ALL_TABLES.find(t => t.id === joinedTableId) ||
-        (joinedTableId >= 900 ? {
-            id: joinedTableId,
-            name: `${friends[joinedTableId - 900]?.name || "Arkadaş"} ile Özel Masa`,
-            capacity: 2,
-            currentUsers: 1,
-            icon: "🥂",
-            type: "vip"
-        } : null)
+        (joinedTableId >= 900 ? (() => {
+            const matchedFriend = friends.find(f => {
+                const hash = f.id ? f.id.charCodeAt(0) + f.id.charCodeAt(f.id.length - 1) : 0;
+                return 900 + hash === joinedTableId;
+            });
+            return {
+                id: joinedTableId,
+                name: `${matchedFriend?.name || "Arkadaş"} ile Özel Masa`,
+                capacity: 2,
+                currentUsers: 1,
+                icon: "🥂",
+                type: "vip" as const
+            };
+        })() : null)
     ) : null;
 
     // Scroll chat to bottom
@@ -192,123 +198,22 @@ export function SeatLayout() {
                 {/* Background effects for focused view */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,127,0.1),transparent_70%)] opacity-30 pointer-events-none" />
 
-                <div className="hidden md:flex md:w-[12%] flex-col items-center justify-center relative p-1 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
-                    {/* Masa Bilgisi - En Üstte */}
-                    <div className="w-full flex items-center gap-2 mb-4 animate-in slide-in-from-top duration-700">
-                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-lg border bg-black shadow-xl ${isVip ? 'border-gold-500/50' : 'border-neon-pink/50'}`}>
-                            {activeTable.icon}
-                        </div>
-                        <div className="flex flex-col">
-                             <h2 className="text-sm font-black text-white uppercase tracking-tighter flex items-center gap-2">
-                                {activeTable.name}
-                                {isVip && <span className="text-[10px] md:text-xs bg-gold-500 text-black px-2 py-0.5 rounded-full font-black tracking-widest shadow-[0_0_15px_rgba(255,215,0,0.5)]">VIP</span>}
-                            </h2>
-                            <div className="flex items-center gap-2 mt-1">
-                                <span className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)] animate-pulse" />
-                                <span className="text-xs md:text-sm text-white/60 font-bold uppercase tracking-widest">{activeTable.currentUsers + 1} Kişi Masada</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative w-full max-w-[160px] aspect-square flex items-center justify-center">
-                        {/* Kırmızı Hilal Şeklinde Koltuk (Sofa) */}
-                        <div
-                            className="absolute rounded-full border-red-900 shadow-[inset_0_10px_30px_rgba(80,0,0,0.9),0_15px_40px_rgba(220,38,38,0.2)] z-0 flex items-center justify-center before:absolute before:inset-0 before:rounded-full before:border-[2px] before:border-red-500/30 before:border-t-transparent after:absolute after:inset-1 after:rounded-full after:border-[1px] after:border-white/5 after:border-t-transparent"
-                            style={{
-                                width: isVip ? '200px' : '150px',
-                                height: isVip ? '120px' : '100px',
-                                borderWidth: isVip ? '25px' : '20px',
-                                borderTopColor: 'transparent',
-                                transform: 'translateY(-20px)'
-                            }}
-                        >
-                        </div>
-
-                        {/* Fiziksel Masa Büyütülmüş  */}
-                        <div className={`${isVip ? 'w-24 h-16 rounded-2xl' : 'w-12 h-12 rounded-full'} border-[1.5px] flex flex-col items-center justify-center shadow-[0_0_40px_rgba(0,0,0,1)] z-10 ${isVip ? 'bg-black border-gold-500/50' : 'bg-black border-neon-pink/50'} -mt-16`}>
-                            <span className="text-lg drop-shadow-lg opacity-95">{activeTable.icon}</span>
-                        </div>
-
-                        {/* Oturan Avatarlar */}
-                        {Array.from({ length: activeTable.capacity }).map((_, i) => {
-                            const isMySeat = i === activeTable.currentUsers;
-                            const isOccupied = i < activeTable.currentUsers || isMySeat;
-                            const pos = getSeatPosition(i, activeTable.capacity, isVip, 1, true);
-                            const hasMessage = activeMessage?.tableId === activeTable.id && activeMessage?.seatIndex === i;
-                            const isHovered = hoveredUser?.tableId === activeTable.id && hoveredUser?.seatIndex === i;
-
-                            const mockName = MOCK_USER_NAMES[(activeTable.id + i) % MOCK_USER_NAMES.length];
-                            const mockAge = 20 + ((activeTable.id * i) % 15);
-                            const avatarUrl = isMySeat ? '/avatars/male_avatar_1.png' : `/avatars/${i % 2 === 0 ? 'female' : 'male'}_avatar_${(i % 6) + 1}.png`;
-
-                            return (
-                                <div
-                                    key={i}
-                                    onMouseEnter={() => isOccupied && !isMySeat && setHoveredUser({ tableId: activeTable.id, seatIndex: i })}
-                                    onMouseLeave={() => setHoveredUser(null)}
-                                    onClick={() => {
-                                        if (isOccupied && !isMySeat) {
-                                            setSelectedUserProfile({ id: mockName, name: mockName, avatar: avatarUrl, age: mockAge });
-                                            setHoveredUser(null);
-                                        }
-                                    }}
-                                    className={`absolute w-7 h-7 md:w-10 md:h-10 rounded-full border-[2px] transition-all cursor-${isOccupied && !isMySeat ? 'pointer' : 'default'} ${isOccupied ? `bg-cover bg-center shadow-2xl z-20 ${isMySeat ? 'border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.6)]' : (isVip ? 'neon-border-gold shadow-[0_0_10px_rgba(255,215,0,0.3)]' : 'neon-border-pink shadow-[0_0_10px_rgba(255,0,127,0.3)]')}` : 'border-white/5 bg-white/5 opacity-20 border-dashed z-0'} `}
-                                    style={{
-                                        left: pos.left,
-                                        top: pos.top,
-                                        backgroundImage: isOccupied ? `url('${avatarUrl}')` : 'none',
-                                        zIndex: isHovered ? 40 : (isMySeat ? 30 : 20)
-                                    }}
-                                >
-                                    {/* Profil Kartı (Hover) */}
-                                    {isHovered && (
-                                        <div className="absolute top-12 left-1/2 -translate-x-1/2 bg-black/95 border border-white/20 rounded-xl p-3 shadow-[0_20px_50px_rgba(0,0,0,1)] w-48 animate-in zoom-in-95 duration-200 backdrop-blur-xl flex flex-col items-center gap-2 pointer-events-auto">
-                                            <img src={avatarUrl} className="w-16 h-16 rounded-full border-2 border-neon-pink object-cover" />
-                                            <div className="text-center">
-                                                <div className="font-bold text-white text-sm flex items-center justify-center gap-1">
-                                                    {mockName}, {mockAge}
-                                                </div>
-                                                <div className="text-[10px] text-white/50">Masadan birisi...</div>
-                                            </div>
-                                            <div className="flex flex-col gap-2 w-full mt-2">
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); showToast("Hediye göndermek için profilini aç!", "info"); setHoveredUser(null); }}
-                                                    className="w-full bg-gradient-to-r from-neon-pink to-purple-600 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap"
-                                                >
-                                                    <Gift className="w-3.5 h-3.5" /> Hediye Gönder
-                                                </button>
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); setSelectedUserProfile({ id: mockName, name: mockName, avatar: avatarUrl, age: mockAge }); setHoveredUser(null); }}
-                                                    className="w-full bg-white/10 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-white/20 transition-colors whitespace-nowrap"
-                                                >
-                                                    <UserPlus className="w-3.5 h-3.5" /> Arkadaş Ekle
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Konuşan Kişinin Baloncuğu */}
-                                    {isOccupied && hasMessage && !isHovered && (
-                                        <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-white text-black text-[12px] font-bold px-3 py-1.5 rounded-xl rounded-bl-none shadow-[0_0_20px_rgba(255,255,255,0.8)] whitespace-nowrap z-50 animate-bounce">
-                                            {activeMessage.text}
-                                            <div className="absolute -bottom-2 left-0 w-4 h-4 bg-white transform rotate-45 -z-10"></div>
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
+                {/* Masa bilgisi artık chat header'da gösteriliyor */}
 
                 {/* Sağ Taraf: Masaya Özel Kurallı Chat - Expanded on Mobile */}
-                <div className="w-full md:w-[88%] h-full border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden z-10 rounded-tr-2xl">
-                    <div className="p-4 border-b border-white/10 bg-black/60 shadow-md flex items-center justify-between">
-                        <div>
-                            <h3 className="font-bold text-white flex items-center gap-2 truncate">
-                                {isVip ? <Wine className="w-4 h-4 text-gold-400" /> : <Users className="w-4 h-4 text-neon-pink" />}
-                                {activeTable.name}
-                            </h3>
-                            <p className="text-[10px] text-white/50 mt-0.5">Genel ahlak kuralları geçerlidir.</p>
+                <div className="w-full h-full border-white/10 flex flex-col bg-black/40 overflow-hidden z-10 rounded-2xl">
+                    <div className="p-3 border-b border-white/10 bg-black/60 shadow-md flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl border bg-black shadow-xl ${isVip ? 'border-gold-500/50' : 'border-neon-pink/50'}`}>
+                                {activeTable.icon}
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-white flex items-center gap-2 truncate text-sm">
+                                    {activeTable.name}
+                                    {isVip && <span className="text-[9px] bg-gold-500 text-black px-1.5 py-0.5 rounded-full font-black">VIP</span>}
+                                </h3>
+                                <p className="text-[10px] text-white/40 mt-0.5">Genel ahlak kuralları geçerlidir.</p>
+                            </div>
                         </div>
                         <div className="flex items-center gap-2">
                             {/* Video Call Button — SADECE ÖZEL LOCADA (ID: 99) GÖSTER */}
@@ -476,8 +381,8 @@ export function SeatLayout() {
                                                 </div>
                                                 <button
                                                     onClick={() => {
-                                                        const idx = friends.indexOf(friend);
-                                                        const privateTableId = 900 + (idx >= 0 ? idx : 0);
+                                                        const hash = friend.id ? friend.id.charCodeAt(0) + friend.id.charCodeAt(friend.id.length - 1) : 0;
+                                                        const privateTableId = 900 + hash;
                                                         setJoinedTableId(privateTableId);
                                                         setIsLocalarimOpen(false);
                                                     }}

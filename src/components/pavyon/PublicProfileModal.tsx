@@ -198,11 +198,6 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
                         <button
                             onClick={() => {
                                 if (blocked) return;
-                                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-                                if (!user?.id || !uuidRegex.test(String(user.id))) {
-                                    useUserStore.getState().showToast("Bu kullanıcıya henüz hediye gönderilemiyor.", "info");
-                                    return;
-                                }
                                 setIsGiftModalOpen(true);
                             }}
                             disabled={blocked}

@@ -10,27 +10,24 @@ export async function POST(req: Request) {
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
         const senderValid = uuidRegex.test(data.senderId);
         if (!senderValid) {
-            return NextResponse.json({ success: false, error: "Geçersiz gönderen ID" }, { status: 400 });
+            return NextResponse.json({ success: false, error: "Geçersiz gönderen" }, { status: 400 });
         }
-        // receiverId geçerli UUID ise kişiye hediye, değilse masaya ikram
         const receiverValid = data.receiverId && uuidRegex.test(data.receiverId);
-        const receiverId = receiverValid ? data.receiverId : data.senderId;
+        const finalReceiverId = receiverValid ? data.receiverId : data.senderId;
         await prisma.gift.create({
             data: {
                 type: data.giftType,
                 creditCost: data.creditCost,
                 tlValue: data.tlValue || 0,
                 senderId: data.senderId,
-                receiverId: receiverId,
+                receiverId: finalReceiverId,
                 createdAt: new Date(),
             }
         });
-        // Kredi düş
         await prisma.user.update({
             where: { id: data.senderId },
             data: { credits: { decrement: data.creditCost } }
         });
-        // Kazanç ekle (sadece farklı kişiye gönderimde)
         if (receiverValid && data.receiverId !== data.senderId) {
             await prisma.user.update({
                 where: { id: data.receiverId },

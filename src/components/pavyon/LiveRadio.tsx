@@ -137,7 +137,7 @@ export function LiveRadio() {
                         </button>
 
                         {isRadioMenuOpen && (
-                            <div className="absolute top-12 right-0 w-48 bg-black/98 border border-white/20 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.95)] p-2 z-[60] animate-in fade-in zoom-in-95 duration-200 backdrop-blur-xl">
+                            <div className="absolute top-12 right-0 w-48 bg-black border border-white/20 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.95)] p-2 z-[9999] animate-in fade-in zoom-in-95 duration-200 backdrop-blur-xl" onClick={(e) => e.stopPropagation()}>
                                 {RADIOS.map((radio) => (
                                     <button
                                         key={radio.id}
