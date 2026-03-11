@@ -20,12 +20,15 @@ const GIFTS = [
 ];
 
 const RECIPIENTS = [
-    { value: "all", label: "Sisteme (Genel Hediye)" },
-    { value: "kral", label: "Kral Locası" },
-    { value: "sahne", label: "Sahne Önü" },
-    { value: "arabesk", label: "Arabesk & Damar Masası" },
-    { value: "edebiyat", label: "Edebiyat Köşesi" },
-    { value: "rock", label: "Rock Severler Masası" },
+    { value: "all", label: "Herkese (Genel İkram)" },
+    { value: "11", label: "Kral Masası" },
+    { value: "12", label: "Sahne Önü" },
+    { value: "1", label: "Sinema Tutkunları" },
+    { value: "2", label: "Arabesk & Damar" },
+    { value: "3", label: "Edebiyat Köşesi" },
+    { value: "4", label: "Rock Severler" },
+    { value: "5", label: "Kırmızı Güller" },
+    { value: "6", label: "Günün Yorgunluğu" },
 ];
 
 export function GiftPanel() {
@@ -61,12 +64,13 @@ export function GiftPanel() {
                     senderId: senderId || "anonymous-web",
                     senderNickname: senderName || "Misafir",
                     senderAvatar: senderAvatar || "/avatars/male_avatar_1.png",
-                    receiverId: recipient,
+                    receiverId: senderId,
                     receiverNickname: targetRecipient?.label || recipient,
                     receiverAvatar: "/avatars/female_avatar_1.png",
                     giftType: selectedGift.name,
                     creditCost: selectedGift.price,
                     tlValue: selectedGift.price * 0.20,
+                    targetTable: recipient,
                 })
             });
 
@@ -75,6 +79,7 @@ export function GiftPanel() {
             console.log(`[SECURE] Payout: ₺${earnings} | ID: ${txId} | To: ${recipient}`);
 
             setStatus("success");
+            useUserStore.getState().showToast(`${selectedGift.name} gönderildi! 🎉`, "success");
             setTimeout(() => {
                 setStatus("idle");
                 setSelectedGiftId(null);

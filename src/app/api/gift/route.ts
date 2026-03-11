@@ -7,30 +7,31 @@ export async function POST(req: Request) {
         if (!data.senderId || !data.giftType || !data.creditCost) {
             return NextResponse.json({ success: false, error: "Eksik veri" }, { status: 400 });
         }
-        // receiverId geçerli bir UUID mi kontrol et
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-        const validReceiver = data.receiverId && uuidRegex.test(data.receiverId);
-        if (!validReceiver) {
-            return NextResponse.json({ success: false, error: "Geçersiz alıcı ID" }, { status: 400 });
+        const senderValid = uuidRegex.test(data.senderId);
+        if (!senderValid) {
+            return NextResponse.json({ success: false, error: "Geçersiz gönderen ID" }, { status: 400 });
         }
-        // 1. Create gift record (receiverId opsiyonel)
+        // receiverId geçerli UUID ise kişiye hediye, değilse masaya ikram
+        const receiverValid = data.receiverId && uuidRegex.test(data.receiverId);
+        const receiverId = receiverValid ? data.receiverId : data.senderId;
         await prisma.gift.create({
             data: {
                 type: data.giftType,
                 creditCost: data.creditCost,
                 tlValue: data.tlValue || 0,
                 senderId: data.senderId,
-                receiverId: data.receiverId,
+                receiverId: receiverId,
                 createdAt: new Date(),
             }
         });
-        // 2. Kredi düş (sender)
+        // Kredi düş
         await prisma.user.update({
             where: { id: data.senderId },
             data: { credits: { decrement: data.creditCost } }
         });
-        // 3. Kazanç ekle (sadece gerçek alıcıya)
-        if (validReceiver && data.receiverId !== data.senderId) {
+        // Kazanç ekle (sadece farklı kişiye gönderimde)
+        if (receiverValid && data.receiverId !== data.senderId) {
             await prisma.user.update({
                 where: { id: data.receiverId },
                 data: { earnings: { increment: data.tlValue || 0 } }
@@ -38,7 +39,7 @@ export async function POST(req: Request) {
         }
         return NextResponse.json({ success: true });
     } catch (e: any) {
-        console.error("Failed to register gift:", e.message);
+        console.error("Gift API error:", e.message);
         return NextResponse.json({ success: false, error: e.message }, { status: 500 });
     }
 }

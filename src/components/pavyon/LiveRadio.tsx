@@ -5,10 +5,10 @@ import { Play, Pause, Radio, Volume2, VolumeX, Music } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 
 const RADIOS = [
-    { id: "turkuaz", name: "Türküaz FM", url: "https://yayin.turkuazradyo.com:7041/stream", streamLabel: "Türkü & Halk" },
-    { id: "joyturk", name: "JoyTürk", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK.mp3", streamLabel: "Rock & Alternatif" },
-    { id: "virgin", name: "Virgin Radio", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/VIRGIN_RADIO_TR.mp3", streamLabel: "Pop & Hit" },
     { id: "trt", name: "TRT FM", url: "https://trtrad1-a.trt.com.tr/trt-fm.mp3", streamLabel: "Karışık Müzik" },
+    { id: "trtturku", name: "TRT Türkü", url: "https://trtrad4-a.trt.com.tr/trt-turku.mp3", streamLabel: "Türkü & Halk" },
+    { id: "joy", name: "Joy FM", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_FM.mp3", streamLabel: "Pop & Hit" },
+    { id: "superfm", name: "Süper FM", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM.mp3", streamLabel: "Türkçe Pop" },
 ];
 
 export function LiveRadio() {

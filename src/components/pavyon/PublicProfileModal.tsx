@@ -271,7 +271,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
     return (
         <>
             {profileModal}
-            {isGiftModalOpen && (
+            {isGiftModalOpen && user && (
                 <GiftModal
                     isOpen={isGiftModalOpen}
                     onClose={() => setIsGiftModalOpen(false)}

@@ -136,6 +136,9 @@ export default function PavyonPage() {
                         </button>
                     )}
 
+                    <div className="shrink-0">
+                        <LiveRadio />
+                    </div>
                     <div className="flex flex-col gap-2 shrink-0">
                         {/* Combined Leaders Row: MOVED TO TOP AND ENLARGED */}
                         <div className="grid grid-cols-2 gap-4">
@@ -192,13 +195,11 @@ export default function PavyonPage() {
                             </div>
                         </div>
 
-                        <div className="w-full">
-                            <LiveRadio />
-                        </div>
+
                     </div>
 
                     {/* Seat Layout */}
-                    <div className="flex-1 relative z-10 min-h-[500px] bg-black/20 rounded-2xl border border-white/5 mx-auto w-full overflow-hidden" style={{height: 'calc(100vh - 250px)'}}>
+                    <div className="flex-1 relative z-10 min-h-[500px] bg-black/20 rounded-2xl border border-white/5 mx-auto w-full overflow-hidden" style={{height: 'calc(100vh - 200px)'}}>
                         <SeatLayout />
                     </div>
                 </main>

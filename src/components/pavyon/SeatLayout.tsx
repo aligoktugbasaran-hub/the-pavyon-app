@@ -9,13 +9,13 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSocket } from "@/lib/useSocket";
 
 const ALL_TABLES = [
-    { id: 99, name: "Ceren ile Özel", capacity: 2, currentUsers: 1, icon: "🥂", type: "vip" }, // Hidden private room mock
-    { id: 11, name: "Kral Locası", capacity: 8, currentUsers: 7, icon: "👑", type: "vip" },
+    { id: 99, name: "Ceren ile Özel", capacity: 2, currentUsers: 1, icon: "🥂", type: "vip" },
+    { id: 11, name: "Kral Masası", capacity: 8, currentUsers: 7, icon: "👑", type: "vip" },
     { id: 12, name: "Sahne Önü", capacity: 8, currentUsers: 6, icon: "💎", type: "vip" },
     { id: 1, name: "Sinema Tutkunları", capacity: 10, currentUsers: 4, icon: "🎬", type: "masa" },
     { id: 2, name: "Arabesk & Damar", capacity: 10, currentUsers: 8, icon: "🎻", type: "masa" },
     { id: 3, name: "Edebiyat Köşesi", capacity: 10, currentUsers: 3, icon: "📚", type: "masa" },
-    { id: 14, name: "Köşe Loca", capacity: 6, currentUsers: 1, icon: "🍷", type: "vip" },
+    { id: 14, name: "Köşe Masası", capacity: 6, currentUsers: 1, icon: "🍷", type: "vip" },
     { id: 4, name: "Rock Severler", capacity: 10, currentUsers: 6, icon: "🎸", type: "masa" },
     { id: 5, name: "Kırmızı Güller", capacity: 10, currentUsers: 10, icon: "🌹", type: "masa" },
     { id: 6, name: "Günün Yorgunluğu", capacity: 10, currentUsers: 2, icon: "🥃", type: "masa" },
@@ -182,7 +182,7 @@ export function SeatLayout() {
                 {/* Background effects for focused view */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,127,0.1),transparent_70%)] opacity-30 pointer-events-none" />
 
-                <div className="w-full md:w-[20%] flex flex-col items-center justify-center relative p-2 md:p-4 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
+                <div className="hidden md:flex md:w-[15%] flex-col items-center justify-center relative p-2 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
                     {/* Masa Bilgisi - En Üstte */}
                     <div className="w-full flex items-center gap-2 mb-4 animate-in slide-in-from-top duration-700">
                         <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-lg border bg-black shadow-xl ${isVip ? 'border-gold-500/50' : 'border-neon-pink/50'}`}>
@@ -291,7 +291,7 @@ export function SeatLayout() {
                 </div>
 
                 {/* Sağ Taraf: Masaya Özel Kurallı Chat - Expanded on Mobile */}
-                <div className="w-full md:w-[80%] h-full border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden z-10 rounded-tr-2xl">
+                <div className="w-full md:w-[85%] h-full border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden z-10 rounded-tr-2xl">
                     <div className="p-4 border-b border-white/10 bg-black/60 shadow-md flex items-center justify-between">
                         <div>
                             <h3 className="font-bold text-white flex items-center gap-2 truncate">
@@ -427,9 +427,9 @@ export function SeatLayout() {
                             <Wine className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className={`font-bold text-sm text-red-400`}>Özel Localarım</h3>
+                            <h3 className={`font-bold text-sm text-red-400`}>Özel Masalarım</h3>
                             <p className="text-xs text-white/40">
-                                Sadece arkadaşlarınıza özel kapalı odalar.
+                                Arkadaşlarınızla özel sohbet masaları.
                             </p>
                         </div>
                     </div>
@@ -439,18 +439,18 @@ export function SeatLayout() {
                             onClick={() => setIsLocalarimOpen(!isLocalarimOpen)}
                             className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${isLocalarimOpen ? 'bg-black border border-red-500/50 text-red-400 hover:bg-red-900/20' : 'bg-gradient-to-r from-gold-600 to-yellow-500 text-black hover:scale-105 shadow-[0_0_10px_rgba(255,215,0,0.3)]'}`}
                         >
-                            <KeyRound className="w-3 h-3" /> Localarım ({friends.length})
+                            <KeyRound className="w-3 h-3" /> Masalarım ({friends.length})
                         </button>
 
                         {/* Dropdown for Localarım */}
                         {isLocalarimOpen && (
                             <div className="absolute top-12 right-0 w-72 bg-black/95 border border-red-500/30 rounded-xl shadow-[0_10px_30px_rgba(255,0,0,0.2)] backdrop-blur-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                                 <div className="p-3 border-b border-white/10 flex items-center justify-between bg-red-900/20">
-                                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Onaylanmış İlişkiler</span>
+                                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Özel Masalarım</span>
                                 </div>
                                 <div className="flex flex-col max-h-60 overflow-y-auto">
                                     {friends.length === 0 ? (
-                                        <div className="p-4 text-center text-white/30 text-[10px]">Henüz onaylı bir locanız yok.</div>
+                                        <div className="p-4 text-center text-white/30 text-[10px]">Henüz özel masanız yok. Birini arkadaş ekleyin!</div>
                                     ) : (
                                         friends.map(friend => (
                                             <div key={friend.id} className="p-3 hover:bg-white/5 transition-colors flex items-center justify-between group">
@@ -460,7 +460,7 @@ export function SeatLayout() {
                                                         <div className="absolute -bottom-1 -right-1 bg-green-500 w-3 h-3 rounded-full border border-black shadow-[0_0_5px_rgba(34,197,94,0.8)]"></div>
                                                     </div>
                                                     <div className="flex flex-col">
-                                                        <span className="text-sm font-bold text-white group-hover:text-gold-400 transition-colors">{friend.name} ile Loca</span>
+                                                        <span className="text-sm font-bold text-white group-hover:text-gold-400 transition-colors">{friend.name} ile Özel Masa</span>
                                                         <span className="text-[10px] text-green-400">Aktif</span>
                                                     </div>
                                                 </div>
@@ -480,7 +480,7 @@ export function SeatLayout() {
                                 </div>
                                 <div className="p-2 border-t border-white/10 bg-black/50">
                                     <button className="w-full py-1.5 border border-dashed border-white/20 text-white/50 hover:text-white hover:border-white/50 text-[10px] font-bold rounded-lg transition-colors flex items-center justify-center gap-1">
-                                        <Users className="w-3 h-3" /> Yeni Loca Aç
+                                        <Users className="w-3 h-3" /> Yeni Masa Aç
                                     </button>
                                 </div>
                             </div>
