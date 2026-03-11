@@ -10,6 +10,9 @@ export async function POST(req: Request) {
         // receiverId geçerli bir UUID mi kontrol et
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
         const validReceiver = data.receiverId && uuidRegex.test(data.receiverId);
+        if (!validReceiver) {
+            return NextResponse.json({ success: false, error: "Geçersiz alıcı ID" }, { status: 400 });
+        }
         // 1. Create gift record (receiverId opsiyonel)
         await prisma.gift.create({
             data: {
@@ -17,7 +20,7 @@ export async function POST(req: Request) {
                 creditCost: data.creditCost,
                 tlValue: data.tlValue || 0,
                 senderId: data.senderId,
-                receiverId: validReceiver ? data.receiverId : data.senderId,
+                receiverId: data.receiverId,
                 createdAt: new Date(),
             }
         });

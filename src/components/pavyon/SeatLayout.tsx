@@ -182,7 +182,7 @@ export function SeatLayout() {
                 {/* Background effects for focused view */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,127,0.1),transparent_70%)] opacity-30 pointer-events-none" />
 
-                <div className="w-full md:w-[30%] flex flex-col items-center justify-center relative p-2 md:p-4 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
+                <div className="w-full md:w-[20%] flex flex-col items-center justify-center relative p-2 md:p-4 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
                     {/* Masa Bilgisi - En Üstte */}
                     <div className="w-full flex items-center gap-2 mb-4 animate-in slide-in-from-top duration-700">
                         <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-lg border bg-black shadow-xl ${isVip ? 'border-gold-500/50' : 'border-neon-pink/50'}`}>
@@ -262,7 +262,7 @@ export function SeatLayout() {
                                             </div>
                                             <div className="flex flex-col gap-2 w-full mt-2">
                                                 <button
-                                                    onClick={(e) => { e.stopPropagation(); setGiftTarget({ name: mockName, avatar: avatarUrl, id: String(mockName) }); setHoveredUser(null); }}
+                                                    onClick={(e) => { e.stopPropagation(); showToast("Hediye göndermek için profilini aç!", "info"); setHoveredUser(null); }}
                                                     className="w-full bg-gradient-to-r from-neon-pink to-purple-600 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap"
                                                 >
                                                     <Gift className="w-3.5 h-3.5" /> Hediye Gönder
@@ -291,7 +291,7 @@ export function SeatLayout() {
                 </div>
 
                 {/* Sağ Taraf: Masaya Özel Kurallı Chat - Expanded on Mobile */}
-                <div className="w-full md:w-[70%] h-full border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden z-10 rounded-tr-2xl">
+                <div className="w-full md:w-[80%] h-full border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden z-10 rounded-tr-2xl">
                     <div className="p-4 border-b border-white/10 bg-black/60 shadow-md flex items-center justify-between">
                         <div>
                             <h3 className="font-bold text-white flex items-center gap-2 truncate">
@@ -575,7 +575,7 @@ export function SeatLayout() {
                                                     </div>
                                                     <div className="flex flex-col gap-2 w-full mt-2">
                                                         <button
-                                                            onClick={(e) => { e.stopPropagation(); setGiftTarget({ name: mockName, avatar: avatarUrl, id: String(mockName) }); setHoveredUser(null); }}
+                                                            onClick={(e) => { e.stopPropagation(); showToast("Hediye göndermek için profilini aç!", "info"); setHoveredUser(null); }}
                                                             className="w-full bg-gradient-to-r from-neon-pink to-purple-600 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap"
                                                         >
                                                             <Gift className="w-3.5 h-3.5" /> Hediye Gönder

@@ -136,11 +136,11 @@ export default function PavyonPage() {
                         </button>
                     )}
 
-                    <div className="flex flex-col gap-4 shrink-0">
+                    <div className="flex flex-col gap-2 shrink-0">
                         {/* Combined Leaders Row: MOVED TO TOP AND ENLARGED */}
                         <div className="grid grid-cols-2 gap-4">
                             {/* Bonkörler (Givers) */}
-                            <div className="bg-black/60 border-2 border-gold-500/40 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-[0_0_25px_rgba(255,215,0,0.15)] backdrop-blur-md">
+                            <div className="bg-black/60 border-2 border-gold-500/40 rounded-2xl p-2 flex items-center justify-between gap-2 shadow-[0_0_25px_rgba(255,215,0,0.15)] backdrop-blur-md">
                                 <div className="flex flex-col flex-1 min-w-0">
                                     <h4 className="text-[10px] md:text-xs font-black text-gold-400 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
                                         <Trophy className="w-4 h-4" /> GÜNÜN BONKÖRLERİ
@@ -154,7 +154,7 @@ export default function PavyonPage() {
                                                     onClick={() => setSelectedUserProfile({ ...user, age: 30 })}
                                                 >
                                                     <div className="absolute -inset-1 bg-gold-400/20 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity" />
-                                                    <img src={user.avatar} className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-2 border-gold-400 object-cover shadow-[0_0_15px_rgba(255,215,0,0.3)] bg-black ${idx === 0 ? 'scale-110' : ''}`} />
+                                                    <img src={user.avatar} className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-gold-400 object-cover shadow-[0_0_15px_rgba(255,215,0,0.3)] bg-black ${idx === 0 ? 'scale-110' : ''}`} />
                                                     {idx === 0 && <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xl">👑</div>}
                                                 </div>
                                             ))
@@ -166,7 +166,7 @@ export default function PavyonPage() {
                             </div>
 
                             {/* Ünlüler (Receivers) */}
-                            <div className="bg-black/60 border-2 border-neon-pink/40 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-[0_0_25px_rgba(255,0,127,0.15)] backdrop-blur-md">
+                            <div className="bg-black/60 border-2 border-neon-pink/40 rounded-2xl p-2 flex items-center justify-between gap-2 shadow-[0_0_25px_rgba(255,0,127,0.15)] backdrop-blur-md">
                                 <div className="flex flex-col flex-1 min-w-0">
                                     <h4 className="text-[10px] md:text-xs font-black text-neon-pink uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
                                         <Sparkles className="w-4 h-4" /> GÜNÜN ÜNLÜLERİ
@@ -180,7 +180,7 @@ export default function PavyonPage() {
                                                     onClick={() => setSelectedUserProfile(user)}
                                                 >
                                                     <div className="absolute -inset-1 bg-neon-pink/20 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity" />
-                                                    <img src={user.avatar} className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-2 border-neon-pink object-cover shadow-[0_0_15px_rgba(255,0,127,0.3)] bg-black ${idx === 0 ? 'scale-110' : idx > 2 ? 'opacity-60 grayscale-[0.5]' : ''}`} />
+                                                    <img src={user.avatar} className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-neon-pink object-cover shadow-[0_0_15px_rgba(255,0,127,0.3)] bg-black ${idx === 0 ? 'scale-110' : idx > 2 ? 'opacity-60 grayscale-[0.5]' : ''}`} />
                                                     {idx === 0 && <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xl text-neon-pink drop-shadow-[0_0_5px_rgba(255,0,127,0.8)]">✨</div>}
                                                 </div>
                                             ))
@@ -198,7 +198,7 @@ export default function PavyonPage() {
                     </div>
 
                     {/* Seat Layout */}
-                    <div className="flex-1 relative z-10 min-h-[500px] bg-black/20 rounded-2xl border border-white/5 mx-auto w-full overflow-hidden" style={{height: 'calc(100vh - 350px)'}}>
+                    <div className="flex-1 relative z-10 min-h-[500px] bg-black/20 rounded-2xl border border-white/5 mx-auto w-full overflow-hidden" style={{height: 'calc(100vh - 250px)'}}>
                         <SeatLayout />
                     </div>
                 </main>

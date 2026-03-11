@@ -58,7 +58,7 @@ export function GiftModal({ isOpen, onClose, recipientName, recipientAvatar, rec
                     creditCost: selectedGift.price,
                     tlValue: selectedGift.price * 0.20,
                     senderId,
-                    receiverId: recipientId || senderId,
+                    receiverId: recipientId,
                     senderNickname: nickname,
                     senderAvatar: avatarUrl,
                     receiverNickname: recipientName,
