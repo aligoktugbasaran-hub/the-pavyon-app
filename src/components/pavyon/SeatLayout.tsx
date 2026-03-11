@@ -60,7 +60,17 @@ export function SeatLayout() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // Active table object
-    const activeTable = joinedTableId ? ALL_TABLES.find(t => t.id === joinedTableId) : null;
+    const activeTable = joinedTableId ? (
+        ALL_TABLES.find(t => t.id === joinedTableId) ||
+        (joinedTableId >= 900 ? {
+            id: joinedTableId,
+            name: `${friends[joinedTableId - 900]?.name || "Arkadaş"} ile Özel Masa`,
+            capacity: 2,
+            currentUsers: 1,
+            icon: "🥂",
+            type: "vip"
+        } : null)
+    ) : null;
 
     // Scroll chat to bottom
     const scrollToBottom = () => {
@@ -182,7 +192,7 @@ export function SeatLayout() {
                 {/* Background effects for focused view */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,127,0.1),transparent_70%)] opacity-30 pointer-events-none" />
 
-                <div className="hidden md:flex md:w-[15%] flex-col items-center justify-center relative p-2 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
+                <div className="hidden md:flex md:w-[12%] flex-col items-center justify-center relative p-1 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
                     {/* Masa Bilgisi - En Üstte */}
                     <div className="w-full flex items-center gap-2 mb-4 animate-in slide-in-from-top duration-700">
                         <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-lg border bg-black shadow-xl ${isVip ? 'border-gold-500/50' : 'border-neon-pink/50'}`}>
@@ -291,7 +301,7 @@ export function SeatLayout() {
                 </div>
 
                 {/* Sağ Taraf: Masaya Özel Kurallı Chat - Expanded on Mobile */}
-                <div className="w-full md:w-[85%] h-full border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden z-10 rounded-tr-2xl">
+                <div className="w-full md:w-[88%] h-full border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden z-10 rounded-tr-2xl">
                     <div className="p-4 border-b border-white/10 bg-black/60 shadow-md flex items-center justify-between">
                         <div>
                             <h3 className="font-bold text-white flex items-center gap-2 truncate">
@@ -466,8 +476,8 @@ export function SeatLayout() {
                                                 </div>
                                                 <button
                                                     onClick={() => {
-                                                        // 99 is assigned for private sessions in this demo
-                                                        setJoinedTableId(99);
+                                                        const privateTableId = 900 + friends.indexOf(friend);
+                                                        setJoinedTableId(privateTableId);
                                                         setIsLocalarimOpen(false);
                                                     }}
                                                     className="px-3 py-1.5 bg-white/10 group-hover:bg-gold-500 group-hover:text-black text-white text-xs font-bold rounded-lg transition-colors"

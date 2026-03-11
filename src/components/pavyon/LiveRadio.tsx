@@ -5,10 +5,10 @@ import { Play, Pause, Radio, Volume2, VolumeX, Music } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 
 const RADIOS = [
-    { id: "trt", name: "TRT FM", url: "https://trtrad1-a.trt.com.tr/trt-fm.mp3", streamLabel: "Karışık Müzik" },
-    { id: "trtturku", name: "TRT Türkü", url: "https://trtrad4-a.trt.com.tr/trt-turku.mp3", streamLabel: "Türkü & Halk" },
-    { id: "joy", name: "Joy FM", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_FM.mp3", streamLabel: "Pop & Hit" },
-    { id: "superfm", name: "Süper FM", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM.mp3", streamLabel: "Türkçe Pop" },
+    { id: "chillhop", name: "Lofi Beats", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Lofi & Chill" },
+    { id: "jazz", name: "Smooth Jazz", url: "https://streaming.radio.co/s774887f7b/listen", streamLabel: "Jazz & Soul" },
+    { id: "classical", name: "Klasik Müzik", url: "https://live.musopen.org:8085/streamvbr0", streamLabel: "Klasik & Orkestra" },
+    { id: "ambient", name: "Ambient", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Ambient & Relax" },
 ];
 
 export function LiveRadio() {
@@ -22,11 +22,13 @@ export function LiveRadio() {
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
-        // Initialize audio object once on mount
-        audioRef.current = new Audio(currentRadio.url);
-        audioRef.current.volume = volume;
-
-        // Cleanup on unmount
+        try {
+            audioRef.current = new Audio();
+            audioRef.current.volume = volume;
+            audioRef.current.preload = "none";
+        } catch (e) {
+            console.warn("Audio init failed", e);
+        }
         return () => {
             if (audioRef.current) {
                 audioRef.current.pause();
@@ -37,31 +39,32 @@ export function LiveRadio() {
 
     // Change radio station
     useEffect(() => {
-        if (audioRef.current) {
-            const wasPlaying = isPlaying;
-            audioRef.current.pause();
-            audioRef.current.src = currentRadio.url;
-            audioRef.current.load();
-            if (wasPlaying) {
-                audioRef.current.play().catch(e => console.log("Can't autoplay", e));
-            }
+        if (!audioRef.current) return;
+        const wasPlaying = isPlaying;
+        audioRef.current.pause();
+        audioRef.current.src = currentRadio.url;
+        if (wasPlaying) {
+            audioRef.current.play().catch(e => {
+                console.log("Stream yüklenemedi", e);
+                useUserStore.getState().showToast("Bu radyo şu an yayında değil, başka kanal dene.", "info");
+                setIsPlaying(false);
+            });
         }
     }, [currentRadio]);
 
     // Handle play/pause
     const togglePlay = () => {
         if (!audioRef.current) return;
-
         if (isPlaying) {
             audioRef.current.pause();
             setIsPlaying(false);
         } else {
-            // Need to handle browser autoplay policies (might require user interaction first)
+            audioRef.current.src = currentRadio.url;
             audioRef.current.play()
                 .then(() => setIsPlaying(true))
                 .catch(err => {
-                    console.error("Autoplay failed", err);
-                    useUserStore.getState().showToast("Radyoyu başlatmak için lütfen sayfaya bir kez tıklayın.", "info");
+                    console.error("Radyo başlatılamadı", err);
+                    useUserStore.getState().showToast("Radyo başlatılamadı. Başka kanal deneyin.", "info");
                 });
         }
     };

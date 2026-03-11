@@ -196,7 +196,15 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
                     <div className="grid grid-cols-3 gap-2">
                         {/* Hediye Gönder */}
                         <button
-                            onClick={() => !blocked && setIsGiftModalOpen(true)}
+                            onClick={() => {
+                                if (blocked) return;
+                                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+                                if (!user?.id || !uuidRegex.test(String(user.id))) {
+                                    useUserStore.getState().showToast("Bu kullanıcıya henüz hediye gönderilemiyor.", "info");
+                                    return;
+                                }
+                                setIsGiftModalOpen(true);
+                            }}
                             disabled={blocked}
                             className={`col-span-1 font-bold py-3 text-[10px] md:text-sm rounded-xl flex items-center justify-center gap-1 transition-all ${blocked ? 'bg-white/5 text-white/20 cursor-not-allowed' : 'bg-gradient-to-r from-neon-pink to-purple-600 text-white shadow-[0_0_15px_rgba(255,0,127,0.3)] hover:opacity-90'}`}
                         >
