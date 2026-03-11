@@ -42,13 +42,22 @@ export function LiveRadio() {
         if (!audioRef.current) return;
         const wasPlaying = isPlaying;
         audioRef.current.pause();
-        audioRef.current.src = currentRadio.url;
+        audioRef.current.removeAttribute('src');
+        setIsPlaying(false);
+
         if (wasPlaying) {
-            audioRef.current.play().catch(e => {
-                console.log("Stream yüklenemedi", e);
-                useUserStore.getState().showToast("Bu radyo şu an yayında değil, başka kanal dene.", "info");
-                setIsPlaying(false);
-            });
+            audioRef.current.src = currentRadio.url;
+            const onCanPlay = () => {
+                audioRef.current?.play().then(() => {
+                    setIsPlaying(true);
+                }).catch(e => {
+                    console.log("Kanal değiştirme hatası", e);
+                    useUserStore.getState().showToast("Bu kanal şu an yayında değil, başka dene.", "info");
+                });
+                audioRef.current?.removeEventListener('canplay', onCanPlay);
+            };
+            audioRef.current.addEventListener('canplay', onCanPlay);
+            audioRef.current.load();
         }
     }, [currentRadio]);
 
@@ -59,13 +68,29 @@ export function LiveRadio() {
             audioRef.current.pause();
             setIsPlaying(false);
         } else {
+            audioRef.current.pause();
             audioRef.current.src = currentRadio.url;
-            audioRef.current.play()
-                .then(() => setIsPlaying(true))
-                .catch(err => {
+
+            const onCanPlay = () => {
+                audioRef.current?.play().then(() => {
+                    setIsPlaying(true);
+                }).catch(err => {
                     console.error("Radyo başlatılamadı", err);
                     useUserStore.getState().showToast("Radyo başlatılamadı. Başka kanal deneyin.", "info");
                 });
+                audioRef.current?.removeEventListener('canplay', onCanPlay);
+                audioRef.current?.removeEventListener('error', onError);
+            };
+
+            const onError = () => {
+                useUserStore.getState().showToast("Bu kanal şu an yayında değil.", "info");
+                audioRef.current?.removeEventListener('canplay', onCanPlay);
+                audioRef.current?.removeEventListener('error', onError);
+            };
+
+            audioRef.current.addEventListener('canplay', onCanPlay);
+            audioRef.current.addEventListener('error', onError);
+            audioRef.current.load();
         }
     };
 
