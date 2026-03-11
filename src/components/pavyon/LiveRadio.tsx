@@ -8,7 +8,7 @@ const RADIOS = [
     { id: "chillhop", name: "Lofi Beats", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Lofi & Chill" },
     { id: "jazz", name: "Smooth Jazz", url: "https://streaming.radio.co/s774887f7b/listen", streamLabel: "Jazz & Soul" },
     { id: "classical", name: "Klasik Müzik", url: "https://live.musopen.org:8085/streamvbr0", streamLabel: "Klasik & Orkestra" },
-    { id: "ambient", name: "Ambient", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Ambient & Relax" },
+    { id: "deephouse", name: "Deep House", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Deep & Chill" },
 ];
 
 export function LiveRadio() {

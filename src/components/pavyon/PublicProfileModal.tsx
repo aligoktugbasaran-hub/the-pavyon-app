@@ -198,7 +198,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
                         <button
                             onClick={() => {
                                 if (blocked) return;
-                                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+                                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
                                 if (!user?.id || !uuidRegex.test(String(user.id))) {
                                     useUserStore.getState().showToast("Bu kullanıcıya henüz hediye gönderilemiyor.", "info");
                                     return;
@@ -249,7 +249,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
                                 className={`col-span-1 font-bold py-3 text-[10px] md:text-sm rounded-xl flex items-center justify-center gap-1 transition-all ${inviteSent ? 'bg-green-600 text-white' : 'bg-gold-500 hover:bg-yellow-400 text-black shadow-[0_0_15px_rgba(255,215,0,0.4)]'}`}
                             >
                                 {inviteSent ? <Check className="w-4 h-4" /> : <Wine className="w-4 h-4" />}
-                                {inviteSent ? "Gönderildi" : "Locaya Davet"}
+                                {inviteSent ? "Gönderildi" : "Masaya Davet"}
                             </button>
                         )}
                     </div>
