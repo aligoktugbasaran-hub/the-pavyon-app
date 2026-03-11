@@ -49,12 +49,14 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
             if (confirmAction === "block") {
                 await fetch("/api/blocks", {
                     method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ blockerId: me.id, blockedId: user.id })
                 });
                 blockUser(user.name);
             } else if (confirmAction === "unfriend") {
                 await fetch("/api/friends", {
                     method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ senderId: me.id, receiverId: user.id, action: "REMOVE" })
                 });
                 removeFriend(user.name);
@@ -71,6 +73,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
         try {
             await fetch("/api/friends", {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ senderId: me.id, receiverId: user.id, action: "REQUEST" })
             });
             addNotification({
@@ -89,6 +92,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
         try {
             await fetch("/api/blocks", {
                 method: "DELETE",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ blockerId: me.id, blockedId: user.id })
             });
             unblockUser(user.name);
@@ -267,6 +271,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
                     onClose={() => setIsGiftModalOpen(false)}
                     recipientName={user.name}
                     recipientAvatar={user.avatar}
+                    recipientId={String(user.id)}
                 />
             )}
         </>

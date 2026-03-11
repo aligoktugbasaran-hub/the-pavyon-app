@@ -32,15 +32,14 @@ export function NotificationMenu() {
 
     const handleAcceptFriend = async (notif: any) => {
         if (!notif.userId) {
-            // Fallback for mock notifications without userId
-            addFriend({ id: String(notif.id), name: notif.user, avatar: notif.avatar });
+            addFriend({ id: String(Date.now()), name: notif.user, avatar: notif.avatar });
             removeNotification(notif.id);
             return;
         }
-
         try {
             await fetch("/api/friends", {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ senderId: notif.userId, receiverId: myId, action: "ACCEPT" })
             });
             addFriend({ id: notif.userId, name: notif.user, avatar: notif.avatar });
