@@ -90,14 +90,14 @@ export default function PavyonPage() {
                         src="/logo.png"
                         alt="The Pavyon Logo"
                         className="h-12 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,215,0,0.4)] hover:scale-110 transition-transform cursor-pointer"
-                        onClick={() => window.location.reload()}
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     />
                 </div>
 
                 <div className="flex items-center gap-3 md:gap-6 shrink-0">
                     <NotificationMenu />
 
-                    <div className="hidden xs:flex flex-col items-end">
+                    <div className="flex flex-col items-end">
                         <span className="text-[10px] text-white/40 uppercase tracking-tighter">Bakiye</span>
                         <span className="font-bold text-neon-pink text-sm tracking-tight">₺{credits.toFixed(2)}</span>
                     </div>
