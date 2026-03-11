@@ -182,14 +182,14 @@ export function SeatLayout() {
                 {/* Background effects for focused view */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,127,0.1),transparent_70%)] opacity-30 pointer-events-none" />
 
-                <div className="w-full md:w-64 shrink-0 flex flex-col items-center justify-start relative p-2 md:p-4 pt-12 md:pt-14 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
+                <div className="w-full md:w-[30%] flex flex-col items-center justify-center relative p-2 md:p-4 bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(255,0,127,0.1) 0%, transparent 70%)' }}>
                     {/* Masa Bilgisi - En Üstte */}
-                    <div className="w-full flex items-center gap-4 mb-20 md:mb-24 animate-in slide-in-from-top duration-700">
-                        <div className={`w-14 h-14 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-4xl border bg-black shadow-2xl ${isVip ? 'border-gold-500/50 shadow-gold-500/10' : 'border-neon-pink/50 shadow-neon-pink/10'}`}>
+                    <div className="w-full flex items-center gap-2 mb-4 animate-in slide-in-from-top duration-700">
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-lg border bg-black shadow-xl ${isVip ? 'border-gold-500/50' : 'border-neon-pink/50'}`}>
                             {activeTable.icon}
                         </div>
                         <div className="flex flex-col">
-                            <h2 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter flex items-center gap-3 drop-shadow-[0_0_20px_rgba(0,0,0,1)]">
+                             <h2 className="text-sm font-black text-white uppercase tracking-tighter flex items-center gap-2">
                                 {activeTable.name}
                                 {isVip && <span className="text-[10px] md:text-xs bg-gold-500 text-black px-2 py-0.5 rounded-full font-black tracking-widest shadow-[0_0_15px_rgba(255,215,0,0.5)]">VIP</span>}
                             </h2>
@@ -200,7 +200,7 @@ export function SeatLayout() {
                         </div>
                     </div>
 
-                    <div className="relative w-full max-w-[120px] md:max-w-sm aspect-square flex items-center justify-center scale-75 md:scale-110 lg:scale-125">
+                    <div className="relative w-full max-w-[160px] aspect-square flex items-center justify-center">
                         {/* Kırmızı Hilal Şeklinde Koltuk (Sofa) */}
                         <div
                             className="absolute rounded-full border-red-900 shadow-[inset_0_10px_30px_rgba(80,0,0,0.9),0_15px_40px_rgba(220,38,38,0.2)] z-0 flex items-center justify-center before:absolute before:inset-0 before:rounded-full before:border-[2px] before:border-red-500/30 before:border-t-transparent after:absolute after:inset-1 after:rounded-full after:border-[1px] after:border-white/5 after:border-t-transparent"
@@ -285,7 +285,7 @@ export function SeatLayout() {
                 </div>
 
                 {/* Sağ Taraf: Masaya Özel Kurallı Chat - Expanded on Mobile */}
-                <div className="flex-1 h-full border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden z-10 rounded-tr-2xl">
+                <div className="w-full md:w-[70%] h-full border-t md:border-t-0 md:border-l border-white/10 flex flex-col bg-black/40 overflow-hidden z-10 rounded-tr-2xl">
                     <div className="p-4 border-b border-white/10 bg-black/60 shadow-md flex items-center justify-between">
                         <div>
                             <h3 className="font-bold text-white flex items-center gap-2 truncate">
