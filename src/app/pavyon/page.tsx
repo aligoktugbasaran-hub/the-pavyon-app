@@ -198,7 +198,7 @@ export default function PavyonPage() {
                     </div>
 
                     {/* Seat Layout */}
-                    <div className="flex-1 relative z-10 min-h-[400px] bg-black/20 rounded-2xl border border-white/5 mx-auto w-full overflow-hidden">
+                    <div className="flex-1 relative z-10 min-h-[500px] bg-black/20 rounded-2xl border border-white/5 mx-auto w-full overflow-hidden" style={{height: 'calc(100vh - 350px)'}}>
                         <SeatLayout />
                     </div>
                 </main>

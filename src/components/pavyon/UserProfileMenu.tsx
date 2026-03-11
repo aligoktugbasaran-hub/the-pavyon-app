@@ -3,9 +3,10 @@ import { useUserStore } from "@/store/useUserStore";
 import { Settings, Users, LogOut, X, Edit2, Check, Camera as CameraIcon, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Camera, CameraResultType } from "@capacitor/camera";
+import { PublicProfileModal } from "@/components/pavyon/PublicProfileModal";
 
 export function UserProfileMenu() {
-    const { nickname, avatarUrl, logout, login } = useUserStore();
+    const { nickname, avatarUrl, logout, login, friends } = useUserStore();
     const router = useRouter();
 
     const [isOpen, setIsOpen] = useState(false);
@@ -17,12 +18,7 @@ export function UserProfileMenu() {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Mock friends list
-    const MOCK_FRIENDS = [
-        { id: 1, name: "Ahmet", status: "online", avatar: "/avatars/male_avatar_2.png" },
-        { id: 2, name: "Zeynep", status: "offline", avatar: "/avatars/female_avatar_3.png" },
-        { id: 3, name: "Can", status: "online", avatar: "/avatars/male_avatar_4.png" },
-    ];
+    const [selectedProfile, setSelectedProfile] = useState<{ id: string, name: string, avatar: string, age: number } | null>(null);
 
     const handleLogout = () => {
         logout();
@@ -244,27 +240,24 @@ export function UserProfileMenu() {
                             {/* Friends Tab */}
                             {activeTab === "friends" && (
                                 <div className="flex flex-col gap-3">
-                                    {MOCK_FRIENDS.length > 0 ? (
-                                        MOCK_FRIENDS.map(friend => (
-                                            <div key={friend.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors cursor-pointer group">
+                                    {friends.length > 0 ? (
+                                        friends.map(friend => (
+                                            <div key={friend.id} onClick={() => setSelectedProfile({ id: friend.id, name: friend.name, avatar: friend.avatar, age: 25 })} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors cursor-pointer group">
                                                 <div className="flex items-center gap-3">
                                                     <div className="relative">
                                                         <img src={friend.avatar} alt={friend.name} className="w-10 h-10 rounded-full border border-white/20 object-cover" />
-                                                        <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-black ${friend.status === 'online' ? 'bg-green-500' : 'bg-gray-500'}`}></div>
+                                                        <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-black bg-green-500"></div>
                                                     </div>
                                                     <div>
                                                         <div className="font-bold text-sm text-white">{friend.name}</div>
-                                                        <div className="text-[10px] text-white/40">{friend.status === 'online' ? 'Çevrimiçi' : 'Çevrimdışı'}</div>
+                                                        <div className="text-[10px] text-white/40">Çevrimiçi</div>
                                                     </div>
                                                 </div>
-                                                <button className="text-xs bg-white/10 hover:bg-neon-pink text-white px-3 py-1.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100 font-bold">
-                                                    Mesaj
-                                                </button>
                                             </div>
                                         ))
                                     ) : (
                                         <div className="text-center py-6 text-white/40 text-sm">
-                                            Henüz hiç arkadaşınız yok.<br />Üzerine tıklayarak ekleyebilirsiniz.
+                                            Henüz hiç arkadaşınız yok.
                                         </div>
                                     )}
                                 </div>
@@ -273,6 +266,11 @@ export function UserProfileMenu() {
                     </div>
                 </>
             )}
+            <PublicProfileModal
+                isOpen={!!selectedProfile}
+                onClose={() => setSelectedProfile(null)}
+                user={selectedProfile}
+            />
         </div>
     );
 }
