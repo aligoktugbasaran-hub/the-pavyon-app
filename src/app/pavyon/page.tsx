@@ -198,7 +198,7 @@ export default function PavyonPage() {
                     </div>
 
                     {/* Seat Layout */}
-                    <div className="flex-1 relative z-10 overflow-y-auto bg-black/20 rounded-2xl border border-white/5 mx-auto w-full flex items-start justify-center p-4 md:p-8 md:pt-4 scrollbar-thin scrollbar-thumb-white/10">
+                    <div className="flex-1 relative z-10 min-h-[400px] overflow-y-auto bg-black/20 rounded-2xl border border-white/5 mx-auto w-full flex items-start justify-center p-4 md:p-8 md:pt-4 scrollbar-thin scrollbar-thumb-white/10">
                         <SeatLayout />
                     </div>
                 </main>
