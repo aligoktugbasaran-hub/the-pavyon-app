@@ -476,7 +476,8 @@ export function SeatLayout() {
                                                 </div>
                                                 <button
                                                     onClick={() => {
-                                                        const privateTableId = 900 + friends.indexOf(friend);
+                                                        const idx = friends.indexOf(friend);
+                                                        const privateTableId = 900 + (idx >= 0 ? idx : 0);
                                                         setJoinedTableId(privateTableId);
                                                         setIsLocalarimOpen(false);
                                                     }}
