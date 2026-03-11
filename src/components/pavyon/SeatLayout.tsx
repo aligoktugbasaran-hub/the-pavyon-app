@@ -44,7 +44,7 @@ export function SeatLayout() {
     const [selectedUserProfile, setSelectedUserProfile] = useState<{ id: string | number, name: string, avatar: string, age: number } | null>(null);
 
     // Gift modal state
-    const [giftTarget, setGiftTarget] = useState<{ name: string, avatar: string } | null>(null);
+    const [giftTarget, setGiftTarget] = useState<{ name: string, avatar: string, id?: string } | null>(null);
     const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
     const [isVideoCallOpen, setIsVideoCallOpen] = useState(false);
     const [videoCallTarget, setVideoCallTarget] = useState<{ name: string; avatar: string } | null>(null);
@@ -261,10 +261,16 @@ export function SeatLayout() {
                                                 <div className="text-[10px] text-white/50">Masadan birisi...</div>
                                             </div>
                                             <div className="flex flex-col gap-2 w-full mt-2">
-                                                <button className="w-full bg-gradient-to-r from-neon-pink to-purple-600 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap">
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); setGiftTarget({ name: mockName, avatar: avatarUrl, id: String(mockName) }); setHoveredUser(null); }}
+                                                    className="w-full bg-gradient-to-r from-neon-pink to-purple-600 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap"
+                                                >
                                                     <Gift className="w-3.5 h-3.5" /> Hediye Gönder
                                                 </button>
-                                                <button className="w-full bg-white/10 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-white/20 transition-colors whitespace-nowrap">
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); setSelectedUserProfile({ id: mockName, name: mockName, avatar: avatarUrl, age: mockAge }); setHoveredUser(null); }}
+                                                    className="w-full bg-white/10 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-white/20 transition-colors whitespace-nowrap"
+                                                >
                                                     <UserPlus className="w-3.5 h-3.5" /> Arkadaş Ekle
                                                 </button>
                                             </div>
@@ -315,7 +321,7 @@ export function SeatLayout() {
                         </div>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin scrollbar-thumb-white/10 min-h-0">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin scrollbar-thumb-white/10 min-h-0 min-h-[300px]">
                         {/* Sistem hoş geldiniz mesajı */}
                         {activeTable && (
                             <div className="text-center">
@@ -569,7 +575,7 @@ export function SeatLayout() {
                                                     </div>
                                                     <div className="flex flex-col gap-2 w-full mt-2">
                                                         <button
-                                                            onClick={(e) => { e.stopPropagation(); setGiftTarget({ name: mockName, avatar: avatarUrl }); setHoveredUser(null); }}
+                                                            onClick={(e) => { e.stopPropagation(); setGiftTarget({ name: mockName, avatar: avatarUrl, id: String(mockName) }); setHoveredUser(null); }}
                                                             className="w-full bg-gradient-to-r from-neon-pink to-purple-600 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap"
                                                         >
                                                             <Gift className="w-3.5 h-3.5" /> Hediye Gönder
@@ -614,6 +620,7 @@ export function SeatLayout() {
                     onClose={() => setGiftTarget(null)}
                     recipientName={giftTarget.name}
                     recipientAvatar={giftTarget.avatar}
+                    recipientId={giftTarget.id}
                     onCreditRedirect={() => { setGiftTarget(null); setIsCreditModalOpen(true); }}
                 />
             )}

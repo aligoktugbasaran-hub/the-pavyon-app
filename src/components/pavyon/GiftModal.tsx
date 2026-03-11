@@ -37,6 +37,11 @@ export function GiftModal({ isOpen, onClose, recipientName, recipientAvatar, rec
 
     const handleSend = async () => {
         if (!selectedGift) return;
+        if (!recipientId) {
+            setStatus("idle");
+            useUserStore.getState().showToast("Hediye gönderilemedi: alıcı bulunamadı.", "error");
+            return;
+        }
         if (credits < selectedGift.price) {
             setStatus("insufficient");
             setTimeout(() => setStatus("idle"), 2500);
