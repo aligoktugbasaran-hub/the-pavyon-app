@@ -166,10 +166,11 @@ export function LiveRadio() {
                                 {RADIOS.map((radio) => (
                                     <button
                                         key={radio.id}
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
                                             setCurrentRadio(radio);
                                             setIsRadioMenuOpen(false);
-                                            if (!isPlaying) togglePlay();
                                         }}
                                         className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold transition-all flex flex-col gap-0.5 mb-1 last:mb-0 ${currentRadio.id === radio.id ? 'bg-neon-pink text-white shadow-lg' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
                                     >

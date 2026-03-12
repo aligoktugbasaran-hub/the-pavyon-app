@@ -215,6 +215,25 @@ export function SeatLayout() {
                                 <p className="text-[10px] text-white/40 mt-0.5">Genel ahlak kuralları geçerlidir.</p>
                             </div>
                         </div>
+                        <div className="flex items-center gap-1">
+                            {Array.from({ length: Math.min(activeTable.currentUsers, 6) }).map((_, i) => {
+                                const mockName = MOCK_USER_NAMES[(activeTable.id + i) % MOCK_USER_NAMES.length];
+                                const avatarUrl = `/avatars/${i % 2 === 0 ? 'female' : 'male'}_avatar_${(i % 6) + 1}.png`;
+                                return (
+                                    <img
+                                        key={i}
+                                        src={avatarUrl}
+                                        alt={mockName}
+                                        title={mockName}
+                                        onClick={() => setSelectedUserProfile({ id: mockName, name: mockName, avatar: avatarUrl, age: 20 + ((activeTable.id * i) % 15) })}
+                                        className="w-8 h-8 rounded-full border-2 border-white/20 hover:border-neon-pink cursor-pointer transition-all hover:scale-110 -ml-2 first:ml-0 object-cover"
+                                    />
+                                );
+                            })}
+                            {activeTable.currentUsers > 6 && (
+                                <span className="text-[10px] text-white/40 ml-1">+{activeTable.currentUsers - 6}</span>
+                            )}
+                        </div>
                         <div className="flex items-center gap-2">
                             {/* Video Call Button — SADECE ÖZEL LOCADA (ID: 99) GÖSTER */}
                             {joinedTableId === 99 && (
@@ -394,7 +413,15 @@ export function SeatLayout() {
                                         ))
                                     )}
                                 </div>
-                                <div className="p-2 border-t border-white/10 bg-black/50">
+                                <div className="p-2 border-t border-white/10 bg-black/50 space-y-2">
+                                    {joinedTableId && joinedTableId >= 900 && (
+                                        <button
+                                            onClick={() => { setJoinedTableId(joinedTableId); setIsLocalarimOpen(false); }}
+                                            className="w-full py-1.5 bg-green-900/30 border border-green-500/30 text-green-400 text-[10px] font-bold rounded-lg flex items-center justify-center gap-1"
+                                        >
+                                            <Users className="w-3 h-3" /> Aktif Özel Masaya Dön
+                                        </button>
+                                    )}
                                     <button className="w-full py-1.5 border border-dashed border-white/20 text-white/50 hover:text-white hover:border-white/50 text-[10px] font-bold rounded-lg transition-colors flex items-center justify-center gap-1">
                                         <Users className="w-3 h-3" /> Yeni Masa Aç
                                     </button>

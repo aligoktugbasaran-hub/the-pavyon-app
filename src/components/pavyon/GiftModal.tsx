@@ -37,7 +37,6 @@ export function GiftModal({ isOpen, onClose, recipientName, recipientAvatar, rec
 
     const handleSend = async () => {
         if (!selectedGift) return;
-        // recipientId yoksa veya geçersizse kendi hesabından düş (masaya ikram gibi)
         if (credits < selectedGift.price) {
             setStatus("insufficient");
             setTimeout(() => setStatus("idle"), 2500);

@@ -82,7 +82,7 @@ export default function PavyonPage() {
             {/* Background Grid Overlay */}
             <div className="fixed inset-0 pavyon-grid pointer-events-none opacity-20 z-0" />
             {/* Top Navbar / User Profile Strip */}
-            <header className="flex justify-between items-center glass-panel rounded-full px-6 py-3 shrink-0 relative z-20 gap-4">
+            <header className="flex justify-between items-center glass-panel rounded-full px-6 py-3 shrink-0 relative z-20 gap-4 mb-2">
                 <UserProfileMenu />
 
                 <div className="flex-1 hidden md:flex items-center justify-center">
