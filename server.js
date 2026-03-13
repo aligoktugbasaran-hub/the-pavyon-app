@@ -27,11 +27,27 @@ function getRoomUsers(roomKey) {
 app.prepare().then(() => {
     const httpServer = createServer((req, res) => {
         const parsedUrl = parse(req.url, true);
+        
+        // CORS headers
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        
+        if (req.method === 'OPTIONS') {
+            res.writeHead(200);
+            res.end();
+            return;
+        }
+        
         handle(req, res, parsedUrl);
     });
 
     const io = new Server(httpServer, {
-        cors: { origin: "*", methods: ["GET", "POST"] },
+        cors: { 
+            origin: ["*", "capacitor://localhost", "https://localhost", "http://localhost"],
+            methods: ["GET", "POST"],
+            credentials: true
+        },
         transports: ["websocket", "polling"],
     });
 
