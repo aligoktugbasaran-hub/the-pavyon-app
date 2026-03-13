@@ -3,17 +3,19 @@ import { useState, useRef, useEffect } from "react";
 import { Play, Pause, Volume2, VolumeX, Music, ChevronLeft, ChevronRight } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 
+const PROXY = "/api/radio-proxy?url=";
+
 const RADIOS = [
-    { id: "turkupop", name: "Türkü & Pop", url: "https://live.radyositesihazir.com:10997/;", streamLabel: "Damar & Türkü" },
-    { id: "powerturk", name: "PowerTürk", url: "https://listen.powerapp.com.tr/powerturk/abr/powerturk/128/playlist.m3u8", streamLabel: "Türkçe Pop" },
-    { id: "powerfm", name: "Power FM", url: "https://listen.powerapp.com.tr/powerfm/abr/powerfm/128/playlist.m3u8", streamLabel: "Yabancı Pop" },
-    { id: "powerlove", name: "Power Love", url: "https://listen.powerapp.com.tr/powerlove/abr/powerlove/128/playlist.m3u8", streamLabel: "Slow Müzik" },
-    { id: "powerjazz", name: "Power Jazz", url: "https://listen.powerapp.com.tr/powersmoothjazz/abr/powersmoothjazz/128/playlist.m3u8", streamLabel: "Jazz" },
-    { id: "powerturktaptaze", name: "PowerTürk Taptaze", url: "https://listen.powerapp.com.tr/powerturktaptaze/abr/powerturktaptaze/128/playlist.m3u8", streamLabel: "Yeni Çıkanlar" },
-    { id: "powerturkrap", name: "PowerTürk Rap", url: "https://listen.powerapp.com.tr/powerturkrap/abr/powerturkrap/128/playlist.m3u8", streamLabel: "Türkçe Rap" },
-    { id: "powerturkakustik", name: "PowerTürk Akustik", url: "https://listen.powerapp.com.tr/powerturkakustik/abr/powerturkakustik/128/playlist.m3u8", streamLabel: "Akustik" },
-    { id: "powerxl", name: "Power XL", url: "https://listen.powerapp.com.tr/powerextralounge/abr/powerextralounge/128/playlist.m3u8", streamLabel: "Lounge" },
-    { id: "damarturk", name: "Damar Türk FM", url: "https://live.radyositesihazir.com:10997/;", streamLabel: "Arabesk & Damar" },
+    { id: "seymen", name: "Radyo Seymen", url: PROXY + encodeURIComponent("http://yayin.radyoseymen.com.tr:1070/;stream.mp3"), streamLabel: "Ankara Havaları" },
+    { id: "powerturk", name: "PowerTürk", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio"), streamLabel: "Türkçe Pop" },
+    { id: "powerfm", name: "Power FM", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio"), streamLabel: "Yabancı Pop" },
+    { id: "powerlove", name: "Power Love", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerlove/mpeg/icecast.audio"), streamLabel: "Slow Müzik" },
+    { id: "fenomen", name: "Fenomen", url: PROXY + encodeURIComponent("https://fenomen.listenfenomen.com/fenomen/256/icecast.audio"), streamLabel: "Hit Müzik" },
+    { id: "fenomenturk", name: "Fenomen Türk", url: PROXY + encodeURIComponent("https://fenomen.listenfenomen.com/fenomenturk/256/icecast.audio"), streamLabel: "Türkçe Hit" },
+    { id: "joyturk", name: "Joy Türk", url: PROXY + encodeURIComponent("https://17733.live.streamtheworld.com/JOY_TURK_SC"), streamLabel: "Rock & Alternatif" },
+    { id: "retroturk", name: "Retro Türk", url: PROXY + encodeURIComponent("https://playerservices.streamtheworld.com/api/livestream-redirect/RETROTURK_SC"), streamLabel: "Nostalji" },
+    { id: "taksim", name: "Taksim FM", url: PROXY + encodeURIComponent("http://cast1.taksim.fm:8008/"), streamLabel: "Arabesk" },
+    { id: "damarfm", name: "Damar FM", url: PROXY + encodeURIComponent("https://yayin.damarfm.com:8080/;"), streamLabel: "Damar" },
     { id: "lofi", name: "Lofi Beats", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Lofi & Chill" },
     { id: "somagroove", name: "Groove Salad", url: "https://ice2.somafm.com/groovesalad-256-mp3", streamLabel: "Ambient Groove" },
     { id: "somadefcon", name: "Synthwave", url: "https://ice2.somafm.com/defcon-256-mp3", streamLabel: "Synthwave" },
