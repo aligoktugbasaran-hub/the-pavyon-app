@@ -49,9 +49,20 @@ export function NotificationMenu() {
         }
     };
 
-    const handleAcceptLocaInvite = (id: number, tableId?: number) => {
-        if (tableId) setJoinedTableId(tableId);
-        removeNotification(id);
+    const handleAcceptLocaInvite = (notif: any) => {
+        // Davet eden kişiyle özel masa oluştur
+        const inviterName = notif.user || "Arkadaş";
+        const hash = inviterName.charCodeAt(0) + inviterName.charCodeAt(inviterName.length - 1);
+        const privateTableId = 900 + hash;
+        setJoinedTableId(privateTableId);
+
+        // Davet edeni arkadaş olarak ekle (eğer değilse)
+        const { addFriend, isFriend } = useUserStore.getState();
+        if (!isFriend(inviterName)) {
+            addFriend({ id: notif.userId || String(Date.now()), name: inviterName, avatar: notif.avatar });
+        }
+
+        removeNotification(notif.id);
         setIsOpen(false);
     };
 
@@ -108,7 +119,7 @@ export function NotificationMenu() {
                                             {notif.type === 'friend_request' && ' sana arkadaşlık isteği gönderdi.'}
                                             {notif.type === 'gift' && ` sana ${notif.giftName} gönderdi!`}
                                             {notif.type === 'like' && ' profilinize beğeni bıraktı.'}
-                                            {notif.type === 'loca_invite' && ' seni Locasına davet ediyor!'}
+                                            {notif.type === 'loca_invite' && ' seni Özel Masasına davet ediyor!'}
                                         </p>
                                         <span className="text-[10px] text-white/40 mt-1 block">{notif.time}</span>
 
@@ -132,10 +143,10 @@ export function NotificationMenu() {
                                         {notif.type === 'loca_invite' && (
                                             <div className="flex gap-2 mt-2">
                                                 <button
-                                                    onClick={() => handleAcceptLocaInvite(notif.id, notif.tableId)}
+                                                    onClick={() => handleAcceptLocaInvite(notif)}
                                                     className="flex-1 bg-gold-400 text-black hover:bg-yellow-400 text-[10px] font-bold py-1.5 rounded-lg flex items-center justify-center gap-1 transition-all shadow-[0_0_10px_rgba(255,215,0,0.5)]"
                                                 >
-                                                    <Wine className="w-3 h-3" /> Masaya Geç
+                                                    <Wine className="w-3 h-3" /> Özel Masaya Geç
                                                 </button>
                                                 <button
                                                     onClick={() => removeNotification(notif.id)}

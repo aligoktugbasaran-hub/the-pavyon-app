@@ -9,7 +9,6 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSocket } from "@/lib/useSocket";
 
 const ALL_TABLES = [
-    { id: 99, name: "Ceren ile Özel", capacity: 2, currentUsers: 1, icon: "🥂", type: "vip" },
     { id: 11, name: "Kral Masası", capacity: 8, currentUsers: 7, icon: "👑", type: "vip" },
     { id: 12, name: "Sahne Önü", capacity: 8, currentUsers: 6, icon: "💎", type: "vip" },
     { id: 1, name: "Sinema Tutkunları", capacity: 10, currentUsers: 4, icon: "🎬", type: "masa" },

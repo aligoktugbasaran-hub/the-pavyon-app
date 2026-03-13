@@ -235,7 +235,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
                                 onClick={() => {
                                     if (inviteSent) return;
                                     setInviteSent(true);
-                                    addNotification({ type: "loca_invite", user: user.name, avatar: user.avatar });
+                                    addNotification({ type: "loca_invite", user: user.name, avatar: user.avatar, userId: String(user.id) });
                                     setTimeout(() => { onClose(); setInviteSent(false); }, 1500);
                                 }}
                                 className={`col-span-1 font-bold py-3 text-[10px] md:text-sm rounded-xl flex items-center justify-center gap-1 transition-all ${inviteSent ? 'bg-green-600 text-white' : 'bg-gold-500 hover:bg-yellow-400 text-black shadow-[0_0_15px_rgba(255,215,0,0.4)]'}`}
