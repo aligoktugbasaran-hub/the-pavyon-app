@@ -4,12 +4,12 @@ import { Play, Pause, Volume2, VolumeX, Music, ChevronLeft, ChevronRight } from 
 import { useUserStore } from "@/store/useUserStore";
 
 const RADIOS = [
-    { id: "seymen", name: "Radyo Seymen", url: "https://ssl.radyoseymen.com.tr/;stream.mp3", streamLabel: "Ankara Havaları" },
+    { id: "turkupop", name: "Türkü & Pop", url: "https://live.radyositesihazir.com:10997/;", streamLabel: "Damar & Türkü" },
     { id: "powerturk", name: "PowerTürk", url: "https://listen.powerapp.com.tr/powerturk/abr/powerturk/128/playlist.m3u8", streamLabel: "Türkçe Pop" },
     { id: "powerfm", name: "Power FM", url: "https://listen.powerapp.com.tr/powerfm/abr/powerfm/128/playlist.m3u8", streamLabel: "Yabancı Pop" },
     { id: "powerlove", name: "Power Love", url: "https://listen.powerapp.com.tr/powerlove/abr/powerlove/128/playlist.m3u8", streamLabel: "Slow Müzik" },
     { id: "powerjazz", name: "Power Jazz", url: "https://listen.powerapp.com.tr/powersmoothjazz/abr/powersmoothjazz/128/playlist.m3u8", streamLabel: "Jazz" },
-    { id: "powerturkefsane", name: "PowerTürk En İyiler", url: "https://listen.powerapp.com.tr/powerturkeniyiler/abr/powerturkeniyiler/128/playlist.m3u8", streamLabel: "En İyi Türkçe" },
+    { id: "powerturktaptaze", name: "PowerTürk Taptaze", url: "https://listen.powerapp.com.tr/powerturktaptaze/abr/powerturktaptaze/128/playlist.m3u8", streamLabel: "Yeni Çıkanlar" },
     { id: "powerturkrap", name: "PowerTürk Rap", url: "https://listen.powerapp.com.tr/powerturkrap/abr/powerturkrap/128/playlist.m3u8", streamLabel: "Türkçe Rap" },
     { id: "powerturkakustik", name: "PowerTürk Akustik", url: "https://listen.powerapp.com.tr/powerturkakustik/abr/powerturkakustik/128/playlist.m3u8", streamLabel: "Akustik" },
     { id: "powerxl", name: "Power XL", url: "https://listen.powerapp.com.tr/powerextralounge/abr/powerextralounge/128/playlist.m3u8", streamLabel: "Lounge" },
