@@ -1,37 +1,45 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Play, Pause, Radio, Volume2, VolumeX, Music } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Music, ChevronLeft, ChevronRight } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 
 const RADIOS = [
-    { id: "chillhop", name: "Lofi Beats", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Lofi & Chill" },
-    { id: "jazz", name: "Smooth Jazz", url: "https://streaming.radio.co/s774887f7b/listen", streamLabel: "Jazz & Soul" },
-    { id: "classical", name: "Klasik Müzik", url: "https://live.musopen.org:8085/streamvbr0", streamLabel: "Klasik & Orkestra" },
-    { id: "deephouse", name: "Deep House", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Deep & Chill" },
-    { id: "rock", name: "Classic Rock", url: "https://streaming.radio.co/s2c3f57c83/listen", streamLabel: "Rock Klasikleri" },
-    { id: "hiphop", name: "Hip Hop", url: "https://streaming.radio.co/sab75e2842/listen", streamLabel: "Hip Hop & Rap" },
-    { id: "edm", name: "EDM Party", url: "https://streaming.radio.co/s06b196470/listen", streamLabel: "Elektronik Dans" },
-    { id: "reggae", name: "Reggae Vibes", url: "https://streaming.radio.co/s07f878cd3/listen", streamLabel: "Reggae & Dub" },
-    { id: "blues", name: "Blues FM", url: "https://streaming.radio.co/se1528568d/listen", streamLabel: "Blues & Soul" },
-    { id: "ambient2", name: "Ambient Space", url: "https://streaming.radio.co/s7f3e1f506/listen", streamLabel: "Uzay & Ambient" },
+    { id: "lofi", name: "Lofi Beats", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Lofi & Chill" },
+    { id: "jazz", name: "Smooth Jazz", url: "https://streaming.radio.co/s774887f7b/listen", streamLabel: "Jazz" },
+    { id: "classical", name: "Klasik", url: "https://live.musopen.org:8085/streamvbr0", streamLabel: "Klasik Müzik" },
+    { id: "rock", name: "Rock", url: "https://streaming.radio.co/s2c3f57c83/listen", streamLabel: "Classic Rock" },
+    { id: "hiphop", name: "Hip Hop", url: "https://streaming.radio.co/sab75e2842/listen", streamLabel: "Hip Hop" },
+    { id: "edm", name: "EDM", url: "https://streaming.radio.co/s06b196470/listen", streamLabel: "Elektronik" },
+    { id: "reggae", name: "Reggae", url: "https://streaming.radio.co/s07f878cd3/listen", streamLabel: "Reggae" },
+    { id: "blues", name: "Blues", url: "https://streaming.radio.co/se1528568d/listen", streamLabel: "Blues" },
+    { id: "ambient", name: "Ambient", url: "https://streaming.radio.co/s7f3e1f506/listen", streamLabel: "Ambient" },
+    { id: "pop", name: "Pop Hits", url: "https://streaming.radio.co/s3dc163e0a/listen", streamLabel: "Pop" },
+    { id: "rnb", name: "R&B", url: "https://streaming.radio.co/sdbc0cc67c/listen", streamLabel: "R&B Soul" },
+    { id: "country", name: "Country", url: "https://streaming.radio.co/s960aborl8/listen", streamLabel: "Country" },
+    { id: "latin", name: "Latin", url: "https://streaming.radio.co/sbd7577929/listen", streamLabel: "Latin Pop" },
+    { id: "metal", name: "Metal", url: "https://streaming.radio.co/s83aeb1848/listen", streamLabel: "Heavy Metal" },
+    { id: "indie", name: "Indie", url: "https://streaming.radio.co/sdba006c80/listen", streamLabel: "Indie Rock" },
+    { id: "kpop", name: "K-Pop", url: "https://streaming.radio.co/s5c5da4ba0/listen", streamLabel: "Korean Pop" },
+    { id: "arabesk", name: "Arabesk", url: "https://streaming.radio.co/s0a1c84bc4/listen", streamLabel: "Arabesk" },
+    { id: "turkish", name: "Türkçe Pop", url: "https://streaming.radio.co/sdc03108d9/listen", streamLabel: "Türkçe" },
+    { id: "oldies", name: "Nostalji", url: "https://streaming.radio.co/s0369de62c/listen", streamLabel: "Nostalji" },
+    { id: "piano", name: "Piyano", url: "https://streaming.radio.co/sca8ce7b49/listen", streamLabel: "Piyano" },
 ];
 
 export function LiveRadio() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [volume, setVolume] = useState(0.5);
-    const [currentRadio, setCurrentRadio] = useState(RADIOS[0]);
-    const [isRadioMenuOpen, setIsRadioMenuOpen] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    const currentRadio = RADIOS[currentIndex];
 
     useEffect(() => {
-        try {
-            audioRef.current = new Audio();
-            audioRef.current.volume = volume;
-            audioRef.current.preload = "none";
-        } catch (e) {
-            console.warn("Audio init failed", e);
-        }
+        audioRef.current = new Audio();
+        audioRef.current.volume = volume;
         return () => {
             if (audioRef.current) {
                 audioRef.current.pause();
@@ -40,33 +48,45 @@ export function LiveRadio() {
         };
     }, []);
 
-    const playRadio = (radio: typeof RADIOS[0]) => {
+    const playStation = (index: number) => {
         if (!audioRef.current) return;
+        const radio = RADIOS[index];
+        setIsLoading(true);
         audioRef.current.pause();
         audioRef.current.src = radio.url;
 
-        const onCanPlay = () => {
+        const cleanup = () => {
+            audioRef.current?.removeEventListener('canplay', onReady);
+            audioRef.current?.removeEventListener('error', onFail);
+        };
+
+        const onReady = () => {
             audioRef.current?.play().then(() => {
                 setIsPlaying(true);
-            }).catch(err => {
-                console.error("Radyo başlatılamadı", err);
-                useUserStore.getState().showToast("Bu kanal şu an yayında değil.", "info");
+                setIsLoading(false);
+            }).catch(() => {
                 setIsPlaying(false);
+                setIsLoading(false);
+                useUserStore.getState().showToast("Bu kanal şu an yayında değil.", "info");
             });
-            audioRef.current?.removeEventListener('canplay', onCanPlay);
-            audioRef.current?.removeEventListener('error', onError);
+            cleanup();
         };
 
-        const onError = () => {
-            useUserStore.getState().showToast("Bu kanal yüklenemedi, başka dene.", "info");
+        const onFail = () => {
             setIsPlaying(false);
-            audioRef.current?.removeEventListener('canplay', onCanPlay);
-            audioRef.current?.removeEventListener('error', onError);
+            setIsLoading(false);
+            useUserStore.getState().showToast("Kanal yüklenemedi, başka dene.", "info");
+            cleanup();
         };
 
-        audioRef.current.addEventListener('canplay', onCanPlay);
-        audioRef.current.addEventListener('error', onError);
+        audioRef.current.addEventListener('canplay', onReady);
+        audioRef.current.addEventListener('error', onFail);
         audioRef.current.load();
+    };
+
+    const selectStation = (index: number) => {
+        setCurrentIndex(index);
+        playStation(index);
     };
 
     const togglePlay = () => {
@@ -75,14 +95,18 @@ export function LiveRadio() {
             audioRef.current.pause();
             setIsPlaying(false);
         } else {
-            playRadio(currentRadio);
+            playStation(currentIndex);
         }
     };
 
-    const selectRadio = (radio: typeof RADIOS[0]) => {
-        setCurrentRadio(radio);
-        setIsRadioMenuOpen(false);
-        playRadio(radio);
+    const nextStation = () => {
+        const next = (currentIndex + 1) % RADIOS.length;
+        selectStation(next);
+    };
+
+    const prevStation = () => {
+        const prev = (currentIndex - 1 + RADIOS.length) % RADIOS.length;
+        selectStation(prev);
     };
 
     const toggleMute = () => {
@@ -92,70 +116,73 @@ export function LiveRadio() {
     };
 
     return (
-        <div className="w-full bg-black/60 border border-white/10 rounded-xl p-2 flex items-center gap-3 glass-panel relative z-30 mb-2 shadow-[0_0_30px_rgba(255,0,127,0.1)]">
-            <div className="flex items-center justify-between gap-2 overflow-hidden w-full">
-                <div className="flex items-center gap-3 overflow-hidden">
-                    <div className="relative w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br from-neon-pink to-purple-900 border border-neon-pink/50 flex items-center justify-center shadow-[0_0_15px_rgba(255,0,127,0.4)]">
-                        <Music className="w-5 h-5 text-white animate-pulse" />
+        <div className="w-full bg-black/60 border border-white/10 rounded-xl glass-panel relative z-30 mb-2 shadow-[0_0_30px_rgba(255,0,127,0.1)]">
+            {/* Üst satır: Şu an çalan + kontroller */}
+            <div className="flex items-center gap-3 p-2">
+                <div className="relative w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br from-neon-pink to-purple-900 border border-neon-pink/50 flex items-center justify-center shadow-[0_0_15px_rgba(255,0,127,0.4)]">
+                    <Music className="w-5 h-5 text-white animate-pulse" />
+                    {isPlaying && (
+                        <div className="absolute -top-1 -right-1 flex gap-0.5">
+                            <span className="w-1 h-2.5 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                            <span className="w-1 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                            <span className="w-1 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                        </div>
+                    )}
+                </div>
+                <div className="flex flex-col min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
                         {isPlaying && (
-                            <div className="absolute -top-1 -right-1 flex gap-0.5">
-                                <span className="w-1 h-2.5 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                                <span className="w-1 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                                <span className="w-1 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
-                            </div>
-                        )}
-                    </div>
-                    <div className="flex flex-col min-w-0">
-                        <div className="flex items-center gap-2">
-                            <span className="shrink-0 px-1.5 py-0.5 bg-red-600 rounded-[4px] text-[8px] font-black text-white tracking-tighter uppercase flex items-center gap-1 shadow-[0_0_10px_rgba(220,38,38,0.8)]">
+                            <span className="shrink-0 px-1.5 py-0.5 bg-red-600 rounded-[4px] text-[8px] font-black text-white tracking-tighter uppercase flex items-center gap-1">
                                 <span className="w-1 h-1 rounded-full bg-white animate-pulse"></span>
                                 CANLI
                             </span>
-                            <h3 className="font-bold text-white text-sm md:text-lg tracking-tight truncate">{currentRadio.name}</h3>
-                        </div>
-                        <p className="text-[10px] text-white/50 truncate hidden xs:block">{currentRadio.streamLabel}</p>
-                    </div>
-                </div>
-                <div className="flex items-center gap-2 bg-white/5 px-2 py-1.5 rounded-xl border border-white/5 shrink-0">
-                    <button
-                        onClick={togglePlay}
-                        className="w-8 h-8 rounded-full flex items-center justify-center bg-neon-pink text-white transition-all shadow-lg hover:shadow-[0_0_15px_rgba(255,0,127,0.6)] active:scale-95"
-                    >
-                        {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
-                    </button>
-                    <button
-                        onClick={toggleMute}
-                        className="w-8 h-8 rounded-full flex items-center justify-center bg-white/10 text-white/70 hover:text-white transition-all"
-                    >
-                        {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                    </button>
-                    <div className="relative">
-                        <button
-                            onClick={() => setIsRadioMenuOpen(!isRadioMenuOpen)}
-                            className="flex items-center gap-1 text-[10px] font-black text-white/80 hover:text-white px-2 py-1.5 rounded-lg border border-white/10 bg-white/5 transition-all"
-                        >
-                            <Radio className="w-3.5 h-3.5 text-gold-400" />
-                            <span className="hidden sm:inline">KANAL</span>
-                        </button>
-                        {isRadioMenuOpen && (
-                            <div className="absolute top-12 right-0 w-52 bg-black border border-white/20 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.95)] p-2 z-[9999] backdrop-blur-xl max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
-                                {RADIOS.map((radio) => (
-                                    <button
-                                        key={radio.id}
-                                        onMouseDown={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            selectRadio(radio);
-                                        }}
-                                        className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold transition-all flex flex-col gap-0.5 mb-1 last:mb-0 ${currentRadio.id === radio.id ? 'bg-neon-pink text-white shadow-lg' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
-                                    >
-                                        <span>{radio.name}</span>
-                                        <span className={`text-[9px] font-normal ${currentRadio.id === radio.id ? 'text-white/80' : 'opacity-60'}`}>{radio.streamLabel}</span>
-                                    </button>
-                                ))}
-                            </div>
                         )}
+                        <h3 className="font-bold text-white text-sm tracking-tight truncate">
+                            {isLoading ? "Yükleniyor..." : currentRadio.name}
+                        </h3>
                     </div>
+                    <p className="text-[10px] text-white/50 truncate">{currentRadio.streamLabel}</p>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                    <button onClick={prevStation} className="w-7 h-7 rounded-full flex items-center justify-center bg-white/10 text-white/70 hover:text-white hover:bg-white/20 transition-all">
+                        <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button onClick={togglePlay} disabled={isLoading} className="w-9 h-9 rounded-full flex items-center justify-center bg-neon-pink text-white transition-all shadow-lg hover:shadow-[0_0_15px_rgba(255,0,127,0.6)] active:scale-95 disabled:opacity-50">
+                        {isLoading ? (
+                            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                        ) : isPlaying ? (
+                            <Pause className="w-4 h-4 fill-current" />
+                        ) : (
+                            <Play className="w-4 h-4 fill-current ml-0.5" />
+                        )}
+                    </button>
+                    <button onClick={nextStation} className="w-7 h-7 rounded-full flex items-center justify-center bg-white/10 text-white/70 hover:text-white hover:bg-white/20 transition-all">
+                        <ChevronRight className="w-4 h-4" />
+                    </button>
+                    <button onClick={toggleMute} className="w-7 h-7 rounded-full flex items-center justify-center bg-white/10 text-white/70 hover:text-white hover:bg-white/20 transition-all">
+                        {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                    </button>
+                </div>
+            </div>
+            {/* Alt satır: Kanal seçici (yatay scroll) */}
+            <div className="border-t border-white/5 px-2 py-1.5">
+                <div ref={scrollRef} className="flex gap-1.5 overflow-x-auto scrollbar-none pb-1">
+                    {RADIOS.map((radio, idx) => (
+                        <button
+                            key={radio.id}
+                            onMouseDown={(e) => {
+                                e.preventDefault();
+                                selectStation(idx);
+                            }}
+                            className={`shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all whitespace-nowrap ${
+                                currentIndex === idx
+                                    ? 'bg-neon-pink text-white shadow-[0_0_10px_rgba(255,0,127,0.4)]'
+                                    : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white/80'
+                            }`}
+                        >
+                            {radio.name}
+                        </button>
+                    ))}
                 </div>
             </div>
         </div>
