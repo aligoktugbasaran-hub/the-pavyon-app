@@ -204,6 +204,8 @@ export default function PavyonAuthPage() {
                     <img
                         src="/logo.png"
                         alt="The Pavyon Original Logo"
+                        loading="eager"
+                        fetchPriority="high"
                         className="w-40 h-40 md:w-56 md:h-56 object-contain"
                         style={{ filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.8))' }}
                     />

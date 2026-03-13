@@ -89,6 +89,8 @@ export default function PavyonPage() {
                     <img
                         src="/logo.png"
                         alt="The Pavyon Logo"
+                        loading="eager"
+                        fetchPriority="high"
                         className="h-12 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,215,0,0.4)] hover:scale-110 transition-transform cursor-pointer"
                         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     />
