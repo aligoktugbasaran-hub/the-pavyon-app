@@ -4,26 +4,26 @@ import { Play, Pause, Volume2, VolumeX, Music, ChevronLeft, ChevronRight } from 
 import { useUserStore } from "@/store/useUserStore";
 
 const RADIOS = [
-    { id: "powerturk", name: "PowerTürk", url: "https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio", streamLabel: "Türkçe Pop" },
-    { id: "powerfm", name: "Power FM", url: "https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio", streamLabel: "Yabancı Pop" },
-    { id: "fenomen", name: "Fenomen", url: "https://fenomen.listenfenomen.com/fenomen/256/icecast.audio", streamLabel: "Hit Müzik" },
-    { id: "fenomenturk", name: "Fenomen Türk", url: "https://fenomen.listenfenomen.com/fenomenturk/256/icecast.audio", streamLabel: "Türkçe Hit" },
-    { id: "retroturk", name: "Retro Türk", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/RETROTURK_SC", streamLabel: "Nostalji" },
-    { id: "joyturk", name: "Joy Türk", url: "https://17733.live.streamtheworld.com/JOY_TURK_SC", streamLabel: "Rock & Alternatif" },
-    { id: "damarfm", name: "Damar FM", url: "https://yayin.damarfm.com:8080/;", streamLabel: "Arabesk & Damar" },
-    { id: "palnostaji", name: "Pal Nostalji", url: "https://shoutcast.radyogrup.com:1010/;", streamLabel: "Nostalji" },
-    { id: "palakustik", name: "Pal Akustik", url: "https://shoutcast.radyogrup.com:2030/;", streamLabel: "Akustik" },
-    { id: "palslow", name: "Pal Slow", url: "https://shoutcast.radyogrup.com:2020/;", streamLabel: "Slow Müzik" },
+    { id: "seymen", name: "Radyo Seymen", url: "https://yayin.radyoseymen.com.tr:1071/;stream.mp3", streamLabel: "Ankara Havaları" },
+    { id: "powerturk", name: "PowerTürk", url: "https://listen.powerapp.com.tr/powerturk/abr/powerturk/128/playlist.m3u8", streamLabel: "Türkçe Pop" },
+    { id: "powerfm", name: "Power FM", url: "https://listen.powerapp.com.tr/powerfm/abr/powerfm/128/playlist.m3u8", streamLabel: "Yabancı Pop" },
+    { id: "powerlove", name: "Power Love", url: "https://listen.powerapp.com.tr/powerlove/abr/powerlove/128/playlist.m3u8", streamLabel: "Slow Müzik" },
+    { id: "powerjazz", name: "Power Jazz", url: "https://listen.powerapp.com.tr/powersmoothjazz/abr/powersmoothjazz/128/playlist.m3u8", streamLabel: "Jazz" },
+    { id: "powerturkefsane", name: "PowerTürk Efsane", url: "https://listen.powerapp.com.tr/powerturkefsane/abr/powerturkefsane/128/playlist.m3u8", streamLabel: "90lar & 2000ler" },
+    { id: "powerturkrap", name: "PowerTürk Rap", url: "https://listen.powerapp.com.tr/powerturkrap/abr/powerturkrap/128/playlist.m3u8", streamLabel: "Türkçe Rap" },
+    { id: "powerturkakustik", name: "PowerTürk Akustik", url: "https://listen.powerapp.com.tr/powerturkakustik/abr/powerturkakustik/128/playlist.m3u8", streamLabel: "Akustik" },
+    { id: "powerxl", name: "Power XL", url: "https://listen.powerapp.com.tr/powerextralounge/abr/powerextralounge/128/playlist.m3u8", streamLabel: "Lounge" },
+    { id: "damarturk", name: "Damar Türk FM", url: "https://live.radyositesihazir.com:10997/;", streamLabel: "Arabesk & Damar" },
     { id: "lofi", name: "Lofi Beats", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Lofi & Chill" },
-    { id: "somajazz", name: "Smooth Jazz", url: "https://ice2.somafm.com/secretagent-256-mp3", streamLabel: "Jazz & Lounge" },
     { id: "somagroove", name: "Groove Salad", url: "https://ice2.somafm.com/groovesalad-256-mp3", streamLabel: "Ambient Groove" },
     { id: "somadefcon", name: "Synthwave", url: "https://ice2.somafm.com/defcon-256-mp3", streamLabel: "Synthwave" },
     { id: "somaindie", name: "Indie Pop", url: "https://ice2.somafm.com/indiepop-128-mp3", streamLabel: "Indie Pop" },
-    { id: "somadrone", name: "Drone Zone", url: "https://ice2.somafm.com/dronezone-256-mp3", streamLabel: "Ambient" },
     { id: "somametal", name: "Metal", url: "https://ice2.somafm.com/metal-128-mp3", streamLabel: "Heavy Metal" },
     { id: "somabossa", name: "Bossa Nova", url: "https://ice2.somafm.com/bossa-128-mp3", streamLabel: "Bossa Nova" },
-    { id: "somagoa", name: "Goa Trance", url: "https://ice2.somafm.com/suburbsofgoa-128-mp3", streamLabel: "Goa & Trance" },
     { id: "somasoul", name: "70s Soul", url: "https://ice2.somafm.com/7soul-128-mp3", streamLabel: "70s Soul" },
+    { id: "somagoa", name: "Goa Trance", url: "https://ice2.somafm.com/suburbsofgoa-128-mp3", streamLabel: "Goa & Trance" },
+    { id: "somaspace", name: "Space Station", url: "https://ice2.somafm.com/spacestation-128-mp3", streamLabel: "Uzay Müziği" },
+    { id: "somasecret", name: "Secret Agent", url: "https://ice2.somafm.com/secretagent-256-mp3", streamLabel: "Lounge & Jazz" },
 ];
 
 export function LiveRadio() {
@@ -53,13 +53,28 @@ export function LiveRadio() {
         const radio = RADIOS[index];
         setIsLoading(true);
         audioRef.current.pause();
-        audioRef.current.src = radio.url;
 
+        // HLS (m3u8) formatı için farklı yaklaşım
+        if (radio.url.includes('.m3u8')) {
+            // Tarayıcı HLS'i doğrudan desteklemeyebilir, alternatif dene
+            audioRef.current.src = radio.url;
+            audioRef.current.play().then(() => {
+                setIsPlaying(true);
+                setIsLoading(false);
+            }).catch(() => {
+                // m3u8 çalışmazsa hata göster
+                setIsPlaying(false);
+                setIsLoading(false);
+                useUserStore.getState().showToast("Bu kanal tarayıcınızda desteklenmiyor.", "info");
+            });
+            return;
+        }
+
+        audioRef.current.src = radio.url;
         const cleanup = () => {
             audioRef.current?.removeEventListener('canplay', onReady);
             audioRef.current?.removeEventListener('error', onFail);
         };
-
         const onReady = () => {
             audioRef.current?.play().then(() => {
                 setIsPlaying(true);
@@ -71,14 +86,12 @@ export function LiveRadio() {
             });
             cleanup();
         };
-
         const onFail = () => {
             setIsPlaying(false);
             setIsLoading(false);
             useUserStore.getState().showToast("Kanal yüklenemedi, başka dene.", "info");
             cleanup();
         };
-
         audioRef.current.addEventListener('canplay', onReady);
         audioRef.current.addEventListener('error', onFail);
         audioRef.current.load();
