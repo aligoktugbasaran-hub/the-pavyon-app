@@ -4,9 +4,16 @@
  */
 const getBaseUrl = () => {
     if (typeof window === "undefined") return process.env.NEXT_PUBLIC_API_URL || "";
-    const isCapacitor = (window as any).Capacitor || window.location.protocol === "capacitor:";
-    if (isCapacitor) return process.env.NEXT_PUBLIC_API_URL || "";
-    return ""; // Web'de relative kullan
+    
+    const isCapacitor = !!(window as any).Capacitor?.isNativePlatform?.() || 
+                        window.location.protocol === "capacitor:" ||
+                        window.location.protocol === "file:";
+    
+    if (isCapacitor) {
+        return "https://the-pavyon-app-production.up.railway.app";
+    }
+    
+    return "";
 };
 
 export const API_BASE_URL = getBaseUrl();

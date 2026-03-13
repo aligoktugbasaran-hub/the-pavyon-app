@@ -40,11 +40,12 @@ let globalSocket: Socket | null = null;
 function getSocket(): Socket | null {
     if (typeof window === "undefined") return null;
 
-    const isCapacitor =
-        (window as any).Capacitor || window.location.protocol === "capacitor:";
+    const isCapacitor = !!(window as any).Capacitor?.isNativePlatform?.() ||
+        window.location.protocol === "capacitor:" ||
+        window.location.protocol === "file:";
 
     const baseUrl = isCapacitor
-        ? process.env.NEXT_PUBLIC_API_URL || ""
+        ? "https://the-pavyon-app-production.up.railway.app"
         : "";
 
     // Mobilde NEXT_PUBLIC_API_URL tanımlı değilse WebSocket'i devre dışı bırak
