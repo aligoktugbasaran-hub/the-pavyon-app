@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-
 const nextConfig: NextConfig = {
   output: process.env.IS_CAPACITOR === "true" ? "export" : undefined,
   serverExternalPackages: ["@prisma/client"],
@@ -8,5 +7,4 @@ const nextConfig: NextConfig = {
   },
   trailingSlash: true,
 };
-
 export default nextConfig;

@@ -11,48 +11,37 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
-
       - name: Install Deps
         run: npm ci
-
       - name: Generate Prisma
         run: npx prisma generate
-
       - name: Prep Static Export (Remove API)
         run: rm -rf src/app/api
-
       - name: Remove server.js for static export
         run: |
           cp server.js server.js.bak || true
           rm -f server.js
-
       - name: Build Web
         run: npm run build
         env:
-          IS_CAPACITOR: true
-
-      - name: Capacitor Sync
-        run: npx cap sync ios
-
+          IS_CAPACITOR: "true"
       - name: Restore server.js
         run: mv server.js.bak server.js || true
-
+      - name: Capacitor Sync
+        run: npx cap sync ios
       - name: Build App
         run: |
           cd ios/App
           xcodebuild -project App.xcodeproj -scheme App -sdk iphonesimulator -destination "generic/platform=iOS Simulator" ARCHS="x86_64 arm64" ONLY_ACTIVE_ARCH=NO -configuration Release -derivedDataPath build CODE_SIGNING_ALLOWED=NO
-
       - name: Package for Appetize
         run: |
           mkdir -p artifacts/payload
           cp -r ios/App/build/Build/Products/Release-iphonesimulator/App.app artifacts/payload/
-          
       - name: Upload iOS
         uses: actions/upload-artifact@v4
         with:
@@ -65,68 +54,57 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
-
       - name: Install Deps
         run: npm ci
-
       - name: Generate Prisma
         run: npx prisma generate
-
       - name: Prep Static Export (Remove API)
         run: rm -rf src/app/api
-
       - name: Remove server.js for static export
         run: |
           cp server.js server.js.bak || true
           rm -f server.js
-
       - name: Build Web
         run: npm run build
         env:
-          IS_CAPACITOR: true
-
+          IS_CAPACITOR: "true"
       - name: Fix Android Assets Prefix
         run: |
-          # Rename _next to assets_next to avoid underscore folder issues on Android webview
-          cd out
-          mv _next assets_next || true
-          # Replace all references in HTML files (requires perl for multi-platform friendliness)
-          grep -rl "_next" . | xargs sed -i 's/_next/assets_next/g' || true
-          cd ..
-
-      - name: Capacitor Sync
-        run: npx cap sync android
-
+          if [ -d "out" ]; then
+            cd out
+            mv _next assets_next || true
+            grep -rl "_next" . | xargs sed -i 's/_next/assets_next/g' || true
+            cd ..
+          else
+            echo "out klasörü bulunamadı, devam ediliyor"
+          fi
       - name: Restore server.js
         run: mv server.js.bak server.js || true
-
+      - name: Capacitor Sync
+        run: npx cap sync android
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '21'
-
       - name: Build Android Bundle & APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew bundleRelease
           ./gradlew assembleRelease
-
       - name: Upload Android Bundle
         uses: actions/upload-artifact@v4
         with:
           name: Android-Bundle-PlayConsole
           path: android/app/build/outputs/bundle/release/app-release.aab
-
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
-          name: Android-APK-BlueStacks
+          name: Android-APK
           path: android/app/build/outputs/apk/release/app-release.apk

@@ -170,7 +170,8 @@ export default function PavyonAuthPage() {
             });
 
             // Sync with local store
-            login(res.nickname, res.avatar || finalAvatar, "Gizli", res.id);
+            const userData = res.user || res;
+            login(userData.nickname, userData.avatar || finalAvatar, "Gizli", userData.id);
             router.push("/pavyon");
         } catch (e: any) {
             console.error("Android join error:", e);
