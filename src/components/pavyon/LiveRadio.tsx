@@ -6,7 +6,7 @@ import { useUserStore } from "@/store/useUserStore";
 const PROXY = "/api/radio-proxy?url=";
 
 const RADIOS = [
-    { id: "seymen", name: "Radyo Seymen", url: PROXY + encodeURIComponent("http://yayin.radyoseymen.com.tr:1070/;stream.mp3"), streamLabel: "Ankara Havaları" },
+    { id: "seymen", name: "Radyo Seymen", url: PROXY + encodeURIComponent("http://yayin.radyoseymen.com.tr:1070/"), streamLabel: "Ankara Havaları" },
     { id: "lofi", name: "Lofi Beats", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Lofi & Chill" },
     { id: "somagroove", name: "Groove Salad", url: "https://ice2.somafm.com/groovesalad-256-mp3", streamLabel: "Ambient Groove" },
     { id: "somadefcon", name: "Synthwave", url: "https://ice2.somafm.com/defcon-256-mp3", streamLabel: "Synthwave" },
@@ -25,7 +25,7 @@ const RADIOS = [
     { id: "powerturk", name: "PowerTürk", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio"), streamLabel: "Türkçe Pop" },
     { id: "powerfm", name: "Power FM", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio"), streamLabel: "Yabancı Pop" },
     { id: "taksim", name: "Taksim FM", url: PROXY + encodeURIComponent("http://cast1.taksim.fm:8008/"), streamLabel: "Arabesk" },
-    { id: "damarfm", name: "Damar FM", url: PROXY + encodeURIComponent("https://yayin.damarfm.com:8080/;"), streamLabel: "Damar" },
+    { id: "damarfm", name: "Damar FM", url: PROXY + encodeURIComponent("https://yayin.damarfm.com:8080/"), streamLabel: "Damar" },
 ];
 
 export function LiveRadio() {
