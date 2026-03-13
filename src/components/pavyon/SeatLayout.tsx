@@ -83,12 +83,14 @@ export function SeatLayout() {
     };
 
     useEffect(() => {
-        scrollToBottom();
-    }, [socketMessages]);
+        if (activeTable) {
+            scrollToBottom();
+        }
+    }, [socketMessages, activeTable]);
 
     // Populate mock welcome message when joining a table (socket history arrives async)
     useEffect(() => {
-        if (activeTable) {
+        if (activeTable && socketMessages.length > 0) {
             // Socket geçmişi gelene kadar sadece sistem mesajı göster — socketMessages'ı izle
             scrollToBottom();
         }

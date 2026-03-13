@@ -75,7 +75,7 @@ export function GiftModal({ isOpen, onClose, recipientName, recipientAvatar, rec
     };
 
     return (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[9999999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200">
             <PavyonToast /> {/* Render PavyonToast */}
             <div className="relative bg-gradient-to-br from-[#110820] to-black border border-white/10 rounded-3xl w-full max-w-md shadow-[0_0_50px_rgba(255,0,127,0.2)] overflow-hidden">
 

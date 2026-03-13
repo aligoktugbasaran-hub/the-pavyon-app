@@ -140,7 +140,7 @@ export default function PavyonAuthPage() {
     };
 
     const handleJoin = async () => {
-        if (!nickname.trim() || nicknameError) {
+        if (!nickname.trim()) {
             setStep(1);
             return;
         }

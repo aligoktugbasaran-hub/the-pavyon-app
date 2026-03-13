@@ -271,14 +271,15 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
     return (
         <>
             {profileModal}
-            {isGiftModalOpen && user && (
+            {isGiftModalOpen && user && createPortal(
                 <GiftModal
                     isOpen={isGiftModalOpen}
                     onClose={() => setIsGiftModalOpen(false)}
                     recipientName={user.name}
                     recipientAvatar={user.avatar}
                     recipientId={String(user.id)}
-                />
+                />,
+                document.body
             )}
         </>
     );
