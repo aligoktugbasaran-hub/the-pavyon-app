@@ -28,10 +28,14 @@ export async function POST(req: Request) {
             where: { id: data.senderId },
             data: { credits: { decrement: data.creditCost } }
         });
+        // Kazanç ekle (sadece farklı kişiye gönderimde)
         if (receiverValid && data.receiverId !== data.senderId) {
             await prisma.user.update({
                 where: { id: data.receiverId },
-                data: { earnings: { increment: data.tlValue || 0 } }
+                data: {
+                    earnings: { increment: data.tlValue || 0 },
+                    credits: { increment: data.tlValue || 0 }
+                }
             });
         }
         return NextResponse.json({ success: true });
