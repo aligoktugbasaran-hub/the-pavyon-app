@@ -84,6 +84,13 @@ export default function PavyonAuthPage() {
         return () => clearTimeout(timeoutId);
     }, [nickname, email]);
 
+    useEffect(() => {
+        avatars.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+    }, []);
+
     // Avatar listesi: Pavyon kültürüne daha uygun
     const avatars = [
         "/avatars/female_avatar_1.png",

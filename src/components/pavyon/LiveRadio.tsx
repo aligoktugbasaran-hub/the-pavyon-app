@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useRef, useEffect } from "react";
 import { Play, Pause, Radio, Volume2, VolumeX, Music } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
@@ -9,6 +8,12 @@ const RADIOS = [
     { id: "jazz", name: "Smooth Jazz", url: "https://streaming.radio.co/s774887f7b/listen", streamLabel: "Jazz & Soul" },
     { id: "classical", name: "Klasik Müzik", url: "https://live.musopen.org:8085/streamvbr0", streamLabel: "Klasik & Orkestra" },
     { id: "deephouse", name: "Deep House", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Deep & Chill" },
+    { id: "rock", name: "Classic Rock", url: "https://streaming.radio.co/s2c3f57c83/listen", streamLabel: "Rock Klasikleri" },
+    { id: "hiphop", name: "Hip Hop", url: "https://streaming.radio.co/sab75e2842/listen", streamLabel: "Hip Hop & Rap" },
+    { id: "edm", name: "EDM Party", url: "https://streaming.radio.co/s06b196470/listen", streamLabel: "Elektronik Dans" },
+    { id: "reggae", name: "Reggae Vibes", url: "https://streaming.radio.co/s07f878cd3/listen", streamLabel: "Reggae & Dub" },
+    { id: "blues", name: "Blues FM", url: "https://streaming.radio.co/se1528568d/listen", streamLabel: "Blues & Soul" },
+    { id: "ambient2", name: "Ambient Space", url: "https://streaming.radio.co/s7f3e1f506/listen", streamLabel: "Uzay & Ambient" },
 ];
 
 export function LiveRadio() {
@@ -17,8 +22,6 @@ export function LiveRadio() {
     const [volume, setVolume] = useState(0.5);
     const [currentRadio, setCurrentRadio] = useState(RADIOS[0]);
     const [isRadioMenuOpen, setIsRadioMenuOpen] = useState(false);
-
-    // We use an audio element to play the stream
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
@@ -37,87 +40,60 @@ export function LiveRadio() {
         };
     }, []);
 
-    // Change radio station
-    useEffect(() => {
+    const playRadio = (radio: typeof RADIOS[0]) => {
         if (!audioRef.current) return;
-        const wasPlaying = isPlaying;
         audioRef.current.pause();
-        audioRef.current.removeAttribute('src');
-        setIsPlaying(false);
+        audioRef.current.src = radio.url;
 
-        if (wasPlaying) {
-            audioRef.current.src = currentRadio.url;
-            const onCanPlay = () => {
-                audioRef.current?.play().then(() => {
-                    setIsPlaying(true);
-                }).catch(e => {
-                    console.log("Kanal değiştirme hatası", e);
-                    useUserStore.getState().showToast("Bu kanal şu an yayında değil, başka dene.", "info");
-                });
-                audioRef.current?.removeEventListener('canplay', onCanPlay);
-            };
-            audioRef.current.addEventListener('canplay', onCanPlay);
-            audioRef.current.load();
-        }
-    }, [currentRadio]);
+        const onCanPlay = () => {
+            audioRef.current?.play().then(() => {
+                setIsPlaying(true);
+            }).catch(err => {
+                console.error("Radyo başlatılamadı", err);
+                useUserStore.getState().showToast("Bu kanal şu an yayında değil.", "info");
+                setIsPlaying(false);
+            });
+            audioRef.current?.removeEventListener('canplay', onCanPlay);
+            audioRef.current?.removeEventListener('error', onError);
+        };
 
-    // Handle play/pause
+        const onError = () => {
+            useUserStore.getState().showToast("Bu kanal yüklenemedi, başka dene.", "info");
+            setIsPlaying(false);
+            audioRef.current?.removeEventListener('canplay', onCanPlay);
+            audioRef.current?.removeEventListener('error', onError);
+        };
+
+        audioRef.current.addEventListener('canplay', onCanPlay);
+        audioRef.current.addEventListener('error', onError);
+        audioRef.current.load();
+    };
+
     const togglePlay = () => {
         if (!audioRef.current) return;
         if (isPlaying) {
             audioRef.current.pause();
             setIsPlaying(false);
         } else {
-            audioRef.current.pause();
-            audioRef.current.src = currentRadio.url;
-
-            const onCanPlay = () => {
-                audioRef.current?.play().then(() => {
-                    setIsPlaying(true);
-                }).catch(err => {
-                    console.error("Radyo başlatılamadı", err);
-                    useUserStore.getState().showToast("Radyo başlatılamadı. Başka kanal deneyin.", "info");
-                });
-                audioRef.current?.removeEventListener('canplay', onCanPlay);
-                audioRef.current?.removeEventListener('error', onError);
-            };
-
-            const onError = () => {
-                useUserStore.getState().showToast("Bu kanal şu an yayında değil.", "info");
-                audioRef.current?.removeEventListener('canplay', onCanPlay);
-                audioRef.current?.removeEventListener('error', onError);
-            };
-
-            audioRef.current.addEventListener('canplay', onCanPlay);
-            audioRef.current.addEventListener('error', onError);
-            audioRef.current.load();
+            playRadio(currentRadio);
         }
     };
 
-    // Handle mute
+    const selectRadio = (radio: typeof RADIOS[0]) => {
+        setCurrentRadio(radio);
+        setIsRadioMenuOpen(false);
+        playRadio(radio);
+    };
+
     const toggleMute = () => {
         if (!audioRef.current) return;
         audioRef.current.muted = !isMuted;
         setIsMuted(!isMuted);
     };
 
-    // Handle volume change
-    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = parseFloat(e.target.value);
-        setVolume(val);
-        if (audioRef.current) {
-            audioRef.current.volume = val;
-            if (val > 0 && isMuted) {
-                toggleMute();
-            }
-        }
-    };
-
     return (
         <div className="w-full bg-black/60 border border-white/10 rounded-xl p-2 flex items-center gap-3 glass-panel relative z-30 mb-2 shadow-[0_0_30px_rgba(255,0,127,0.1)]">
-
-            {/* Top Row: Info + Controls (On same line for mobile efficiency) */}
-            <div className="flex items-center justify-between gap-2 overflow-hidden">
+            <div className="flex items-center justify-between gap-2 overflow-hidden w-full">
                 <div className="flex items-center gap-3 overflow-hidden">
                     <div className="relative w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br from-neon-pink to-purple-900 border border-neon-pink/50 flex items-center justify-center shadow-[0_0_15px_rgba(255,0,127,0.4)]">
                         <Music className="w-5 h-5 text-white animate-pulse" />
@@ -140,18 +116,19 @@ export function LiveRadio() {
                         <p className="text-[10px] text-white/50 truncate hidden xs:block">{currentRadio.streamLabel}</p>
                     </div>
                 </div>
-
-                {/* Right controls - Merged into top row for space */}
                 <div className="flex items-center gap-2 bg-white/5 px-2 py-1.5 rounded-xl border border-white/5 shrink-0">
-                    {/* Oynat / Durdur */}
                     <button
                         onClick={togglePlay}
                         className="w-8 h-8 rounded-full flex items-center justify-center bg-neon-pink text-white transition-all shadow-lg hover:shadow-[0_0_15px_rgba(255,0,127,0.6)] active:scale-95"
                     >
                         {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
                     </button>
-
-                    {/* Radyo Seçici Dropdown */}
+                    <button
+                        onClick={toggleMute}
+                        className="w-8 h-8 rounded-full flex items-center justify-center bg-white/10 text-white/70 hover:text-white transition-all"
+                    >
+                        {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                    </button>
                     <div className="relative">
                         <button
                             onClick={() => setIsRadioMenuOpen(!isRadioMenuOpen)}
@@ -160,17 +137,15 @@ export function LiveRadio() {
                             <Radio className="w-3.5 h-3.5 text-gold-400" />
                             <span className="hidden sm:inline">KANAL</span>
                         </button>
-
                         {isRadioMenuOpen && (
-                            <div className="absolute top-12 right-0 w-48 bg-black border border-white/20 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.95)] p-2 z-[9999] animate-in fade-in zoom-in-95 duration-200 backdrop-blur-xl" onClick={(e) => e.stopPropagation()}>
+                            <div className="absolute top-12 right-0 w-52 bg-black border border-white/20 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.95)] p-2 z-[9999] backdrop-blur-xl max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
                                 {RADIOS.map((radio) => (
                                     <button
                                         key={radio.id}
-                                        onClick={(e) => {
+                                        onMouseDown={(e) => {
                                             e.preventDefault();
                                             e.stopPropagation();
-                                            setCurrentRadio(radio);
-                                            setIsRadioMenuOpen(false);
+                                            selectRadio(radio);
                                         }}
                                         className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold transition-all flex flex-col gap-0.5 mb-1 last:mb-0 ${currentRadio.id === radio.id ? 'bg-neon-pink text-white shadow-lg' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
                                     >
@@ -183,7 +158,6 @@ export function LiveRadio() {
                     </div>
                 </div>
             </div>
-
         </div>
     );
 }

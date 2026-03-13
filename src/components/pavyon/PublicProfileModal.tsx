@@ -25,6 +25,7 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
     const [isGiftModalOpen, setIsGiftModalOpen] = useState(false);
     const [confirmAction, setConfirmAction] = useState<"unfriend" | "block" | null>(null);
     const [requestSent, setRequestSent] = useState(false);
+    const [isSending, setIsSending] = useState(false);
 
     const { id: userId, nickname, avatarUrl, credits, id: meId, setFriends, setBlockedUsers, showToast, addNotification, joinedTableId, addFriend, removeFriend, blockUser, unblockUser, isFriend, isBlocked } = useUserStore();
     const me = { id: userId };
@@ -69,7 +70,8 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
     };
 
     const handleFriendRequest = async () => {
-        if (!user.id) return;
+        if (!user.id || isSending || requestSent) return;
+        setIsSending(true);
         try {
             const res = await fetch("/api/friends", {
                 method: "POST",
@@ -79,15 +81,15 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
             const data = await res.json();
             if (!res.ok) {
                 showToast(data.error || "İstek gönderilemedi.", "error");
+                setIsSending(false);
                 return;
             }
-            // Bildirim karşı tarafa WebSocket üzerinden gönderilecek (henüz implemente değil)
-            // Şimdilik sadece toast göster
             setRequestSent(true);
             showToast(`${user.name} adlı kişiye arkadaşlık isteği gönderildi!`, "success");
         } catch (e) {
             showToast("İstek gönderilemedi, bir sorun oluştu.", "error");
         }
+        setIsSending(false);
     };
 
     const handleUnblock = async () => {
@@ -219,9 +221,10 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
                         ) : (
                             <button
                                 onClick={handleFriendRequest}
-                                className="col-span-1 bg-white/10 hover:bg-white/20 text-white font-bold py-3 text-[10px] md:text-sm rounded-xl flex items-center justify-center gap-1 transition-all border border-white/5"
+                                disabled={isSending}
+                                className={`col-span-1 bg-white/10 hover:bg-white/20 text-white font-bold py-3 text-[10px] md:text-sm rounded-xl flex items-center justify-center gap-1 transition-all border border-white/5 ${isSending ? 'opacity-50 cursor-wait' : ''}`}
                             >
-                                <UserPlus className="w-4 h-4" /> Arkadaş Ekle
+                                <UserPlus className="w-4 h-4" /> {isSending ? 'Gönderiliyor...' : 'Arkadaş Ekle'}
                             </button>
                         )}
 
