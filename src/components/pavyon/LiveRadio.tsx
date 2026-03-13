@@ -7,6 +7,16 @@ const PROXY = "/api/radio-proxy?url=";
 
 const RADIOS = [
     { id: "seymen", name: "Radyo Seymen", url: PROXY + encodeURIComponent("http://yayin.radyoseymen.com.tr:1070/"), streamLabel: "Ankara Havaları" },
+    { id: "powerturk", name: "PowerTürk", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio"), streamLabel: "Türkçe Pop" },
+    { id: "powerfm", name: "Power FM", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio"), streamLabel: "Yabancı Pop" },
+    { id: "powerlove", name: "Power Love", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerlove/mpeg/icecast.audio"), streamLabel: "Slow Müzik" },
+    { id: "powerjazz", name: "Power Jazz", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powersmoothjazz/mpeg/icecast.audio"), streamLabel: "Jazz" },
+    { id: "fenomen", name: "Fenomen", url: PROXY + encodeURIComponent("https://fenomen.listenfenomen.com/fenomen/256/icecast.audio"), streamLabel: "Hit Müzik" },
+    { id: "fenomenturk", name: "Fenomen Türk", url: PROXY + encodeURIComponent("https://fenomen.listenfenomen.com/fenomenturk/256/icecast.audio"), streamLabel: "Türkçe Hit" },
+    { id: "joyturk", name: "Joy Türk", url: PROXY + encodeURIComponent("https://17733.live.streamtheworld.com/JOY_TURK_SC"), streamLabel: "Rock & Alternatif" },
+    { id: "retroturk", name: "Retro Türk", url: PROXY + encodeURIComponent("https://playerservices.streamtheworld.com/api/livestream-redirect/RETROTURK_SC"), streamLabel: "Nostalji" },
+    { id: "taksim", name: "Taksim FM", url: PROXY + encodeURIComponent("http://cast1.taksim.fm:8008/"), streamLabel: "Arabesk" },
+    { id: "damarfm", name: "Damar FM", url: PROXY + encodeURIComponent("https://yayin.damarfm.com:8080/"), streamLabel: "Damar" },
     { id: "lofi", name: "Lofi Beats", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Lofi & Chill" },
     { id: "somagroove", name: "Groove Salad", url: "https://ice2.somafm.com/groovesalad-256-mp3", streamLabel: "Ambient Groove" },
     { id: "somadefcon", name: "Synthwave", url: "https://ice2.somafm.com/defcon-256-mp3", streamLabel: "Synthwave" },
@@ -14,18 +24,8 @@ const RADIOS = [
     { id: "somametal", name: "Metal", url: "https://ice2.somafm.com/metal-128-mp3", streamLabel: "Heavy Metal" },
     { id: "somabossa", name: "Bossa Nova", url: "https://ice2.somafm.com/bossa-128-mp3", streamLabel: "Bossa Nova" },
     { id: "somasoul", name: "70s Soul", url: "https://ice2.somafm.com/7soul-128-mp3", streamLabel: "70s Soul" },
-    { id: "somagoa", name: "Goa Trance", url: "https://ice2.somafm.com/suburbsofgoa-128-mp3", streamLabel: "Goa & Trance" },
     { id: "somaspace", name: "Space Station", url: "https://ice2.somafm.com/spacestation-128-mp3", streamLabel: "Uzay Müziği" },
     { id: "somasecret", name: "Secret Agent", url: "https://ice2.somafm.com/secretagent-256-mp3", streamLabel: "Lounge & Jazz" },
-    { id: "somafolk", name: "Folk Forward", url: "https://ice2.somafm.com/folkfwd-128-mp3", streamLabel: "Folk" },
-    { id: "somalush", name: "Lush", url: "https://ice2.somafm.com/lush-128-mp3", streamLabel: "Sensual" },
-    { id: "somabeat", name: "Beat Blender", url: "https://ice2.somafm.com/beatblender-128-mp3", streamLabel: "Deep House" },
-    { id: "somacliq", name: "Cliq Hop", url: "https://ice2.somafm.com/cliqhop-256-mp3", streamLabel: "IDM & Glitch" },
-    { id: "powerjazz", name: "Power Jazz", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powersmoothjazz/mpeg/icecast.audio"), streamLabel: "Jazz" },
-    { id: "powerturk", name: "PowerTürk", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio"), streamLabel: "Türkçe Pop" },
-    { id: "powerfm", name: "Power FM", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio"), streamLabel: "Yabancı Pop" },
-    { id: "taksim", name: "Taksim FM", url: PROXY + encodeURIComponent("http://cast1.taksim.fm:8008/"), streamLabel: "Arabesk" },
-    { id: "damarfm", name: "Damar FM", url: PROXY + encodeURIComponent("https://yayin.damarfm.com:8080/"), streamLabel: "Damar" },
 ];
 
 export function LiveRadio() {
