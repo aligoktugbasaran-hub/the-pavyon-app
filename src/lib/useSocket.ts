@@ -111,7 +111,12 @@ export function useSocket({ roomType, tableId = null, enabled = true }: UseSocke
             setMessages((prev) => {
                 // Aynı id varsa eklemiyoruz (double prevention)
                 if (prev.some((m) => m.id === msg.id)) return prev;
-                return [...prev, msg];
+                const updated = [...prev, msg];
+                // 200'den fazla mesaj varsa en eski 100'ü sil
+                if (updated.length > 200) {
+                    return updated.slice(-100);
+                }
+                return updated;
             });
         };
 

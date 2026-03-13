@@ -63,7 +63,7 @@ app.prepare().then(() => {
                     ? { roomType: "table", tableId: Number(tableId) }
                     : { roomType: "global" };
                 const history = await prisma.message.findMany({
-                    where, orderBy: { createdAt: "asc" }, take: 50,
+                    where, orderBy: { createdAt: "asc" }, take: 30,
                 });
                 socket.emit("room:history", history);
             } catch (err) {

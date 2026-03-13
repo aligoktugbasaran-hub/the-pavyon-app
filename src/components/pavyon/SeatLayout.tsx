@@ -26,6 +26,21 @@ const MOCK_USER_NAMES = ["Ahmet", "Ayşe", "Mehmet", "Fatma", "Ali", "Zeynep", "
 
 export function SeatLayout() {
     const [activeMessage, setActiveMessage] = useState<{ tableId: number, seatIndex: number, text: string } | null>(null);
+
+    const [tables, setTables] = useState(ALL_TABLES.filter(t => t.id !== 99));
+
+    // Kullanıcı sayısını periyodik olarak güncelle (simülasyon)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTables(prev => prev.map(table => ({
+                ...table,
+                currentUsers: Math.max(0, Math.min(table.capacity, 
+                    table.currentUsers + (Math.random() > 0.5 ? 1 : -1)
+                ))
+            })));
+        }, 15000); // 15 saniyede bir güncelle
+        return () => clearInterval(interval);
+    }, []);
     const [isLocalarimOpen, setIsLocalarimOpen] = useState(false);
 
     // Global Store
@@ -252,6 +267,18 @@ export function SeatLayout() {
                                     <Video className="w-3.5 h-3.5" /> GÖRÜNTÜLÜ ARA
                                 </button>
                             )}
+                            {joinedTableId && joinedTableId >= 900 && (
+                                <button
+                                    onClick={() => {
+                                        const otherName = activeTable.name.replace(" ile Özel Masa", "");
+                                        setVideoCallTarget({ name: otherName, avatar: "/avatars/female_avatar_1.png" });
+                                        setIsVideoCallOpen(true);
+                                    }}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-neon-pink text-white border border-neon-pink/30 rounded-full text-xs font-bold animate-pulse shadow-[0_0_15px_rgba(255,0,127,0.5)]"
+                                >
+                                    <Video className="w-3.5 h-3.5" /> GÖRÜNTÜLÜ
+                                </button>
+                            )}
                             <span className="text-xs bg-white/10 px-2 py-1 rounded-full text-white/80 font-bold">{totalUsers} Kişi</span>
                         </div>
                     </div>
@@ -441,7 +468,7 @@ export function SeatLayout() {
                 </div>
 
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-2 lg:gap-y-4 w-full max-w-5xl mx-auto pb-10">
-                    {ALL_TABLES.filter(t => t.id !== 99).map((table) => {
+                    {tables.map((table) => {
                         const isVip = table.type === "vip";
                         // In the main view, joinedTableId is null, so we just show currentUsers
                         const displayUsers = table.currentUsers;
