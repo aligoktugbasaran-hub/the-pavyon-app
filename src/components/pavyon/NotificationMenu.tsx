@@ -73,7 +73,7 @@ export function NotificationMenu() {
 
             {/* Dropdown - Fixed for Mobile (centered with margins) and md:w-80 for desktop near the button */}
             <div
-                className="fixed z-[9001] top-16 right-4 left-4 md:left-auto md:right-10 md:w-80 bg-black/95 border border-white/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
+                className="fixed z-[9001] top-14 right-2 left-auto w-72 md:right-10 md:w-72 bg-black/95 border border-white/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
             >
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-white/10 bg-gradient-to-r from-neon-pink/10 to-transparent">
@@ -91,7 +91,7 @@ export function NotificationMenu() {
                 </div>
 
                 {/* List */}
-                <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 p-2">
+                <div className="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 p-2">
                     {filteredNotifications.length === 0 ? (
                         <div className="text-center py-8 text-white/40 text-sm">
                             <Bell className="w-8 h-8 mx-auto mb-2 opacity-20" />
