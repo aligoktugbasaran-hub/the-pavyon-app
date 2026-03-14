@@ -82,7 +82,7 @@ export default function PavyonPage() {
             {/* Background Grid Overlay */}
             <div className="fixed inset-0 pavyon-grid pointer-events-none opacity-20 z-0" />
             {/* Top Navbar / User Profile Strip */}
-            <header className="flex justify-between items-center glass-panel rounded-full px-6 py-3 shrink-0 relative z-20 gap-4 mb-2">
+            <header className="flex justify-between items-center glass-panel rounded-full px-3 md:px-6 py-2 md:py-3 shrink-0 relative z-20 gap-2 md:gap-4 mb-2">
                 <UserProfileMenu />
 
                 <div className="flex-1 hidden md:flex items-center justify-center">
@@ -100,12 +100,12 @@ export default function PavyonPage() {
                     <NotificationMenu />
 
                     <div className="flex flex-col items-end">
-                        <span className="text-[10px] text-white/40 uppercase tracking-tighter">Bakiye</span>
-                        <span className="font-bold text-neon-pink text-sm tracking-tight">₺{credits.toFixed(2)}</span>
+                        <span className="text-[8px] md:text-[10px] text-white/40 uppercase tracking-tighter">Bakiye</span>
+                        <span className="font-bold text-neon-pink text-xs md:text-sm tracking-tight">₺{credits.toFixed(0)}</span>
                     </div>
                     <button
                         onClick={() => setIsCreditModalOpen(true)}
-                        className="text-[10px] md:text-sm border border-neon-pink/50 rounded-full px-3 md:px-4 py-1.5 hover:bg-neon-pink transition-all font-bold shadow-[0_0_15px_rgba(255,0,127,0.2)]"
+                        className="text-[9px] md:text-sm border border-neon-pink/50 rounded-full px-2 md:px-4 py-1 md:py-1.5 hover:bg-neon-pink transition-all font-bold shadow-[0_0_15px_rgba(255,0,127,0.2)] whitespace-nowrap"
                     >
                         Kredi Yükle
                     </button>
@@ -132,7 +132,7 @@ export default function PavyonPage() {
                     {!isGlobalChatOpen && (
                         <button
                             onClick={() => setIsGlobalChatOpen(true)}
-                            className="bg-neon-pink text-white px-4 py-2 rounded-r-xl absolute left-0 top-1/2 -translate-y-1/2 z-50 shadow-[0_0_15px_rgba(255,0,127,0.5)] flex items-center gap-2 hover:scale-105 transition-all text-[10px] md:text-xs font-bold whitespace-nowrap"
+                            className="bg-neon-pink text-white px-3 py-1.5 rounded-r-xl absolute left-0 top-20 z-50 shadow-[0_0_15px_rgba(255,0,127,0.5)] flex items-center gap-2 hover:scale-105 transition-all text-[10px] md:text-xs font-bold whitespace-nowrap"
                         >
                             <MessageSquare className="w-4 h-4 md:w-5 md:h-5" /> <span className="hidden sm:inline">GENEL SOHBET</span>
                         </button>

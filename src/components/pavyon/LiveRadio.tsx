@@ -3,20 +3,26 @@ import { useState, useRef, useEffect } from "react";
 import { Play, Pause, Volume2, VolumeX, Music, ChevronLeft, ChevronRight } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 
-const PROXY = "/api/radio-proxy?url=";
+const isMobile = typeof window !== "undefined" && (
+    !!(window as any).Capacitor?.isNativePlatform?.() ||
+    window.location.protocol === "capacitor:" ||
+    window.location.protocol === "file:"
+);
+
+const PROXY = isMobile ? "" : "/api/radio-proxy?url=";
+
+const makeUrl = (directUrl: string) => {
+    if (isMobile) return directUrl;
+    return PROXY + encodeURIComponent(directUrl);
+};
 
 const RADIOS = [
-    { id: "seymen", name: "Radyo Seymen", url: PROXY + encodeURIComponent("http://yayin.radyoseymen.com.tr:1070/"), streamLabel: "Ankara Havaları" },
-    { id: "powerturk", name: "PowerTürk", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio"), streamLabel: "Türkçe Pop" },
-    { id: "powerfm", name: "Power FM", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio"), streamLabel: "Yabancı Pop" },
-    { id: "powerlove", name: "Power Love", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powerlove/mpeg/icecast.audio"), streamLabel: "Slow Müzik" },
-    { id: "powerjazz", name: "Power Jazz", url: PROXY + encodeURIComponent("https://listen.powerapp.com.tr/powersmoothjazz/mpeg/icecast.audio"), streamLabel: "Jazz" },
-    { id: "fluxberlin", name: "FluxFM Berlin", url: "https://streams.fluxfm.de/live/mp3-320/streams.fluxfm.de/", streamLabel: "Alternatif" },
-    { id: "flux80s", name: "80ler", url: "https://streams.fluxfm.de/80sFM/mp3-320/streams.fluxfm.de/", streamLabel: "80s Hits" },
-    { id: "fluxfunk", name: "70s Funk", url: "https://streams.fluxfm.de/70sFunk/mp3-320/streams.fluxfm.de/", streamLabel: "Funk & Soul" },
-    { id: "retroturk", name: "Retro Türk", url: PROXY + encodeURIComponent("https://playerservices.streamtheworld.com/api/livestream-redirect/RETROTURK_SC"), streamLabel: "Nostalji" },
-    { id: "somafolk", name: "Folk", url: "https://ice2.somafm.com/folkfwd-128-mp3", streamLabel: "Folk Forward" },
-    { id: "somabeat", name: "Deep House", url: "https://ice2.somafm.com/beatblender-128-mp3", streamLabel: "Deep & Chill" },
+    { id: "seymen", name: "Radyo Seymen", url: makeUrl("http://yayin.radyoseymen.com.tr:1070/"), streamLabel: "Ankara Havaları" },
+    { id: "powerturk", name: "PowerTürk", url: makeUrl("https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio"), streamLabel: "Türkçe Pop" },
+    { id: "powerfm", name: "Power FM", url: makeUrl("https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio"), streamLabel: "Yabancı Pop" },
+    { id: "powerlove", name: "Power Love", url: makeUrl("https://listen.powerapp.com.tr/powerlove/mpeg/icecast.audio"), streamLabel: "Slow Müzik" },
+    { id: "powerjazz", name: "Power Jazz", url: makeUrl("https://listen.powerapp.com.tr/powersmoothjazz/mpeg/icecast.audio"), streamLabel: "Jazz" },
+    { id: "retroturk", name: "Retro Türk", url: makeUrl("https://playerservices.streamtheworld.com/api/livestream-redirect/RETROTURK_SC"), streamLabel: "Nostalji" },
     { id: "lofi", name: "Lofi Beats", url: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/", streamLabel: "Lofi & Chill" },
     { id: "somagroove", name: "Groove Salad", url: "https://ice2.somafm.com/groovesalad-256-mp3", streamLabel: "Ambient Groove" },
     { id: "somadefcon", name: "Synthwave", url: "https://ice2.somafm.com/defcon-256-mp3", streamLabel: "Synthwave" },
@@ -25,7 +31,7 @@ const RADIOS = [
     { id: "somabossa", name: "Bossa Nova", url: "https://ice2.somafm.com/bossa-128-mp3", streamLabel: "Bossa Nova" },
     { id: "somasoul", name: "70s Soul", url: "https://ice2.somafm.com/7soul-128-mp3", streamLabel: "70s Soul" },
     { id: "somaspace", name: "Space Station", url: "https://ice2.somafm.com/spacestation-128-mp3", streamLabel: "Uzay Müziği" },
-    { id: "somalush", name: "Lush", url: "https://ice2.somafm.com/lush-128-mp3", streamLabel: "Sensual Lounge" },
+    { id: "somabeat", name: "Deep House", url: "https://ice2.somafm.com/beatblender-128-mp3", streamLabel: "Deep House" },
 ];
 
 export function LiveRadio() {

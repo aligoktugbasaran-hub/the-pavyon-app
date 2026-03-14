@@ -43,7 +43,7 @@ export function CreditModal({ isOpen, onClose }: CreditModalProps) {
                 <div className="text-gold-400 font-black tracking-tighter text-sm uppercase">Bakiye Yükle</div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#0d0011] to-black border-0 md:border md:border-white/10 rounded-none md:rounded-3xl w-full max-w-4xl min-h-screen md:min-h-0 shadow-[0_0_50px_rgba(255,0,127,0.15)] flex flex-col md:flex-row overflow-hidden relative pt-16 md:pt-0">
+            <div className="bg-gradient-to-br from-[#0d0011] to-black border-0 md:border md:border-white/10 rounded-none md:rounded-3xl w-full max-w-[95vw] md:max-w-md max-h-[90vh] overflow-y-auto min-h-screen md:min-h-0 shadow-[0_0_50px_rgba(255,0,127,0.15)] flex flex-col md:flex-row overflow-hidden relative pt-16 md:pt-0">
 
                 <button onClick={onClose} className="absolute top-4 right-4 text-white/50 hover:text-white bg-black/50 hover:bg-white/10 p-2 rounded-full transition-all z-20 hidden md:block">
                     <X className="w-5 h-5" />
