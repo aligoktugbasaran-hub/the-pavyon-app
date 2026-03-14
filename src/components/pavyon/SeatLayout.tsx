@@ -491,7 +491,7 @@ export function SeatLayout() {
                                 </div>
 
                                 {/* Fiziksel Masa / Loca Çizimi */}
-                                <div className={`${isVip ? 'w-24 h-16 md:w-32 md:h-20 rounded-2xl md:rounded-3xl' : 'w-16 h-16 md:w-20 md:h-20 rounded-full'} border-[2px] flex flex-col items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-10 transition-all ${displayUsers >= (table.capacity ?? 10) ? 'bg-red-900/30 border-red-500/30' : (isVip ? 'bg-black border-gold-500/30 group-hover:border-gold-500/80 shadow-[0_0_15px_rgba(255,215,0,0.1)]' : 'bg-black border-neon-pink/30 group-hover:border-neon-pink/80 shadow-[0_0_15px_rgba(255,0,127,0.1)]')} `}>
+                                <div className={`${isVip ? 'w-24 h-16 md:w-32 md:h-20 rounded-2xl md:rounded-3xl' : 'w-16 h-16 md:w-20 md:h-20 rounded-full'} border-[2px] flex flex-col items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-[60] transition-all ${displayUsers >= (table.capacity ?? 10) ? 'bg-red-900/30 border-red-500/30' : (isVip ? 'bg-black border-gold-500/30 group-hover:border-gold-500/80 shadow-[0_0_15px_rgba(255,215,0,0.1)]' : 'bg-black border-neon-pink/30 group-hover:border-neon-pink/80 shadow-[0_0_15px_rgba(255,0,127,0.1)]')} `}>
                                     <span className="text-xl md:text-2xl drop-shadow-lg opacity-90 group-hover:scale-110 transition-transform">{table.icon}</span>
                                     <button
                                         onClick={(e) => { e.stopPropagation(); handleJoinTable(table.id, table.currentUsers, table.capacity); }}
@@ -530,7 +530,7 @@ export function SeatLayout() {
                                                 left: pos.left,
                                                 top: pos.top,
                                                 backgroundImage: isOccupied ? `url('${avatarUrl}')` : 'none',
-                                                zIndex: isHovered ? 40 : 10
+                                                zIndex: isHovered ? 40 : 5
                                             }}
                                         >
                                             {/* Profil Popover */}
