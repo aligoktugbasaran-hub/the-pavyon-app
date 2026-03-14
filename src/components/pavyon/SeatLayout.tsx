@@ -495,7 +495,7 @@ export function SeatLayout() {
                                     <span className="text-xl md:text-2xl drop-shadow-lg opacity-90 group-hover:scale-110 transition-transform">{table.icon}</span>
                                     <button
                                         onClick={(e) => { e.stopPropagation(); handleJoinTable(table.id, table.currentUsers, table.capacity); }}
-                                        className={`mt-1.5 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase text-white shadow-[0_0_15px_rgba(255,0,127,0.4)] transition-all active:scale-90 flex items-center justify-center gap-1 ${displayUsers >= table.capacity ? 'bg-gray-700' : 'bg-gradient-to-r from-neon-pink to-purple-600 border border-white/20'}`}
+                                        className={`mt-1.5 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase text-white shadow-[0_0_15px_rgba(255,0,127,0.4)] transition-all active:scale-90 flex items-center justify-center gap-1 relative z-50 ${displayUsers >= table.capacity ? 'bg-gray-700' : 'bg-gradient-to-r from-neon-pink to-purple-600 border border-white/20'}`}
                                     >
                                         <Users className="w-3 h-3 md:w-4 h-4" />
                                         {displayUsers >= table.capacity ? 'DOLU' : 'OTUR'}
@@ -525,12 +525,12 @@ export function SeatLayout() {
                                                     setHoveredUser(null);
                                                 }
                                             }}
-                                            className={`absolute w-7 h-7 rounded-full border-2 transition-all cursor-${isOccupied ? 'pointer' : 'default'} ${isOccupied ? `bg-cover bg-center shadow-lg z-20 ${isVip ? 'border-gold-400 shadow-[0_0_8px_rgba(255,215,0,0.3)] hover:scale-125' : 'border-neon-pink shadow-[0_0_8px_rgba(255,0,127,0.3)] hover:scale-125'}` : 'border-white/5 bg-white/5 opacity-10 border-dashed z-0'} `}
+                                            className={`absolute w-7 h-7 rounded-full border-2 transition-all cursor-${isOccupied ? 'pointer' : 'default'} ${isOccupied ? `bg-cover bg-center shadow-lg z-10 ${isVip ? 'border-gold-400 shadow-[0_0_8px_rgba(255,215,0,0.3)] hover:scale-125' : 'border-neon-pink shadow-[0_0_8px_rgba(255,0,127,0.3)] hover:scale-125'}` : 'border-white/5 bg-white/5 opacity-10 border-dashed z-0'} `}
                                             style={{
                                                 left: pos.left,
                                                 top: pos.top,
                                                 backgroundImage: isOccupied ? `url('${avatarUrl}')` : 'none',
-                                                zIndex: isHovered ? 40 : 20
+                                                zIndex: isHovered ? 40 : 10
                                             }}
                                         >
                                             {/* Profil Popover */}
