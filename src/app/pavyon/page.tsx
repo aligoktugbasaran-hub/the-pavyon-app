@@ -132,9 +132,9 @@ export default function PavyonPage() {
                     {!isGlobalChatOpen && (
                         <button
                             onClick={() => setIsGlobalChatOpen(true)}
-                            className="bg-neon-pink text-white px-3 py-1.5 rounded-r-xl absolute left-0 top-20 z-50 shadow-[0_0_15px_rgba(255,0,127,0.5)] flex items-center gap-2 hover:scale-105 transition-all text-[10px] md:text-xs font-bold whitespace-nowrap"
+                            className="bg-neon-pink text-white px-3 py-2 rounded-r-xl fixed left-0 top-1/2 -translate-y-1/2 z-[200] shadow-[0_0_20px_rgba(255,0,127,0.6)] flex items-center gap-1.5 hover:scale-105 transition-all text-[10px] md:text-xs font-bold animate-pulse"
                         >
-                            <MessageSquare className="w-4 h-4 md:w-5 md:h-5" /> <span className="hidden sm:inline">GENEL SOHBET</span>
+                            <MessageSquare className="w-4 h-4 md:w-5 md:h-5" /> <span className="hidden sm:inline">SOHBET</span>
                         </button>
                     )}
 
