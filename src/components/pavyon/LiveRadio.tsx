@@ -17,7 +17,7 @@ const makeUrl = (directUrl: string) => {
 };
 
 const RADIOS = [
-    { id: "seymen", name: "Radyo Seymen", url: isMobile ? "https://the-pavyon-app-production.up.railway.app/api/radio-proxy?url=" + encodeURIComponent("http://yayin.radyoseymen.com.tr:1070/stream") : PROXY + encodeURIComponent("http://yayin.radyoseymen.com.tr:1070/stream"), streamLabel: "Ankara Havaları" },
+    { id: "seymen", name: "Radyo Seymen", url: "https://the-pavyon-app-production.up.railway.app/api/radio-proxy?url=http%3A%2F%2Fyayin.radyoseymen.com.tr%3A1070%2Fstream", streamLabel: "Ankara Havaları" },
     { id: "powerturk", name: "PowerTürk", url: makeUrl("https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio"), streamLabel: "Türkçe Pop" },
     { id: "powerfm", name: "Power FM", url: makeUrl("https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio"), streamLabel: "Yabancı Pop" },
     { id: "powerlove", name: "Power Love", url: makeUrl("https://listen.powerapp.com.tr/powerlove/mpeg/icecast.audio"), streamLabel: "Slow Müzik" },
