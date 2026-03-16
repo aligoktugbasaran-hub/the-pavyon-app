@@ -1,90 +1,114 @@
 "use client";
-
 import { motion } from "framer-motion";
-import { ShieldCheck, ChevronLeft } from "lucide-react";
-import Link from "next/link";
 
 export default function PrivacyPage() {
     return (
-        <div className="min-h-screen bg-[#05000a] text-white p-6 md:p-12 font-sans selection:bg-neon-pink selection:text-white">
-            <div className="max-w-4xl mx-auto">
-                <Link href="/" className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors mb-12 group">
-                    <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                    <span>Ana Sayfaya Dön</span>
-                </Link>
+        <div className="min-h-screen bg-black text-white/80 px-4 py-12 md:px-8">
+            <div className="max-w-3xl mx-auto">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+                    <h1 className="text-3xl md:text-4xl font-black text-white mb-2">Gizlilik Politikası</h1>
+                    <p className="text-white/40 text-sm mb-10">Son güncelleme: 16 Mart 2026</p>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-col gap-8"
-                >
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-neon-pink/10 rounded-2xl border border-neon-pink/20">
-                            <ShieldCheck className="w-8 h-8 text-neon-pink" />
-                        </div>
-                        <div>
-                            <h1 className="text-4xl font-black uppercase tracking-tight">Gizlilik Politikası</h1>
-                            <p className="text-white/40 uppercase text-xs font-bold tracking-widest mt-1">Son Güncelleme: 7 Mart 2026</p>
-                        </div>
-                    </div>
-
-                    <div className="space-y-8 text-white/70 leading-relaxed text-sm md:text-base">
+                    <div className="space-y-8 text-sm leading-relaxed">
                         <section className="space-y-4">
                             <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">1. Genel Bakış</h2>
                             <p>
-                                The Pavyon, kullanıcılarının gizliliğine ve anonimiteye son derece önem vermektedir.
-                                Bu politika, uygulamamızı kullandığınızda verilerinizin nasıl toplandığını, kullanıldığını ve
-                                korunduğunu açıklamaktadır.
+                                The Pavyon (&quot;Uygulama&quot;), kullanıcılarının gizliliğine saygı duyan bir sosyal etkileşim platformudur.
+                                Bu politika, hangi verilerin toplandığını, nasıl kullanıldığını, kimlerle paylaşıldığını ve
+                                kullanıcıların haklarını açıklar. Uygulamayı kullanarak bu politikayı kabul etmiş sayılırsınız.
                             </p>
                         </section>
 
                         <section className="space-y-4">
-                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">2. Kamera ve Mikrofon Erişimi</h2>
+                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">2. Toplanan Veriler</h2>
+                            <p><strong className="text-white">Hesap Bilgileri:</strong> Lakap (nickname), e-posta adresi (opsiyonel), profil fotoğrafı, cinsiyet bilgisi.</p>
+                            <p><strong className="text-white">Kullanım Verileri:</strong> Sohbet mesajları, hediye gönderimleri, arkadaşlık istekleri, masa katılım bilgileri.</p>
+                            <p><strong className="text-white">Cihaz Bilgileri:</strong> Cihaz türü, işletim sistemi, IP adresi, tarayıcı bilgisi.</p>
+                            <p><strong className="text-white">Konum Bilgisi:</strong> Konum bilgisi toplanmaz.</p>
+                            <p><strong className="text-white">Kamera ve Mikrofon:</strong> Sadece kullanıcı izni ile profil fotoğrafı çekimi ve görüntörü sohbet için kullanılır.</p>
+                        </section>
+
+                        <section className="space-y-4">
+                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">3. Verilerin Kullanımı</h2>
+                            <p>Toplanan veriler şu amaçlarla kullanılır:</p>
+                            <p>Hesap oluşturma ve kimlik doğrulama, uygulama içi iletişim (sohbet, bildirimler),
+                            hediye ve kredi sisteminin işletilmesi, liderlik tabloları ve kullanıcı sıralamaları,
+                            uygulama performansının iyileştirilmesi ve güvenlik önlemleri.</p>
+                        </section>
+
+                        <section className="space-y-4">
+                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">4. Veri Paylaşımı</h2>
                             <p>
-                                Uygulamamız, Apple App Store politikalarına tam uyum sağlayacak şekilde Kamera ve Mikrofon donanımlarınızı aşağıdaki amaçlarla kullanır:
-                            </p>
-                            <ul className="list-disc pl-6 space-y-2">
-                                <li><strong>Görüntülü Arama:</strong> Özel odalarda diğer kullanıcılarla yapılan canlı görüntülü görüşmeler için.</li>
-                                <li><strong>Profil Fotoğrafı:</strong> Uygulama içinde kendinize bir avatar veya fotoğraf çekip yükleyebilmeniz için.</li>
-                                <li><strong>Sesli İletişim:</strong> Görüntülü görüşmeler sırasında ses iletimini sağlamak için.</li>
-                            </ul>
-                            <p className="bg-white/5 p-4 rounded-xl border border-white/5 italic">
-                                Verileriniz ASLA izniniz olmadan kayıt altına alınmaz, sunucularımızda saklanmaz veya üçüncü taraflarla paylaşılmaz.
+                                Kişisel verileriniz üçüncü taraflarla satılmaz veya kiralanmaz. Veriler yalnızca şu durumlarda paylaşılabilir:
+                                yasal zorunluluklar (mahkeme kararı, resmi talep), hizmet sağlayıcılar (sunucu altyapısı: Railway),
+                                ve kullanıcı güvenliğini korumak amacıyla.
                             </p>
                         </section>
 
                         <section className="space-y-4">
-                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">3. Anonimite ve Veri Saklama</h2>
+                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">5. Veri Saklama ve Güvenlik</h2>
                             <p>
-                                The Pavyon, gerçek kimliğinizi saklamak üzerine tasarlanmıştır. Yalnızca şu verileri işleriz:
-                            </p>
-                            <ul className="list-disc pl-6 space-y-2">
-                                <li>Kullanıcı adı (nickname).</li>
-                                <li>Kendi isteğinizle yüklediğiniz fotoğraflar.</li>
-                                <li>Bildirimler için gerekli olan temel cihaz kimliği.</li>
-                            </ul>
-                        </section>
-
-                        <section className="space-y-4">
-                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">4. Veri Silme Talebi</h2>
-                            <p>
-                                Hesabınızı ve ilişkili tüm verilerinizi dilediğiniz zaman silebilirsiniz. Sildiğiniz takdirde; nickname, fotoğraflar, arkadaş listeleri ve sohbet geçmişiniz kalıcı olarak sistemden kaldırılır.
-                                Veri silme talebi için <strong>info@thepavyon.app</strong> adresine kullanıcı adınızla beraber yazmanız yeterlidir.
+                                Verileriniz şifrelenmiş bağlantılar (HTTPS/SSL) üzerinden iletilir ve güvenli sunucularda saklanır.
+                                Hesabınızı sildiğinizde tüm kişisel verileriniz 30 gün içinde kalıcı olarak silinir.
+                                Sohbet mesajları düzenli olarak temizlenir.
                             </p>
                         </section>
 
                         <section className="space-y-4">
-                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">5. İletişim</h2>
+                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">6. Kullanıcı Hakları</h2>
+                            <p>Kullanıcılar şu haklara sahiptir:</p>
                             <p>
-                                Herhangi bir soru veya endişeniz için: <br />
-                                <strong>E-posta: info@thepavyon.app</strong>
+                                Verilerine erişim talep etme, verilerinin düzeltilmesini isteme,
+                                verilerinin silinmesini talep etme (hesap silme),
+                                veri işlemeye itiraz etme ve veri taşınabilirliği talep etme.
+                            </p>
+                            <p>
+                                Bu haklarınızı kullanmak için <strong className="text-neon-pink">aligoktugbasaran@gmail.com</strong> adresine
+                                kullanıcı adınızla birlikte yazmanız yeterlidir.
+                            </p>
+                        </section>
+
+                        <section className="space-y-4">
+                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">7. Çocukların Gizliliği</h2>
+                            <p>
+                                The Pavyon, 18 yaşın altındaki bireylere yönelik değildir. 18 yaşından küçük olduğu tespit edilen
+                                kullanıcıların hesapları bildirilmeksizin silinebilir. Ebeveynler veya yasal vasiler, çocuklarının
+                                bilgilerinin silinmesi için bizimle iletişime geçebilir.
+                            </p>
+                        </section>
+
+                        <section className="space-y-4">
+                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">8. Çerezler ve İzleme</h2>
+                            <p>
+                                Uygulama, oturum yönetimi için yerel depolama (localStorage) kullanır.
+                                Üçüncü taraf izleme araçları veya reklam çerezleri kullanılmaz.
+                                Analitik veriler anonim olarak toplanabilir.
+                            </p>
+                        </section>
+
+                        <section className="space-y-4">
+                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">9. Politika Değişiklikleri</h2>
+                            <p>
+                                Bu gizlilik politikası zaman zaman güncellenebilir. Önemli değişiklikler uygulama içi bildirim
+                                veya e-posta yoluyla kullanıcılara duyurulacaktır. Güncel politikayı her zaman bu sayfadan
+                                kontrol edebilirsiniz.
+                            </p>
+                        </section>
+
+                        <section className="space-y-4">
+                            <h2 className="text-xl font-bold text-white border-b border-white/10 pb-2">10. İletişim</h2>
+                            <p>
+                                Gizlilik ile ilgili her türlü soru, talep ve şikayetleriniz için:<br />
+                                <strong className="text-white">E-posta:</strong> <span className="text-neon-pink">aligoktugbasaran@gmail.com</span><br />
+                                <strong className="text-white">Geliştirici:</strong> Ali Göktug Başaran<br />
+                                <strong className="text-white">Uygulama:</strong> The Pavyon
                             </p>
                         </section>
                     </div>
                 </motion.div>
 
                 <footer className="mt-20 pt-8 border-t border-white/5 text-center text-white/20 text-xs">
-                    © 2026 The Pavyon Management. Tüm Hakları Saklıdır.
+                    &copy; 2026 The Pavyon. Tüm Hakları Saklıdır.
                 </footer>
             </div>
         </div>
