@@ -24,10 +24,16 @@ android {
             keyPassword "PavyonApp2024!"
         }
     }
+    // R8/ProGuard
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             ndk {
                 debugSymbolLevel 'FULL'
