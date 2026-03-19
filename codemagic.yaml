@@ -67,14 +67,10 @@ workflows:
             -archivePath build/App.xcarchive \
             archive \
             COMPILER_INDEX_STORE_ENABLE=NO \
-            DEVELOPMENT_TEAM="$TEAM_ID" \
+            DEVELOPMENT_TEAM="RYPLW7PTDR" \
             CODE_SIGN_STYLE=Automatic \
             CODE_SIGNING_ALLOWED=YES \
-            CODE_SIGNING_REQUIRED=YES \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath "$HOME/.private_keys/AuthKey.p8" \
-            -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
-            -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
+            -allowProvisioningUpdates
       - name: Export IPA
         script: |
           cd ios/App
