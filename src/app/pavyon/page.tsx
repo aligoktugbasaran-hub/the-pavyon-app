@@ -77,7 +77,7 @@ export default function PavyonPage() {
     if (!isLoggedIn) return null; // Avoid hydration mismatch or flash
 
     return (
-        <div className="min-h-screen bg-black text-white relative flex flex-col overflow-hidden">
+        <div className="min-h-screen bg-black text-white relative flex flex-col overflow-hidden pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
             <PavyonToast />
             {/* Background Grid Overlay */}
             <div className="fixed inset-0 pavyon-grid pointer-events-none opacity-20 z-0" />
@@ -105,7 +105,7 @@ export default function PavyonPage() {
                     </div>
                     <button
                         onClick={() => setIsCreditModalOpen(true)}
-                        className="text-[10px] md:text-sm bg-neon-pink border border-neon-pink/50 rounded-full px-3 md:px-4 py-2 md:py-1.5 hover:bg-neon-pink/80 transition-all font-bold shadow-[0_0_15px_rgba(255,0,127,0.4)] whitespace-nowrap text-white"
+                        className="text-[9px] md:text-sm border border-neon-pink/50 rounded-full px-2 md:px-4 py-1 md:py-1.5 hover:bg-neon-pink transition-all font-bold shadow-[0_0_15px_rgba(255,0,127,0.2)] whitespace-nowrap"
                     >
                         Kredi Yükle
                     </button>
