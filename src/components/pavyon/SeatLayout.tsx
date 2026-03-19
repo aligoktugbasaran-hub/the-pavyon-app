@@ -72,7 +72,7 @@ export function SeatLayout() {
 
     const [newMessage, setNewMessage] = useState("");
     const [showEmojis, setShowEmojis] = useState(false);
-    const PAVYON_EMOJIS = ["😂", "❤️", "🔥", "👏", "🎵", "🍷", "💃", "🎶", "😘", "🥂", "🎉", "💎", "👑", "🌹", "😎", "🤩", "💋", "🫶", "✨", "🎤"];
+    const PAVYON_EMOJIS = ["🍷", "🥂", "💃", "🎤", "🎵", "🎶", "🌹", "💋", "👑", "💎", "🔥", "✨", "🫶", "😘", "🤩", "🥀", "🎰", "🃏", "🪩", "🍾"];
     const appendEmoji = (emoji: string) => {
         setNewMessage(prev => prev + emoji);
     };
