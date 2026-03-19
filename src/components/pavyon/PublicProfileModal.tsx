@@ -71,6 +71,10 @@ export function PublicProfileModal({ isOpen, onClose, user }: PublicProfileProps
 
     const handleFriendRequest = async () => {
         if (!user.id || isSending || requestSent) return;
+        if (!me.id) {
+            showToast("Arkadaş eklemek için giriş yapmalısınız.", "error");
+            return;
+        }
         setIsSending(true);
         try {
             const res = await fetch("/api/friends", {

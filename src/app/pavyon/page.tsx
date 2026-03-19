@@ -105,7 +105,7 @@ export default function PavyonPage() {
                     </div>
                     <button
                         onClick={() => setIsCreditModalOpen(true)}
-                        className="text-[9px] md:text-sm border border-neon-pink/50 rounded-full px-2 md:px-4 py-1 md:py-1.5 hover:bg-neon-pink transition-all font-bold shadow-[0_0_15px_rgba(255,0,127,0.2)] whitespace-nowrap"
+                        className="text-[10px] md:text-sm bg-neon-pink border border-neon-pink/50 rounded-full px-3 md:px-4 py-2 md:py-1.5 hover:bg-neon-pink/80 transition-all font-bold shadow-[0_0_15px_rgba(255,0,127,0.4)] whitespace-nowrap text-white"
                     >
                         Kredi Yükle
                     </button>
@@ -117,7 +117,7 @@ export default function PavyonPage() {
 
                 {/* Left: Global Chat (Toggleable) */}
                 <aside className={`fixed md:relative inset-y-0 left-0 z-[100] md:z-10 w-full md:w-80 lg:w-[320px] xl:w-[380px] flex flex-col shrink-0 transition-transform duration-500 transform ${isGlobalChatOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0 md:w-0 overflow-hidden opacity-0'}`}>
-                    <div className="h-full flex flex-col p-4 md:p-0">
+                    <div className="h-full flex flex-col p-4 md:p-0 bg-black/90 md:bg-transparent rounded-2xl md:rounded-none">
                         {/* Mobile Close Button for Chat */}
                         <div className="md:hidden flex justify-end mb-2">
                             <button onClick={() => setIsGlobalChatOpen(false)} className="bg-white/10 p-2 rounded-full"><X className="w-5 h-5" /></button>
