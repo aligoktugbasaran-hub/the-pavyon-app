@@ -6,47 +6,104 @@ on:
 
 jobs:
   build-ios:
-    name: Build iOS Simulator
+    name: Build iOS
     runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
+
       - name: Install Deps
         run: npm ci
+
       - name: Generate Prisma
         run: npx prisma generate
+
       - name: Prep Static Export (Remove API)
         run: rm -rf src/app/api
+
       - name: Remove server.js for static export
         run: |
           cp server.js server.js.bak || true
           rm -f server.js
+
       - name: Build Web
         run: npm run build
         env:
           IS_CAPACITOR: "true"
+
       - name: Restore server.js
         run: mv server.js.bak server.js || true
+
       - name: Capacitor Sync
         run: npx cap sync ios
-      - name: Build App
+
+      - name: Setup API Key
+        run: |
+          mkdir -p ~/.private_keys
+          echo '${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}' > ~/.private_keys/AuthKey.p8
+
+      - name: Build Archive
         run: |
           cd ios/App
-          xcodebuild -project App.xcodeproj -scheme App -sdk iphonesimulator -destination "generic/platform=iOS Simulator" ARCHS="x86_64 arm64" ONLY_ACTIVE_ARCH=NO -configuration Release -derivedDataPath build CODE_SIGNING_ALLOWED=NO
-      - name: Package for Appetize
+          xcodebuild -project App.xcodeproj \
+            -scheme App \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath build/App.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=YES \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}"
+
+      - name: Export IPA
         run: |
-          mkdir -p artifacts/payload
-          cp -r ios/App/build/Build/Products/Release-iphonesimulator/App.app artifacts/payload/
-      - name: Upload iOS
+          cd ios/App
+          cat > ExportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>teamID</key>
+              <string>${{ secrets.APPLE_TEAM_ID }}</string>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>uploadSymbols</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+          xcodebuild -exportArchive \
+            -archivePath build/App.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath build/export \
+            -allowProvisioningUpdates
+
+      - name: Upload to App Store Connect
+        run: |
+          cd ios/App
+          xcrun altool --upload-app \
+            --type ios \
+            --file "build/export/App.ipa" \
+            --apiKey "${{ secrets.APP_STORE_CONNECT_KEY_ID }}" \
+            --apiIssuer "${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}"
+
+      - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: iOS-Simulator-Appetize
-          path: artifacts/payload/
+          name: iOS-IPA
+          path: ios/App/build/export/App.ipa
+          if-no-files-found: ignore
+
 
   build-android:
     name: Build Android Bundle
