@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { GlassCard } from "@/components/ui/GlassCard";
-import { KeyRound, Users, Wine, Lock, UserPlus, X, Send, ArrowLeft, Gift, Video, Wifi, WifiOff } from "lucide-react";
+import { KeyRound, Users, Wine, Lock, UserPlus, X, Send, ArrowLeft, Gift, Video, Wifi, WifiOff, Smile } from "lucide-react";
 import { PublicProfileModal } from "@/components/pavyon/PublicProfileModal";
 import { GiftModal } from "@/components/pavyon/GiftModal";
 import { CreditModal } from "@/components/pavyon/CreditModal";
@@ -71,6 +71,11 @@ export function SeatLayout() {
     });
 
     const [newMessage, setNewMessage] = useState("");
+    const [showEmojis, setShowEmojis] = useState(false);
+    const PAVYON_EMOJIS = ["😂", "❤️", "🔥", "👏", "🎵", "🍷", "💃", "🎶", "😘", "🥂", "🎉", "💎", "👑", "🌹", "😎", "🤩", "💋", "🫶", "✨", "🎤"];
+    const appendEmoji = (emoji: string) => {
+        setNewMessage(prev => prev + emoji);
+    };
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // Active table object
@@ -332,8 +337,29 @@ export function SeatLayout() {
                         <div ref={messagesEndRef} />
                     </div>
 
-                    <form onSubmit={handleSendMessage} className="p-4 border-t border-white/10 bg-black/60 shrink-0">
-                        <div className="flex items-center gap-2">
+                    <div className="border-t border-white/10 bg-black/60 shrink-0">
+                        {showEmojis && (
+                            <div className="flex gap-2 p-2 px-4 bg-white/5 overflow-x-auto scrollbar-none animate-in fade-in">
+                                {PAVYON_EMOJIS.map((emoji) => (
+                                    <button
+                                        key={emoji}
+                                        type="button"
+                                        onClick={() => appendEmoji(emoji)}
+                                        className="text-xl hover:scale-125 transition-transform p-1"
+                                    >
+                                        {emoji}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                        <form onSubmit={handleSendMessage} className="p-3 flex items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={() => setShowEmojis(!showEmojis)}
+                                className={`p-2 rounded-full transition-colors shrink-0 ${showEmojis ? "bg-white/20 text-yellow-400" : "text-white/50 hover:text-white/90 hover:bg-white/10"}`}
+                            >
+                                <Smile className="w-5 h-5" />
+                            </button>
                             <input
                                 type="text"
                                 value={newMessage}
@@ -343,17 +369,17 @@ export function SeatLayout() {
                                 }}
                                 placeholder={isConnected ? "Masaya yaz..." : "Bağlanıyor..."}
                                 disabled={false}
-                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-neon-pink/50 transition-colors disabled:opacity-50"
+                                className="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-neon-pink/50 transition-colors disabled:opacity-50"
                             />
                             <button
                                 type="submit"
                                 disabled={!newMessage.trim()}
-                                className="p-2 bg-neon-pink text-white rounded-xl hover:bg-neon-pink/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="p-2.5 bg-gradient-to-r from-neon-pink to-purple-600 text-white rounded-full hover:shadow-[0_0_15px_rgba(255,0,127,0.5)] disabled:opacity-50 disabled:cursor-not-allowed transition-all shrink-0"
                             >
-                                <Send className="w-5 h-5" />
+                                <Send className="w-4 h-4 ml-0.5" />
                             </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
 
                     {/* Masadan Kalk Butonu (Chat Altı) */}
                     <div className="p-3 border-t border-white/10 bg-black/80 flex justify-center shrink-0">
