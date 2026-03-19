@@ -33,8 +33,14 @@ workflows:
         script: npx cap sync ios
       - name: Set up code signing
         script: |
-          echo $CM_CERTIFICATE | base64 --decode > /tmp/cert.p12
-          echo $CM_PROVISIONING_PROFILE | base64 --decode > /tmp/profile.mobileprovision
+          printf '%s' "$CM_CERTIFICATE" | base64 --decode > /tmp/cert.p12
+          printf '%s' "$CM_PROVISIONING_PROFILE" | base64 --decode > /tmp/profile.mobileprovision
+          echo "=== Cert size ==="
+          ls -la /tmp/cert.p12
+          echo "=== Profile size ==="
+          ls -la /tmp/profile.mobileprovision
+          echo "=== Profile check ==="
+          security cms -D -i /tmp/profile.mobileprovision > /dev/null 2>&1 && echo "Profile OK" || echo "Profile INVALID"
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp /tmp/profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
           keychain initialize
