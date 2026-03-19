@@ -6,11 +6,10 @@ workflows:
     integrations:
       app_store_connect: Codemagic
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.thepavyon.app
       vars:
-        BUNDLE_ID: com.thepavyon.app
+        BUNDLE_ID: "com.thepavyon.app"
+        XCODE_SCHEME: "App"
+        XCODE_PROJECT: "App.xcodeproj"
       node: 22
       xcode: latest
     scripts:
@@ -31,14 +30,14 @@ workflows:
         script: npx cap sync ios
       - name: Set up code signing
         script: |
-          app-store-connect fetch-signing-files com.thepavyon.app --type IOS_APP_STORE --create
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
           keychain initialize
           keychain add-certificates
           xcode-project use-profiles
       - name: Build IPA
         script: |
           cd ios/App
-          xcode-project build-ipa --project App.xcodeproj --scheme App
+          xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
     artifacts:
       - ios/App/build/ios/ipa/*.ipa
     publishing:
