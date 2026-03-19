@@ -37,7 +37,10 @@ workflows:
       - name: Build IPA
         script: |
           cd ios/App
-          xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME" \
+            --archive-flags="CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=RYPLW7PTDR"
     artifacts:
       - ios/App/build/ios/ipa/*.ipa
     publishing:
