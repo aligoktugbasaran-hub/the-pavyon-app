@@ -11,6 +11,8 @@ workflows:
         XCODE_SCHEME: "App"
         XCODE_PROJECT: "App.xcodeproj"
         TEAM_ID: "RYPLW7PTDR"
+        APP_STORE_CONNECT_KEY_ID: "CZV2847494"
+        APP_STORE_CONNECT_ISSUER_ID: "9571d02a-8a64-4839-8fb7-f98bde3fba41"
       node: 22
       xcode: latest
     scripts:
@@ -66,8 +68,13 @@ workflows:
             archive \
             COMPILER_INDEX_STORE_ENABLE=NO \
             DEVELOPMENT_TEAM="$TEAM_ID" \
-            CODE_SIGN_STYLE=Manual \
-            PROVISIONING_PROFILE_SPECIFIER=""
+            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGNING_ALLOWED=YES \
+            CODE_SIGNING_REQUIRED=YES \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$HOME/.private_keys/AuthKey.p8" \
+            -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
+            -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
       - name: Export IPA
         script: |
           cd ios/App
