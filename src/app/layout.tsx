@@ -25,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="tr" className="dark">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         {/* Inline safety styles to prevent white screen on Android if CSS fails to load */}
         <style dangerouslySetInnerHTML={{
           __html: `
