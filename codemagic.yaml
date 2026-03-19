@@ -6,6 +6,8 @@ workflows:
     integrations:
       app_store_connect: Codemagic
     environment:
+      groups:
+        - ios_credentials
       vars:
         BUNDLE_ID: "com.thepavyon.app"
         XCODE_SCHEME: "App"
