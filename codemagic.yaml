@@ -1,0 +1,45 @@
+workflows:
+  ios-release:
+    name: iOS App Store Release
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.thepavyon.app
+      vars:
+        BUNDLE_ID: "com.thepavyon.app"
+      node: 22
+      xcode: latest
+    scripts:
+      - name: Install dependencies
+        script: npm ci
+      - name: Generate Prisma
+        script: npx prisma generate
+      - name: Prep Static Export
+        script: |
+          rm -rf src/app/api
+          cp server.js server.js.bak || true
+          rm -f server.js
+      - name: Build Web
+        script: IS_CAPACITOR=true npm run build
+      - name: Restore server.js
+        script: mv server.js.bak server.js || true
+      - name: Capacitor Sync
+        script: npx cap sync ios
+      - name: Set up code signing
+        script: xcode-project use-profiles
+      - name: Build IPA
+        script: |
+          cd ios/App
+          xcode-project build-ipa \
+            --project App.xcodeproj \
+            --scheme App \
+            --archive-flags="-destination 'generic/platform=iOS'"
+    artifacts:
+      - ios/App/build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_review: false
+        submit_to_testflight: true
