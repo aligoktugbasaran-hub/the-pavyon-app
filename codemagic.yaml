@@ -33,17 +33,13 @@ workflows:
         script: npx cap sync ios
       - name: Set up code signing
         script: |
-          echo "=== Listing all p12 files ==="
-          find /Users/builder -name "*.p12" 2>/dev/null || echo "No p12 found"
-          echo "=== Listing all mobileprovision files ==="
-          find /Users/builder -name "*.mobileprovision" 2>/dev/null || echo "No mobileprovision found"
-          find /Users/builder -name "*.provisionprofile" 2>/dev/null || echo "No provisionprofile found"
-          echo "=== Listing codemagic directories ==="
-          ls -la /Users/builder/Library/MobileDevice/Provisioning\ Profiles/ 2>/dev/null || echo "No MobileDevice profiles dir"
-          ls -la /Users/builder/Library/Developer/Xcode/UserData/Provisioning\ Profiles/ 2>/dev/null || echo "No Xcode profiles dir"
-          echo "=== Keychain init ==="
+          echo $CM_CERTIFICATE | base64 --decode > /tmp/cert.p12
+          echo $CM_PROVISIONING_PROFILE | base64 --decode > /tmp/profile.mobileprovision
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp /tmp/profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
           keychain initialize
-          keychain add-certificates
+          security import /tmp/cert.p12 -k ~/Library/codemagic-cli-tools/keychains/*.keychain-db -P "$CM_CERTIFICATE_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -k "" ~/Library/codemagic-cli-tools/keychains/*.keychain-db
           xcode-project use-profiles --project ios/App/App.xcodeproj
       - name: Build Archive
         script: |
