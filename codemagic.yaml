@@ -10,6 +10,7 @@ workflows:
         BUNDLE_ID: "com.thepavyon.app"
         XCODE_SCHEME: "App"
         XCODE_PROJECT: "App.xcodeproj"
+        TEAM_ID: "RYPLW7PTDR"
       node: 22
       xcode: latest
     scripts:
@@ -34,15 +35,45 @@ workflows:
           keychain initialize
           keychain add-certificates
           xcode-project use-profiles
-      - name: Build IPA
+      - name: Create ExportOptions
+        script: |
+          cat > ios/ExportOptions.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>teamID</key>
+              <string>RYPLW7PTDR</string>
+              <key>signingStyle</key>
+              <string>manual</string>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>uploadSymbols</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+      - name: Build Archive
         script: |
           cd ios/App
-          xcode-project build-ipa \
-            --project "$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME" \
-            --archive-flags="CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=RYPLW7PTDR"
+          xcodebuild -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath build/App.xcarchive \
+            archive \
+            COMPILER_INDEX_STORE_ENABLE=NO
+      - name: Export IPA
+        script: |
+          cd ios/App
+          xcodebuild -exportArchive \
+            -archivePath build/App.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist ../ExportOptions.plist
     artifacts:
-      - ios/App/build/ios/ipa/*.ipa
+      - ios/App/build/ipa/*.ipa
     publishing:
       app_store_connect:
         auth: integration
