@@ -10,7 +10,7 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.thepavyon.app
       vars:
-        BUNDLE_ID: "com.thepavyon.app"
+        BUNDLE_ID: com.thepavyon.app
       node: 22
       xcode: latest
     scripts:
@@ -31,23 +31,14 @@ workflows:
         script: npx cap sync ios
       - name: Set up code signing
         script: |
-          echo "=== Fetching signing files ==="
-          app-store-connect fetch-signing-files "com.thepavyon.app" --type IOS_APP_STORE --create --verbose 2>&1 || echo "FETCH FAILED"
-          echo "=== Listing certificates ==="
-          app-store-connect list-certificates --type IOS_DISTRIBUTION 2>&1 || true
-          echo "=== Listing profiles ==="
-          app-store-connect list-profiles --type IOS_APP_STORE 2>&1 || true
-          echo "=== Keychain ==="
+          app-store-connect fetch-signing-files com.thepavyon.app --type IOS_APP_STORE --create
           keychain initialize
           keychain add-certificates
           xcode-project use-profiles
       - name: Build IPA
         script: |
           cd ios/App
-          xcode-project build-ipa \
-            --project App.xcodeproj \
-            --scheme App \
-            --archive-flags="-destination 'generic/platform=iOS'"
+          xcode-project build-ipa --project App.xcodeproj --scheme App
     artifacts:
       - ios/App/build/ios/ipa/*.ipa
     publishing:
