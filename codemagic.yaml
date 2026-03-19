@@ -56,7 +56,9 @@ workflows:
             --project App.xcodeproj \
             --scheme App
     artifacts:
-      - ios/App/build/ipa/*.ipa
+      - ios/App/build/ios/ipa/*.ipa
+      - ios/App/build/**/*.ipa
+      - /Users/builder/clone/ios/App/build/**/*.ipa
     publishing:
       app_store_connect:
         auth: integration
