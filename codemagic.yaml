@@ -32,21 +32,14 @@ workflows:
       - name: Set up code signing
         script: |
           echo "=== Fetching signing files ==="
-          app-store-connect fetch-signing-files "com.thepavyon.app" \
-            --type IOS_APP_STORE \
-            --create \
-            --verbose \
-            --certificate-key=CERTIFICATE_PRIVATE_KEY \
-            2>&1 || echo "FETCH FAILED - trying alternative"
-          echo "=== Listing available certificates ==="
+          app-store-connect fetch-signing-files "com.thepavyon.app" --type IOS_APP_STORE --create --verbose 2>&1 || echo "FETCH FAILED"
+          echo "=== Listing certificates ==="
           app-store-connect list-certificates --type IOS_DISTRIBUTION 2>&1 || true
-          echo "=== Listing available profiles ==="
+          echo "=== Listing profiles ==="
           app-store-connect list-profiles --type IOS_APP_STORE 2>&1 || true
-          echo "=== Initializing keychain ==="
+          echo "=== Keychain ==="
           keychain initialize
-          echo "=== Adding certificates ==="
           keychain add-certificates
-          echo "=== Using profiles ==="
           xcode-project use-profiles
       - name: Build IPA
         script: |
