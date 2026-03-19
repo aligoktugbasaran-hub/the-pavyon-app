@@ -33,6 +33,15 @@ workflows:
         script: npx cap sync ios
       - name: Set up code signing
         script: |
+          echo "=== Listing all p12 files ==="
+          find /Users/builder -name "*.p12" 2>/dev/null || echo "No p12 found"
+          echo "=== Listing all mobileprovision files ==="
+          find /Users/builder -name "*.mobileprovision" 2>/dev/null || echo "No mobileprovision found"
+          find /Users/builder -name "*.provisionprofile" 2>/dev/null || echo "No provisionprofile found"
+          echo "=== Listing codemagic directories ==="
+          ls -la /Users/builder/Library/MobileDevice/Provisioning\ Profiles/ 2>/dev/null || echo "No MobileDevice profiles dir"
+          ls -la /Users/builder/Library/Developer/Xcode/UserData/Provisioning\ Profiles/ 2>/dev/null || echo "No Xcode profiles dir"
+          echo "=== Keychain init ==="
           keychain initialize
           keychain add-certificates
           xcode-project use-profiles --project ios/App/App.xcodeproj
